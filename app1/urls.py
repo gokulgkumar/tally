@@ -972,6 +972,7 @@ urlpatterns = [
     path('admin_distributor',views.admin_distributor,name='admin_distributor'),
     path('admin_clients',views.admin_clients,name='admin_clients'),
     path('payment_terms',views.payment_terms,name='payment_terms'),
+    path('add_payment_terms',views.add_payment_terms,name='add_payment_terms'),
 
 
     

@@ -18966,3 +18966,37 @@ def createdistributor(request):
 def payment_terms(request):
     return render(request,'admin_payment_terms.html')
 
+
+
+    # if 'SAdm_id' in request.session:
+    #     if request.session.has_key('SAdm_id'):
+    #         SAdm_id = request.session['SAdm_id']
+    #     else:
+    #         return redirect('/')
+def add_payment_terms(request):
+    pay_terms=Payment_Terms(request)
+    if request.method == 'POST':
+        pay_terms_number= request.POST['num']
+        select=request.POST['select']
+        if select == 'Months':
+            months = pay_terms_number * 30
+            pay_terms.payment_terms_number=pay_terms_number
+            pay_terms.payment_terms_value=select
+            pay_terms.days=months
+            messages.info(request,'a new payment term has been added successfully')
+            pay_terms.save()
+            return redirect('add_payment_terms')
+        else:
+            years = pay_terms_number * 365
+            pay_terms.payment_terms_number=pay_terms_number
+            pay_terms.payment_terms_value=select
+            pay_terms.days=years
+            messages.info(request,'a new payment term has been added successfully')
+            pay_terms.save()
+            return redirect('add_payment_terms')
+            
+    return redirect('add_payment_terms')
+
+    
+
+

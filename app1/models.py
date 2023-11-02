@@ -2088,7 +2088,7 @@ class receipt_note_no(models.Model):
 
 #GOKUL ---------------
 
-class payment_terms(models.Model):
+class Payment_Terms(models.Model):
     payment_terms_number = models.IntegerField(null=True,blank=True)  
     payment_terms_value = models.CharField(max_length=100,null=True,blank=True) 
     days = models.CharField(max_length=100,null=True,blank=True) 
