@@ -1,0 +1,561 @@
+
+
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+<head>
+    <script type="text/javascript">
+        function searchrecords()
+        {
+            var input,ul,li,filter;
+            input=document.getElementById("search");
+            filter=input.value.toUpperCase();
+            ul=document.getElementById("ulid")
+            li=ul.getElementsByTagName("li")
+            for(i=0;i<li.length;i++){
+                let li = ul[i].getElementsByTagName('li')[0]
+
+            }
+            
+
+        }
+
+    </script>
+    <style>
+        
+        thead th {
+    border: .5px solid rgba(255, 255, 255, .3); ;
+        }
+    .ledger{
+
+        
+        background-color: rgb(65, 123, 160);
+        width : 300px;
+        margin: auto;
+        text-align: center;
+        height: 100px;
+        color: #000;
+        
+
+    }
+    
+    .input{
+        width: 80%;
+       margin: auto;
+       height: 30px;
+       margin-top: 10px;
+       color: #000;
+       background-color: antiquewhite;
+       border: 1px solid rgb(8, 150, 239,0.5);
+       
+    }
+    .box{
+        width : 400px;
+        background-color: rgba(33,57,77,255);color:#fff;
+        margin: auto;
+        height: auto;
+
+    }
+    .head{
+        background-color: rgb(9, 90, 203);
+        
+    }
+    
+ .create{
+    height: 40px;
+    padding-right: 1%;
+    color: #FFF;
+    padding-left: 100%;
+   padding-top: 1%;
+   text-align: end;
+   font-size: large;
+   
+    
+ }
+ hr{
+    border: 1px solid rgb(12, 12, 12,.2);
+   
+ }
+ .ledgers{
+    color:#FFF;
+    padding-left: 15%;
+    width: 100%;
+    text-decoration: none;
+    margin-top: -15px;
+    list-style:none;
+ }
+
+ tr{
+    margin-left: -15px;
+    cursor: pointer;
+    
+ }
+ tr:hover{
+    background-color: rgb(235, 176, 14);
+
+ }
+ tr a{
+    color:#FFF;
+    padding-left: 10px;
+
+ }
+ .tb{
+    width: 84%;
+    margin-top: -16px;
+    
+    
+ }
+ .selected{
+    background-color: rgb(235, 176, 14);
+
+ }
+ table
+{
+    margin-left:7%;
+    background-color: rgba(0,0,0,.4);
+}
+table,th,td
+{
+    border-collapse: collapse;
+   
+}
+ 
+table
+   {   
+    border: 1px solid rgb(12, 12, 12,.2);}
+        
+    </style>
+</head>
+<body>
+    <table class="tb">
+
+                
+        <div style=" display:flex;  height: 80%;  margin-left:7%;       ">
+            <div style=" border-right: .5px solid rgb(218, 218, 218);   width:90%;  " class="bg-info">
+                <div style="display:flex; padding:25px;">
+                    <div style="width: 50%; text-align: start;">
+                        <h5 style="color: white; font-size:large;height: 3%;"> <strong> List Of Ledgers</strong> </h5>
+                        <div class="create" >
+                            <a href="{% url 'account_books_create_ledger' %}" style="color:#FFF;text-align:right;margin-top:-10"><strong>Create</strong></a></div>  
+                        </div>
+                    </div>
+                    <div style="text-align: right; padding-right:10%;margin-top:-5% ;">
+                        <h6><a href="{% url 'paymentadv_vouchers' %}" style="color: #FFF;font-size:large"><strong>Payment Details</strong></a></h6>
+                    </div>
+                    
+                    
+                    <div class="box">
+                        <table id="myTable" class="tb" style="color:#fff;"><br><br>
+                            {% for i in ledger %}
+                            <tr class="tr" style="height: 20px;">
+                                <td>
+                                    <a href="{% url 'paymentadvice_ledger' i.id %}" style="font-size: large;">{{i.name}}</a>
+                                </td>
+                                <td style="text-align:right;padding-right:-25%;">
+                                    <input  class="amount amount--Jun" value="" 
+                                    style=" background-color: rgba(240, 248, 255, 0);border-color:rgba(240, 248, 255, 0);color:#FFF">
+                                </td>
+                                {% endfor %}
+                            
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </table>
+
+<script>
+    /*-----------------------payment advice_orginal script-----------*/
+
+        const searchFun = () =>{
+            let filter = document.getElementById('search').value.toUpperCase();
+            let myTable = document.getElementById('myTable');
+            let tr = myTable.getElementsByTagName('tr')
+
+            for(var i=0; i<tr.length;i++){
+                let td = tr[i].getElementsByTagName('td')[0];
+
+                
+
+                if (td){
+                    let textvlue = td.textContent || td.innerHTML;
+                    if (textvlue.toUpperCase().indexOf(filter) > -1){
+                        tr[i].style.display = "";
+                        tr[i].classList.toggle("selected")
+                        
+
+                    }else{
+                        tr[i].style.display = "none";
+                        
+                        
+                    }
+                }
+
+
+            }
+        }
+/*-----------------------payment advice_orginal script end-----------*/
+       
+
+/*-----------------------set current balance-----------*/
+
+
+$("#payacc").change(function () {
+    const accid = ($(this).val()).split(",")[0];
+    //console.log(accid);
+    $.ajax({
+        url: '{% url "cur_balance" %}',
+        data: {
+                'id': accid
+        },
+        
+        success: function (data) {
+            if(data[0].current_blnc_type == 'Dr'){       
+            curData = '<input id ="led" class= "txt" readonly value = '+ data[0].current_blnc +'> <input id ="ledt" class= "txt" readonly value = '+data[0].current_blnc_type+'>';}
+            else{
+            curData = '<input id ="led" class= "txt" readonly value = '+ data[0].current_blnc +' style="color: red;"> <input id ="ledt" style="color: red;"  class= "txt" readonly value = '+data[0].current_blnc_type+'>';}
+
+            $("#curbalance").html(curData);
+            //console.log(data);
+        }
+        
+    });
+
+});
+
+
+function changeCurbalance(){
+
+    const id1 = $(this).attr("id")
+    const parid =$('#payacc'+id1).val();
+
+    $.ajax({
+        url: '{% url "cur_balance" %}',
+        data: {
+                'id': parid
+        },
+        
+        success: function (data) {
+            
+            if(data[0].current_blnc_type == 'Dr'){       
+            curData1 = '<input id ="pled" class= "txt" readonly value = '+ data[0].current_blnc +'> <input id ="pledt" class= "txt" readonly value = '+data[0].current_blnc_type+'>';}
+            else{
+            curData1 = '<input id ="pled" class= "txt" readonly value = '+ data[0].current_blnc +' style="color: red;"> <input id ="pledt" style="color: red;"  class= "txt" readonly value = '+data[0].current_blnc_type+'>';}
+            //console.log(curData);
+            $("#blnc"+id1).html(curData1);
+        }
+        
+    });
+    
+    
+}
+/*----------------------end of set current balance-----------*/
+
+
+/*----------------- create new row----&---change current balance while entering amount------*/
+var id = 1
+function createRow(){
+  
+    id++;
+    $(".part").append('<tr style="border: none;"><td colspan="18" style="border: none;" class="mt-4"><select id="payacc'+id+'"  name="opt[]" class=" rows acc payacc mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="changeCurbalance();" ><option class="opt" id = "opt" >&nbsp;&nbsp;Select Particular </option>{% for i in ledg_all %}<option class="opt" id = "opt" value="{{i.id}}" >&nbsp;&nbsp;{{i.name}}</option> {% endfor %}</select> <br><label class = "blnc1" style="color: #000;" >&nbsp;&nbsp;Cur Bal:&nbsp;&nbsp;</label><label class = "blnc1" id="blnc'+id+'" class="p-0 mt-0" style="color: #000;"></label><label id ="onacc'+id+'" class="onacc" name = "onacc" style="color: #000; margin-left: 25px;"></label></td><td colspan="2" class="text-right mt-0" style="border: none; "><input type="number" class = "txt amnt" id= "amnt'+id+'" name = "amnt[]" oninput="calculateTotal();" onchange="showTransaction();"><button type="button" class="butn" id = "butn'+id+'"  onclick="createRow()"><i class="bi bi-plus-square-fill" style="font-size: 20px;"></i></button></td></tr>');
+    
+}
+
+/*---------------end of create new row-------------*/
+
+/*--------- Total----------*/
+
+function calculateTotal() {
+    var sum = 0 ;
+    var count = $('.amnt').length
+    
+  for(var i = 1; i <= count; i++) {
+    var value1 = document.getElementById("amnt" + i);
+    if(isNaN(value1.value) == false){
+        sum += parseInt(value1.value) ;
+    }
+    //console.log(value1);
+  }
+  $('#total').val(sum);
+  
+}
+
+
+function setClosing() {
+
+    console.log('Set Value')
+
+    const ac = ($('#payacc').val()).split(',')[0];
+    const curblnc = $('#led').val();
+    const curblnct = $('#ledt').val();
+    var amount1= $('#amnt'+id).val();
+    //console.log(ac)
+    $.ajax({
+            url: '{% url "cur_balance_change" %}',
+            data: {
+                    'curblnc': curblnc,
+                    'amount' : amount1,
+                    'curblnct': curblnct,
+                    'ac' : ac,
+            },
+            
+            success: function (data) {
+                //console.log(data)
+                
+                $("#curbalance").html(data);
+                //console.log(cur_change);
+            }
+            
+        });
+
+    
+              
+    const pac = $('#payacc'+id).val();
+    const curblnc1 = $('#pled').val();
+    const curblnct1 = $('#pledt').val();
+    
+    $.ajax({
+        url: '{% url "pcur_balance_change" %}',
+        data: {
+                'curblnc': curblnc1,
+                'amount' : amount1,
+                'curblnct': curblnct1,
+                'pac' : pac,
+        },
+        
+        success: function (data) {
+            
+            $("#blnc"+(id-1)).html(data);
+            //console.log('#blnc'+id);
+        }
+    
+    });
+        
+
+   
+    id++;
+  }
+
+
+
+/************** close pop up form*****************/
+
+function closeForm() {
+
+    document.getElementById("trs_type").style.display = "none";
+
+    
+}
+
+/*****************show popup form****************/
+function showTransaction(){   
+
+    setClosing();
+
+    var id = $('#payacc').val();
+    var val_name = id. split(",")[1];
+    var val_under = id.split(",")[2];
+    var value1,e;
+
+    if (val_under.trim() === "Bank_Accounts"){
+
+        document.getElementById('trs_type').style.display= "block";
+        
+
+        var count = $('.amnt').length
+    
+        for(var i = 1; i <= count; i++) {
+
+            value1 = document.getElementById("amnt" + i).value;
+            // $("#amntchange"+i).val(value1);
+            document.getElementById('onacc'+i).innerHTML = "On Account";
+            document.getElementById('onacc'+i).style.display = "block";
+            part = document.getElementById("payacc" + i).value;
+           
+        }
+       
+    }
+    else{
+        document.getElementById("trs_type").style.display = "hide";
+    }
+    /*-----others----*/
+    $("#othacc").html(val_name);
+    $("#tramt").html(value1);
+    $("#amount").html(value1);
+    /*-----cheque----*/
+    $("#chacc").html(val_name);
+    $("#chamt").html(value1);
+    $("#chamnt").html(value1);
+    /*-----efund----*/
+    $("#efacc").html(val_name);
+    $("#efamt").html(value1);
+    $("#efamnt").html(value1);
+    $('#partid').val(part);
+
+    $("#trlist").click(function(e){
+        trvalue= e.target.innerHTML;
+        $("#t_type").html(trvalue);
+        //console.log(trvalue);
+    });
+   
+    
+/*---------------------cheque range display--&---show cheque number automatically-------------------------*/
+    $.ajax({
+        
+        url: '{% url "cheque_range" %}',
+        data: {
+                'account_name' : $("#chacc").text(),
+                 csrfmiddlewaretoken: '{{ csrf_token }}'
+
+        },
+        success: function (data) {
+            if(data[0] != 0){
+                chrange = '<label>&nbsp;&nbsp;&nbsp;&nbsp;'+data[0]+'</label><label>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;</label><label>'+ data[1]+'</label>'
+            }
+            else{
+                chrange = '&nbsp;&nbsp;&nbsp;&nbsp; Not Applicable'
+            }
+            $('#chrange').html(chrange);
+            if(data[0] != 0){
+                if(data[2] != 0){
+                cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum[]" value = "' + data[2]+'" style="width: 250px;height: 25px;">'
+                }
+                else{
+                    cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum[]" value = "Cheque Range Exceeded" style="width: 250px;height: 25px;">'
+
+                }
+            }
+            else{
+                cqnumber = '<input type="text" id = "chnumber" class="form-control" name = "instnum[]"  style="width: 250px;height: 25px;">'
+            }
+
+            $('#chnum').html(cqnumber);
+        }
+    });
+
+}
+
+/*----------------------save modal data to the table--------*/
+ /*----others transactions type ----*/
+   
+  $(document).on("click","#modalSave",function(){
+
+    document.getElementById("trs_type").style.display = "none";// close pop up form
+
+  
+    const vouch_id = $('#idlbl').val();
+    const vouchtype = $('#vouchtype').text();
+    
+    if ($("#t_type").text() === 'Cheque'){
+
+        $.ajax({
+                    type : 'POST',
+                    url:"{% url 'bank_transaction' %}",
+                
+                    data:{
+                        
+                        id : vouch_id, 
+                        vouch_type : vouchtype,
+                        part : $("#partid").val(),
+                        bacc : $("#chacc").text(),
+                        t_type : $("#t_type").text(),
+                        instnum:$("#chnumber").val(),
+                        instdate :$("#chdate").val(),
+                        efaccnum :$("#efaccnum").val(),
+                        efifs :$("#efifs").val(),
+                        efbank : $("#efbank").val(),
+                        amount :$("#chamnt").text(),
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                        
+                    },
+                    
+                    success: function(response) {
+
+                        if(response.message === 'success'){
+                            $('#modalForm')[0].reset();
+                        
+                        }
+                        
+                    },
+                    
+                });
+    }
+    else if($("#t_type").text() === 'e-Fund Transfer'){
+
+        $.ajax({
+                    type : 'POST',
+                    url:"{% url 'bank_transaction' %}",
+                
+                    data:{
+                        id : vouch_id,
+                        vouch_type : vouchtype,
+                        part : $("#partid").val(),
+                        bacc : $("#efacc").text(),
+                        t_type : $("#t_type").text(),
+                        instnum:$("#efnum").val(),
+                        instdate :$("#efdate").val(),
+                        efaccnum :$("#efaccnum").val(),
+                        efifs :$("#efifs").val(),
+                        efbank : $("#efbank").val(),
+                        amount :$("#efamnt").text(),
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                        
+                    },
+                    
+                    success: function(response) {
+                    if(response.message === 'success'){
+                        $('#modalForm')[0].reset();
+                        
+                    }
+                    },
+                    
+                });
+    }
+    else{   
+        // console.log($("#partid").val());
+        $.ajax({
+                    type : 'POST',
+                    url:"{% url 'bank_transaction' %}",
+                
+                    data:{
+                        id : vouch_id,
+                        vouch_type : vouchtype,
+                        part : $("#partid").val(),
+                        bacc : $("#othacc").text(),
+                        t_type : $("#t_type").text(),
+                        instnum:$("#instnum").val(),
+                        instdate :$("#instdate").val(),
+                        efaccnum :$("#efaccnum").val(),
+                        efifs :$("#efifs").val(),
+                        efbank : $("#efbank").val(),
+                        amount :$("#amount").text(),
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                        
+                    },
+                    
+                    success: function(response) {
+                    if(response.message === 'success'){
+                        $('#modalForm')[0].reset();
+                        
+                    }
+                    },
+                    
+                });
+        }
+
+        
+  });
+
+
+
+
+
+
+
+
+    </script>
+    {% endblock %} 
+
+

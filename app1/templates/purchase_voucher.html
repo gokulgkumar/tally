@@ -1,0 +1,1168 @@
+<!-- # created by Nithya -->
+
+
+{% extends 'base.html' %}
+{% block body %}
+{% load static %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+
+<style>
+    
+    .close {
+        position: absolute;
+        top: 3px;
+        right: 8px;
+        font-size: 17px;
+        transform: rotate(0deg);
+        color: rgb(255, 255, 255);
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .popup1 {
+        display: none;
+        position: fixed;
+        top: 150px;
+        right: 30px;
+        border: 1px solid #f1f1f1;
+        z-index: 9;
+        width: 350px;
+        height: 250px;
+    }
+   
+    .content a:hover {
+        background-color: rgb(238, 167, 75);
+    }
+    .form-container1 {
+        max-width: 350px;
+        height: 300px;
+        padding: 0px; 
+    }
+    .form-container2 {
+        max-width: 500px;
+        height: 200px;
+        padding: 2px; 
+        margin-left: 100px;
+        margin-top: 100px;
+    }
+    .btns_prnt{
+        color: #fff;
+        width: 100%;
+        cursor:pointer;
+        background-color: rgba(240, 248, 255, 0);
+        border: none;
+        list-style: none;
+
+    }
+    .btns_prnt:hover{
+        background-color:#5bc9e4;
+        color: rgb(15, 14, 14);
+    }
+    
+    .bg-none {
+        background-color: transparent !important;
+    }
+    .ScrollStyle{
+        overflow-y: scroll;
+    }
+    .hide{
+        display: none;
+    }
+    .enter{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(124, 186, 224);
+}
+
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+        
+        
+    
+    .opt {
+        color: #000;
+        text-align:top;
+        padding: 0px;
+        background-color: rgb(255, 229, 183);
+        
+    } 
+
+    .opt1 {
+        color: #000;
+        text-align:top;
+        padding: 0px;
+        background-color: rgb(245, 240, 230);
+        border-radius: 0;
+    } 
+    .acc {
+        color: #000;
+        text-align:top;
+        padding: 0px;
+        height: 25px; 
+        width: 150px;
+        background-color: rgb(255, 229, 183);
+        
+    } 
+
+    .txt{
+        height: 23px; 
+        width: 150px;
+        padding: 0;
+        background-color: rgb(255, 229, 183);
+        color: #000;
+        text-align: left;
+        border-radius: 5px;
+    }
+    .txt1{
+        height: 25px; 
+        width: 150px;
+        padding: 0;
+        background-color: rgb(245, 240, 230);
+        color: #000;
+        text-align: left;
+        border-radius: 5px;
+    }
+    .butn{
+        
+        height: 15px; 
+        /*width: 32px;*/
+        padding: 0px;
+        border:none;
+        color: rgb(0, 0, 0);
+        margin-top: 11px;
+        text-align: center;
+    }
+    .mod-content{
+        position: relative;
+        color:rgb(17, 54, 86) ;
+        width: 850px;
+        min-height: 500px;
+        border-radius: 10px;
+        margin-top: 50px;
+        margin-left: 30px;
+        /* overflow-y: scroll; */
+    }
+    .btn{
+        color: azure;
+        background-color: rgb(13, 63, 92);
+        width: 200px;
+        justify-content: center;
+    }
+    .reccol:not(:last-child) {
+        border-right: 1px double #ccc; 
+    }
+        
+</style>
+<div class="container-fluid" >
+    <div class="main-panel" style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+        <div class="content-wrapper" >
+            
+                 <!--changed from table-responsive-->
+            <div class="row d-flex my-0" style="background-color:  rgb(124, 186, 224);color:rgb(0, 0, 0);width: 100%;margin: auto;">
+                <div class="col" style="font-weight:600 ;text-transform:capitalize;">Accounting Voucher Creation</div>
+                <div class="col-4" style="font-weight:600 ;text-transform:capitalize;">{{company.name}}</div>
+          
+                <div class= 'col-2'><a href="javascript:history.go(-1);">
+                    <span class="pull-right clickable" data-effect="fadeOut"><i class="fa fa-times" style="color: black;"></i></span></a>
+                </div>                      
+            </div>
+        <form action="{% url 'create_purchase_voucher' %}" id="frmvouch" method="POST" >
+                {% csrf_token %}
+            <div class="table-responsive my-0">
+                
+                <table class="table table-bordered table-sm border-dark" style="background-color: rgb(245, 240, 230);color:rgb(0, 0, 0);">
+                  <tr  class="p-2">
+                    <th colspan="18" style="border-bottom: solid 0.5px rgba(205, 196, 196, 0.2) ; border-right:none ;">
+                        <div>
+                            <label style="font-weight:600 ;text-transform:capitalize; font-size: 18px;background-color: rgb(17, 54, 86);" id = 'vouchtype'
+                                name = 'vouchtype' value = '{{name}}'>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}
+                                &nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="hidden" value="{{name}}" name="type">
+                            <label style="font-weight: 400; color: #000;">No.&nbsp;&nbsp;</label>&nbsp;&nbsp;
+                                {% if vouch.voucherNumber == 'Automatic' %}
+                            <label style="font-weight: 400; color: #000;" name = 'idlbl'>{{v}}</label>
+                            <input type="hidden" value="{{v}}" name="idlbl" id = 'idlbl'>
+                                {% elif vouch.voucherNumber == 'Manual'%}
+                            <input type="number" id = 'idlbl' style=" color:#000;background-color: rgb(255, 229, 183);height: 20px;" name = 'idlbl'>
+                                {% elif vouch.voucherNumber == 'None' %}
+                            <input type="hidden" value="" name="idlbl" id = 'idlbl'>
+                            <label name = 'idlbl'></label>
+                                {% elif vouch.voucherNumber == 'Automatic(Manual Override)' %}
+                            <input type="number" id = 'idlbl' style="background-color: rgb(255, 229, 183);height: 20px;">
+                                {% endif %}
+
+                        </div>
+
+                        <div  class= "account" style="color: #000;font-weight:500 ;text-transform:capitalize; font-size: 18px;">
+                            <span class = 'input-group'>
+                                <label style=" font-weight: 550;">&nbsp;&nbsp;Supplier Invoice No.&nbsp;&nbsp;:&nbsp;&nbsp;</label>
+                                <input type="number" class = 'txt m-0 p-0' style="width: 150px; border-radius: 5px;" id= 'sup_invno' name = 'sup_invno'>&nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <!-- </span>
+                            <span class="input-group"> -->
+                            <label style=" font-weight: 550;">&nbsp;&nbsp;Date :&nbsp;&nbsp;</label>
+                            <input type="date" class = 'txt' id= 'inv_date' name = 'inv_date' style="border-radius: 5px;">
+                        
+                            </span>
+                        </div>
+
+                        <!-- modal for receipt modal -->
+                        <input type="hidden" name="modal_data_receipt" id="modal_data_receipt" value="">
+                        <input type="hidden" name="modal_data_receiptnotes" id="modal_data_receiptnotes" value="">
+
+                        <!-- modal for party modal -->
+                        <input type="hidden" name="modal_data_party" id="modal_data_party" value="">
+
+                        <div  class= "party_account" style="color: #000;font-weight:500 ;text-transform:capitalize; font-size: 18px;">
+                            <span class = 'input-group'>
+                                <label style=" font-weight: 550;">&nbsp;&nbsp;Party A/c Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
+
+                                
+                                <select id="partyacc"  name="partyacc"  class=" acc rows partyacc m-0 p-0" style="width: 150px; border-radius: 5px;" onchange="showPartybalance()">
+                                    <option class="opt" id = "opt" >&nbsp;&nbsp;Select Account </option> 
+                                    {% for i in ledg_all %}
+                                    <option class="opt" id = "opt" name ='opt' value="{{i.id}}" 
+                                        data-name = "{{i.name}}"
+                                        data-under = "{{i.under}}"
+                                        data-balance="{{ i.current_blnc }}"
+                                        data-balance-type="{{ i.current_blnc_type }}">
+                                        &nbsp;&nbsp;{{i.name}}
+                                    </option>
+                                {% endfor %}
+
+                                </select> 
+                            </span>
+                            <span class="input-group party_curbalance d-none"> 
+                                <label>&nbsp;&nbsp;Current Balance &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
+                                <input type="number" class = 'txt m-0 p-0' style="width: 150px; border-radius: 5px;" id= 'party_curblnc' name = 'party_curblnc'>&nbsp;
+                                <input type="text" class = 'txt m-0 p-0' style="width: 50px; border-radius: 5px;" id= 'party_curblnct' name = 'party_curblnct'> 
+                            </span>
+                        </div>
+
+                        <div  class= "purch_account" style="color: #000;font-weight:500 ;text-transform:capitalize; font-size: 18px;">
+                            <span class = 'input-group'>
+                                <label style=" font-weight: 550;">&nbsp;&nbsp;Purchase Ledger&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
+                                <select id="purchacc"  name="purchacc"  class=" acc rows purchacc m-0 p-0" style="width: 150px; border-radius: 5px;" onchange="showPurchbalance()">
+                                        <option class="opt" id = "opt" >&nbsp;&nbsp;Select Account </option> 
+                                    {% for i in ledg %}
+                                        <option class="opt" id = "opt" name ='opt' value="{{i.id}}" 
+                                            data-name = "{{i.name}}"
+                                            data-under = "{{i.under}}"
+                                            data-bal="{{ i.current_blnc }}"
+                                            data-bal-type="{{ i.current_blnc_type }}">
+                                            &nbsp;&nbsp;{{i.name}}
+                                        </option>
+                                    {% endfor %}
+
+                                </select> 
+                            </span>
+                            <span class="input-group purch_curbalance d-none"><!--change to d-none-->
+                                <label>&nbsp;&nbsp;Current Balance &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</label>
+                                <input type="number" class = 'txt m-0 p-0' style="width: 150px; border-radius: 5px;" id= 'purch_curblnc' name = 'purch_curblnc'>&nbsp;
+                                <input type="text" class = 'txt m-0 p-0' style="width: 50px; border-radius: 5px;" id= 'purch_curblnct' name = 'purch_curblnct'> 
+                            </span>
+                        </div>
+                
+                    </th>
+                    <th colspan="10" class="text-right mt-0" style="border-bottom: solid 0.5px rgba(255, 255, 255, .2);
+                            border-left:none ; color: #000;">                           
+                      
+                      <div id="datenew">{{date1 | date:'d-M-Y'}}</div>
+                        <input type="hidden" name = 'date1' id="date1" value="{{date1|date:'Y-m-d'}}">
+                        <div id="daynew">{{date1 | date:'l'}}</div>
+                    </th>
+                    
+                </tr>
+
+                    <tbody style="border-color: rgb(112, 111, 111); " class = 'part' id="myTable">
+                        <div>
+                            <tr>
+                                <th colspan="16" class="text-dark" style="border: none;" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name of Item</th>
+                                <th colspan="1" class=" text-right text-dark" style="border: none;" >Quantity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+
+                                <th colspan="1" class="text-right text-dark" style="border: none;" >Rate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                <th colspan="1" class="text-right text-dark" style="border: none;" >per&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+
+
+                                <th colspan="1" class="text-right text-dark" style=" font: weight 8px;size: 15px; border: none;">Amount&nbsp;</th>
+                            </tr>
+                        </div>
+
+                        <tr style="border: none;" id="itemRow">
+                            
+                            <td colspan="16" style="border: none;" class="mt-4">
+
+                                <select id="item1"  name="opt[]" class="txt rows item mb-2 p-0" style="width: 150px; border-radius: 5px;" onchange="showGodown(this)">
+                                    <option class="opt" id = "opt" >&nbsp;&nbsp;Select Item </option> 
+                                    {% for i in item %}
+                                    <option class="opt" id = "opt" value="{{i.id}}" 
+                                    data-name="{{i.name}}"
+                                    data-rate="{{i.rate}}"
+                                    data-qty="{{i.quantity}}"
+                                    data-per="{{i.per}}"
+                                    data-amount="{{i.value}}">
+                                    &nbsp;&nbsp;{{i.name}}</option> 
+                                    {% endfor %}
+
+                                </select> 
+                                <input type="hidden" name="modal_data_godown" id="modal_data_godown" value="">
+                            </td>
+                            <td colspan="1" class=" text-right mt-0 m-0" style="border: none; ">
+                                <input type="number" style="width: 100px; border-radius: 5px;" class = 'txt qty' id= 'qty1' name = 'qty[]'  >
+                            </td>
+                            <td colspan="1" class="text-right mt-0 m-0" style="border: none; ">
+                                <input type="number" style="width: 100px; border-radius: 5px;" class = 'txt rate' id= 'rate1' name = 'rate[]'  >
+                            </td>
+                            <td colspan="1" class="text-right mt-0 m-0" style="border: none; ">
+                                <input type="text" style="width: 100px; border-radius: 5px;" class = 'txt per' id= 'per1' name = 'per[]' >
+                            </td>
+
+                            <td colspan="2" class="text-right mt-0 m-0" style="border: none; ">
+                                <input type="number" style="width: 150px; border-radius: 5px;" class = 'txt amnt' id= 'amnt1' name = 'amnt[]'>
+                            </td>
+                            <td>                                
+                                <button type="button" class="butn mt-0 bi bi-plus-square-fill" id = 'butn1'  onclick="createRow(this)"></button>
+                            </td>
+                        </tr>
+                        
+
+                    </tbody>
+                    
+                    <tr >
+                        {% if vouch.voucherNarration == 'Yes' %}
+                        <td colspan="16" style="border: none; ">
+                            <label class="text-dark">Narration : </label>
+                            <textarea name  = 'narrate' style="height: 30px; width:250px; background-color: rgb(255, 229, 183); color: #000; border-radius: 5px;"></textarea></td>
+                        {% else %}
+                            <td colspan="16" style="border: none;" name  = 'narrate'></td> 
+                        {% endif %}    
+
+                        <td colspan="1" class="text-right" style="border: none; " >
+                            <label class="text-dark text-right" >Quantity : </label>
+                            <input type="number" class="txt " id = 'quantity' name="quantity" readonly style="width: 100px;  border-radius: 5px;">
+                        </td>
+
+
+                        <td colspan="1" class="text-right" style="border: none; " ></td>
+                        <td colspan="1" class="text-right" style="border: none; " ></td>
+
+
+                        <td colspan="2" class="text-right" style="border: none; " >
+                            <label class="text-dark text-right" >Total : </label>
+                            <input type="number" class="txt " id = 'total' name="total" readonly style="width: 150px;  border-radius: 5px;">
+                        </td>
+                    </tr>
+                </table>
+                
+              </div>
+             
+              <div class="enter w-100 py-1 my-0">
+                <button type = 'submit' class="btn  w-30" id = 'mainform'>SAVE</button>
+              </div>    
+
+            </form>
+            
+        </div>
+   
+
+    <!-- Modal receipt details -->
+
+    <div class="modal fade " id="rec_det">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content mod-content" style="background-color: #213b52; color:azure; height: auto;">
+                    <div class="modal-header">
+                        <div class="row container m-0 p-2">
+                            <div class="col-10 text-center">
+                                <h3><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Receipt Deatils</strong></h3>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="close align-items-end" data-dismiss="modal" >&times;</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="modal-body">
+                        <form class=" 100vw" id ='modalForm' action="" method='post' >
+                            {% csrf_token %}
+                            <div class="row container mt-3 p-2">
+                                <div class="col-6 reccol p-2 rec_noteno">
+                                    <div class="row">
+                                        <label class="font-weight-bold">Receipt Note No(s) : </label><br>
+                                    </div>
+                                    <div id="container">
+                                        <div class="row row-recdet">
+                                            <div class="col-3">
+                                                <input type="number" style="width: 100%;" name="recno[]" class="rec_note txt1 p-1">
+                                            </div>
+                                            <div class="col-7">
+                                                <div class="row">
+                                                    <div class="col-1">
+                                                        <label> Date:</label>
+                                                    </div>
+                                                    <div class="col-5">
+                                                        <input type="date" name="recdate[]" class="rec_note txt1 p-1">
+                                                        &nbsp;
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-1 button_container">
+                                                <button type="button" class="bt fa fa-plus-square bg-dark text-light text-center  mt-1 p-0" 
+                                                style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="addRow()"> </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-6 reccol p-3">
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Receipt Doc No : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="recdocno"  id="recdocno" class="txt1 p-1">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Dispatched Through : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="dispch" id="dispch" class="txt1 p-1">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        
+                                        
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Destination : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="destn" id="destn" class="txt1 p-1">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Carrier Name/Agent: </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="carrier" id="carrier" class="txt1 p-1">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Bill of Lading/LR-RR No : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="bill_lading" id="bill_lading" class="txt1 p-1">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Date : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="date"  name="lad_date"  id="lad_date" class="txt1 p-1">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Motor Vehicle No : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="veh_num" id="veh_num" class="txt1 p-1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="submit" class="btn btn-block text-uppercase text-shadow "
+                            data-dismiss="modal" data-target="#party_det" data-toggle="modal" id="saveReceipt">
+                            SAVE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- End of Receipt Details Modal -->
+
+        <!-- Party Details Modal -->
+
+        <div class="modal fade " id="party_det">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content mod-content" style="background-color: #213b52; color:azure;">
+                    <div class="modal-header">
+                        <div class="row container m-0 p-1">
+                            <div class="col-10 text-center">
+                                <h3><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Party Deatils</strong></h3>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="close align-items-end" data-dismiss="modal" >&times;</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <form  id ='modalForm' action="" method='post' >
+                            {% csrf_token %}
+                            <div class="row container px-5 py-1">
+                                <div class="col-2"></div>
+                                <div class="col-10">
+                                    <div class="row mt-1" >
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Supplier(Bill from) : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" name="supplier" id="supplier" class="txt1 p-1">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Mailing Name : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="mail_name" id="mail_name" class="txt1 p-1">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Address : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <textarea name="party_add" id="party_add"  cols="18" rows="5" class="txt1 p-1" style="height: auto;"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">State : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="party_state" id="party_state" class="txt1 p-1">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">Country : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text"  name="party_country" id="party_country" class="txt1 p-1">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">GST Registration Type : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <select id="gst_type"  name="gst_type"  class="gst_typec m-0 py-0 px-1 txt1 " onchange="showGST()">
+                                            <option class="opt1" value="Unknown">Unknown</option> 
+                                            <option class="opt1" value="Composition">Composition</option> 
+                                            <option class="opt1" value="Consumer">Consumer</option> 
+                                            <option class="opt1" value="Regular">Regular</option> 
+                                            <option class="opt1" value="Unregistered">Unregistered</option> 
+                                        </select> 
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-1 d-none" id="gst_num_row">
+                                        <div class="col-6">
+                                            <label class="font-weight-bold">GSTIN/UIN : </label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" name="gst_num" id="gst_num" class="txt1 p-1">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-4"></div> -->
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer justify-content-center p-1">
+                        <button type="submit" class="btn btn-block text-uppercase text-shadow "
+                            data-dismiss="modal" id="saveParty" >
+                            SAVE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- End of Party Details Modal -->
+
+         <!-- Godown Modal -->
+
+        <div class="modal fade " id="godown">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content mod-content" style="background-color: #213b52; color:azure;">
+                    
+                    <div class="modal-header">
+                        <div class="row container m-0 p-1">
+                            <div class="col-10 text-center">
+                                <h5>
+                                    <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item Allocation for&nbsp; : </strong>&nbsp;&nbsp;&nbsp;
+                                    <em><label id="item_name" ></label> </em>
+                                        <span id="row_number" class="d-none"></span> 
+                                </h5>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="close align-items-end" data-dismiss="modal" >&times;</button>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="modal-body" style="width: auto;">
+                        <form  id ='gdModal' action="" method='post' >
+                            {% csrf_token %}
+                            <input type="hidden" id="item_n" name="item_n">
+
+                            <div class="row px-5 py-0">
+                                <div class="col-3 text-center">
+                                    Godown
+                                </div>
+                                <div class="col-2 text-center">
+                                    Quantity
+                                </div>
+
+                                <div class="col-2 text-center">
+                                    Rate
+                                </div>
+                                <div class="col-2 text-center">
+                                    per
+                                </div>
+                                <div class="col-3 text-center">
+                                    Amount
+                                </div>
+                            </div>
+                            <div class="row-container" style="min-height: 300px;">
+                                <div class="row  gdcontainer my-1" >
+                                    <div class="col-3">
+                                        <select id="gd1" name="gd[]" class=" rows gd gdn py-0 px-1 txt1" style="width: 150px;" onchange="updateRateAndPer(this)">
+                                            <option class="opt1" id = "opt" value="0">&nbsp;&nbsp;Select Godown </option> 
+                                            {% for i in godown %}
+                                                <option class="opt1" id = "opt" value="{{i.id}}" data-name="{{i.name}}">&nbsp;&nbsp;{{i.name}}</option> 
+                                            {% endfor %}
+
+                                        </select> 
+                                    </div>
+                                    <div class="col-2">
+                                        <input type="number" class="txt1 gd gdqty p-1" id= 'gdqty1' name = 'gdqty[]'  style="width: 100px;" onchange="updateAmount(this)">
+                                    </div>
+
+                                    <div class="col-2">
+                                        <input type="number"  class="txt1 gd gdrate p-1" id= 'gdrate1' name = 'gdrate[]' style="width: 100px;" >
+                                    </div>
+                                    <div class="col-2">
+                                        <input type="text" class="txt1 gd gdper p-1" id= 'gdper1' name = 'gdper[]' style="width: 100px;">
+                                    </div>
+                                    <div class="col-3 text-left">
+                                        <input type="number" class="txt1 gd gdamnt p-0" id= 'gdamnt1' name = 'gdamnt[]' style="width: 150px;">
+                                    </div>
+                                              
+                                </div>
+                                <button type="button" class="bt fa fa-plus-square bg-dark text-light  mt-2 p-0" id = 'gdbutn1'
+                                        style="font-size: large; border-radius: 5px;"  title="Add Row" onclick="rowGodown()"> </button>  
+                            </div>
+
+                            <div class="row  totcontainer">
+                                <div class="col-3"> </div>
+                                <div class="col-2">
+                                    <input type="number" class="txt1 tot_qty p-1" id= 'tot_qty' name = 'tot_qty'  style="width: 100px;">
+                                </div>
+
+                                <div class="col-2"> </div>
+                                <div class="col-2"> </div>
+                                <div class="col-3">
+                                    <input type="number" class="txt1  tot_amnt p-1" id= 'tot_amnt' name = 'tot_amnt' style="width: 150px;">
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <div class="col-4"> </div>
+                                <div class="col-2"> <button type="submit" class="btn btn-block text-uppercase text-shadow "
+                                    data-dismiss="modal" id="saveGodown" onclick="submitForm()" >
+                                    SAVE
+                                </button></div>
+                                <div class="col-4">
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                    <!-- <div class="modal-footer justify-content-center p-1">
+                        
+                    </div>
+                 -->
+                </div>
+            </div>
+        </div>
+        <!-- End of Godwn Modal -->
+
+        
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" ></script>
+ 
+
+    
+<script>
+
+    $(document).ready(function(){
+        var ladDateInput = document.getElementById("inv_date");
+        var currentDate = new Date().toISOString().slice(0, 10);
+        ladDateInput.value = currentDate;
+    });
+
+    // *----------------------date setting modal from base.html----------------------------------
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const openModalBtn = document.getElementById('openModalBtn');
+        function openModal() {
+            const modal = document.getElementById('dateModal');
+            console.log('Modal:', modal);
+            console.log('yes');
+            modal.style.display = 'block';
+        }
+
+        openModalBtn.addEventListener('click', openModal);
+    });
+
+    function setDate(){
+        const modal = document.getElementById('dateModal');
+        modal.style.display = 'block';
+        const dateObj = new Date(document.getElementById('enterDate').value);
+
+        const year1 = dateObj.getFullYear();
+        const month1 = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day1 = String(dateObj.getDate()).padStart(2, '0');
+
+        document.getElementById("date1").value= year1 + '-' + month1 + '-' + day1
+
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const monthAbbreviations = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const month = monthAbbreviations[dateObj.getMonth()];
+        const year = dateObj.getFullYear();
+        const formattedDate = day + '-' + month + '-' + year;
+
+        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const dayOfWeek = daysOfWeek[dateObj.getDay()];
+
+        document.getElementById("datenew").innerHTML = formattedDate;
+        document.getElementById("daynew").innerHTML = dayOfWeek;
+    }
+// *----------------------end of date setting modal from base.html----------------------------------
+
+
+
+/*----------------- create new row----&---change current balance while entering amount------*/
+
+
+    function showPartybalance(){
+        
+        $(".party_curbalance").addClass('d-flex');
+        var selectedOption = $("#partyacc option:selected");
+        
+        var blnc = selectedOption.data("balance");
+        var blnct = selectedOption.data("balance-type");
+
+        if (blnct == 'Cr'){
+            $("#party_curblnc").val(blnc);
+            $("#party_curblnct").val(blnct);
+
+            $("#party_curblnc").css("color", "red");
+            $("#party_curblnct").css("color", "red");
+        }
+        else{
+            $("#party_curblnc").val(blnc);
+            $("#party_curblnct").val(blnct);
+
+            $("#party_curblnc").css("color", "");
+            $("#party_curblnct").css("color", ""); 
+        }
+       
+        if (selectedOption) {
+            $('#rec_det').modal('show');
+            var ladDateInput = document.getElementById("lad_date");
+            var currentDate = new Date().toISOString().slice(0, 10);
+            ladDateInput.value = currentDate;
+        }
+    
+    }
+    function showPurchbalance(){
+        $(".purch_curbalance").addClass('d-flex');
+
+        var selectedOption = $("#purchacc option:selected");
+        
+        var blnc1 = selectedOption.data("bal");
+        var blnct1 = selectedOption.data("bal-type");
+        
+        if(blnct1 =='Cr'){
+            $("#purch_curblnc").val(blnc1);
+            $("#purch_curblnct").val(blnct1);
+    
+            $("#purch_curblnc").css("color", "red");
+            $("#purch_curblnct").css("color", "red");
+        }
+        else{
+            $("#purch_curblnc").val(blnc1);
+            $("#purch_curblnct").val(blnct1);
+
+            $("#purch_curblnc").css("color", "");
+            $("#purch_curblnct").css("color", ""); 
+        }
+       
+    }
+    function showGST() {
+        var gstType = document.getElementById("gst_type").value;
+        var gstNumRow = document.getElementById("gst_num_row");
+
+        if (gstType === "Consumer" || gstType === "Unregistered") {
+            gstNumRow.classList.add("d-none");
+            
+        } else {
+            gstNumRow.classList.remove("d-none");
+        }
+    }
+
+
+    $(document).on("click","#saveReceipt",function() {
+
+        const ledg = $("#partyacc").val();
+        $.ajax({
+            url : '{% url "getaccdetails" %}',
+            type: 'POST',
+            data :  {
+                        'id' : ledg,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+            success : function(data){
+                $("#supplier").val(data.ledger_name);
+                $("#mail_name").val(data.ledger_name);
+                $("#party_add").val(data.address);
+                $("#party_state").val(data.state);
+                $("#party_country").val(data.country);
+                $("#gst_type").val(data.gst_type);
+                
+
+                var gstType = $("#gst_type").val();
+                var gstNumRow = document.getElementById("gst_num_row");
+
+                if (gstType === "Consumer" || gstType === "Unregistered") {
+                    gstNumRow.classList.add("d-none");
+                    
+                } else {
+                    gstNumRow.classList.remove("d-none");
+                    $("#gst_num").val(data.gst_num);
+                }
+            }
+        });
+
+        var modalData = {
+            recdocno: document.getElementById("recdocno").value,
+            dispch:document.getElementById("dispch").value,
+            destn: document.getElementById("destn").value,
+            carrier: document.getElementById("carrier").value,
+            bill_lading: document.getElementById("bill_lading").value,
+            lad_date: document.getElementById("lad_date").value,
+            veh_num: document.getElementById("veh_num").value,
+        };
+
+        var modalDataJSON = JSON.stringify(modalData);
+        document.getElementById("modal_data_receipt").value = modalDataJSON;
+        
+        var modalDataArray = [];
+
+        var rows = document.querySelectorAll(".row-recdet");
+
+        rows.forEach(function (row) {
+            var recno = row.querySelector(".rec_note[name='recno[]']").value;
+            var recdate = row.querySelector(".rec_note[name='recdate[]']").value;
+
+            var rowData = {
+                recno: recno,
+                recdate: recdate,
+            };
+
+            modalDataArray.push(rowData);
+        });
+
+        var modalDataJSON = JSON.stringify(modalDataArray);
+
+        document.getElementById("modal_data_receiptnotes").value = modalDataJSON;
+
+        $('#rec_det').modal('hide');
+    });
+
+
+    function addRow() {
+        var newRow = document.querySelector('.row-recdet').cloneNode(true);
+
+        var inputElements = newRow.querySelectorAll('input');
+        for (var i = 0; i < inputElements.length; i++) {
+            inputElements[i].value = '';
+        }
+
+        var oldButtons = document.querySelectorAll('.row-recdet .bt');
+        oldButtons.forEach(function(button) {
+            button.remove();
+        });
+
+        var addButton = document.createElement('button');
+        addButton.type = 'button';
+        addButton.className = 'bt fa fa-plus-square bg-dark text-light text-center mt-1 p-0';
+        addButton.style = 'font-size: large; border-radius: 5px;';
+        addButton.title = 'Add Row';
+        addButton.onclick = addRow;
+       
+        var buttonContainer = newRow.querySelector('.button_container');
+        buttonContainer.innerHTML = '';
+        buttonContainer.appendChild(addButton);
+
+        document.querySelector('.row-recdet').parentNode.appendChild(newRow);
+       
+    }
+
+    function showGodown(selectElement){
+  
+        var rowNumber = parseInt(selectElement.id.replace('item', ''));
+        
+        var selectedOption = $("#item" + rowNumber + " option:selected");
+
+        var blnc1 = selectedOption.data("name");
+        var blnct1 = selectedOption.data("rate");
+        var blnct2 = selectedOption.data("per");
+        var blnct3 = selectedOption.data("quantity");
+        var blnct4 = selectedOption.data("amount");
+
+        $("#item_name").text(blnc1);
+        $("#item_n").val(blnc1);
+        $("#row_number").text(rowNumber);
+
+        $("#rate" + rowNumber).val(blnct1);
+        $("#per" + rowNumber).val(blnct2);
+
+
+        if (selectedOption) {
+            document.getElementById('gdModal').reset();
+            $('#godown').modal('show');
+        }
+        
+        
+    }
+
+    function updateRateAndPer(selectElement) {
+
+        var rowContainer = selectElement.closest('.row');
+        var rateInput = rowContainer.querySelector('.gdrate');
+        var perInput = rowContainer.querySelector('.gdper');
+        var rowLength = $("#row_number").text();
+        var selectedOption = $("#item" + rowLength + " option:selected");
+
+        if (selectedOption.value !== '0') {
+
+            var rate = selectedOption.data("rate");
+            var per = selectedOption.data("per");
+
+            rateInput.value = rate;
+            perInput.value = per;
+
+        } else {
+            rateInput.value = '';
+            perInput.value = '';
+        }
+
+    }
+
+    
+    function updateAmount(inputElement) {
+        var rowContainer = inputElement.closest('.row');
+
+        var amountInput = rowContainer.querySelector('.gdamnt');
+        var quantity = parseFloat(inputElement.value) || 0; 
+        var rateInput = rowContainer.querySelector('.gdrate');
+        var rate = parseFloat(rateInput.value) || 0;
+
+        var calculatedAmount = quantity * rate;
+        amountInput.value = isNaN(calculatedAmount) ? '' : calculatedAmount;
+    }
+
+    function rowGodown() {
+        var gdRow = $(".gdn").length +1;
+        var newRow = document.querySelector('.row.gdcontainer').cloneNode(true);
+
+        newRow.querySelectorAll('[id]').forEach(function(element) {
+            var currentId = element.id;
+            element.id = currentId.replace(/\d+$/, gdRow);
+         });
+
+        var inputs = newRow.querySelectorAll('input');
+        inputs.forEach(function(input) {
+            input.value = '';
+        });
+
+        var button = document.getElementById('gdbutn1');
+        
+        button.parentNode.insertBefore(newRow, button);
+    }
+
+    document.addEventListener('change', function(event) {
+        var input = event.target;
+         if (input.closest('.row.gdcontainer')) {
+            updateTotal(input.closest('.row.gdcontainer'));
+        }
+    });
+
+
+    function updateTotal(row) {
+
+        var totalQuantity = 0;
+        var totalAmount = 0;
+
+        var quantityElements = document.querySelectorAll('.gdqty');
+        var amountElements = document.querySelectorAll('.gdamnt');
+
+        for (var i = 0; i < quantityElements.length; i++) {
+            var quantity = parseInt(quantityElements[i].value) || 0;
+            var amount = parseInt(amountElements[i].value) || 0;
+
+            totalQuantity += quantity;
+            totalAmount += amount;
+        }
+
+        document.querySelector('.tot_qty').value = totalQuantity;
+        document.querySelector('.tot_amnt').value = totalAmount;
+    }
+
+    $("#saveGodown").on('click' , function(e){
+
+        var total_qty = $("#tot_qty").val();
+        var total_amount  = $("#tot_amnt").val();
+        var rowLength = $("#row_number").text();
+
+        $("#qty" + rowLength).val(total_qty);
+        $("#amnt" + rowLength).val(total_amount);
+
+
+        document.getElementById('gdModal').reset();
+
+        const rowContainer = document.querySelector('.row-container');
+        const addedRows = rowContainer.querySelectorAll('.gdcontainer:not(:first-child)');  
+        addedRows.forEach(row => {
+            row.remove();
+        });
+
+        calculateTotal();
+ 
+    });
+
+
+    function createRow(button) {
+
+        var rowCounter =$('#myTable').find('tr').length;
+        const newRow = document.querySelector('#myTable #itemRow').cloneNode(true);
+        var prevCounter = rowCounter-1;
+
+        newRow.querySelectorAll('[id]').forEach(function(element) {
+            var currentId = element.id;
+            element.id = currentId.replace(/\d+$/, rowCounter);
+         });
+
+        newRow.querySelectorAll('input').forEach(input => {
+            input.value = '';
+        });
+
+        const buttons = document.getElementById('myTable').querySelectorAll('button');
+        buttons.forEach(button => {
+            button.style.display = 'none';
+        });
+
+        const lastRowButton = newRow.querySelector('button');
+        lastRowButton.style.display = 'block';
+
+        document.getElementById('myTable').appendChild(newRow);
+    }
+
+
+    function calculateTotal() {
+        
+        var qtyInputs = document.querySelectorAll('.qty');
+        var amntInputs = document.querySelectorAll('.amnt');
+        var quantityInput = document.getElementById('quantity');
+        var totalInput = document.getElementById('total');
+        
+        var totalQty = 0;
+        var totalAmount = 0;
+        
+        for (var i = 0; i < qtyInputs.length; i++) {
+            var qty = parseInt(qtyInputs[i].value) || 0;
+            var amnt = parseInt(amntInputs[i].value) || 0;
+            
+            totalQty += qty;
+            totalAmount += amnt;
+        }
+        
+        quantityInput.value = totalQty;
+        totalInput.value = totalAmount;  
+    }
+
+
+    document.getElementById("saveParty").addEventListener("click", function () {
+
+        var modalData = {
+            supplier : document.getElementById("supplier").value,
+            mailing_name :document.getElementById("mail_name").value,
+            address : document.getElementById("party_add").value,
+            state: document.getElementById("party_state").value,
+            country : document.getElementById("party_country").value,
+            gst_type : document.getElementById("gst_type").value,
+            gst_num: document.getElementById("gst_num").value,
+        };
+
+        var modalDataJSON = JSON.stringify(modalData);
+        document.getElementById("modal_data_party").value = modalDataJSON;
+       
+        $('#party_det').modal('hide');
+    });
+
+    function submitForm() {
+         var formData = $('#gdModal').serialize();
+          $.ajax({
+            type: 'POST',  
+            url: '{% url "purchase_godown" %}',  
+            data: formData,
+            success: function(response) {
+                 console.log('Form submitted successfully');
+                 $('#godown').modal('hide');
+            },
+            error: function(error) {
+                 console.error('Error submitting form:', error);
+            }
+        });
+    }
+   
+</script>
+
+
+{% endblock %}
