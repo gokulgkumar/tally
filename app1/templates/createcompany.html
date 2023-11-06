@@ -513,11 +513,11 @@
                     <div class="row container-fluid  p-2">
                         <div class="col-sm-6 m-0 p-0"> <label for="d"></label>Payment Terms</div>
                         <div class="col-sm-6 m-0 p-0"> 
-                            <select name="" id="" class="form-control" required>
+                            <select name="select4" id="" class="form-control" required>
                             <option value="" selected hidden>Choose ...</option>
-                            <option value="">1 Month</option>
-                            <option value="">6 Month</option>
-                            <option value="">1 Year</option>
+                            {% for i in payment_term %}
+                            <option value="{{ i.id }}" >{{  i.payment_terms_number }}  {{ i.payment_terms_value }}</option>
+                            {% endfor %}
                             
                         </select></div>
                     </div>

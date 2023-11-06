@@ -973,6 +973,11 @@ urlpatterns = [
     path('admin_clients',views.admin_clients,name='admin_clients'),
     path('payment_terms',views.payment_terms,name='payment_terms'),
     path('add_payment_terms',views.add_payment_terms,name='add_payment_terms'),
+    path('distributor_reg',views.distributor_reg,name='distributor_reg'),
+    path('admin_distributor_requests',views.admin_distributor_requests,name='admin_distributor_requests'),
+    path('admin_distributor_all_view',views.admin_distributor_all_view,name='admin_distributor_all_view'),
+    path('admin_distributor_single_view/<int:did>',views.admin_distributor_single_view,name='admin_distributor_single_view'),
+    path('distributor_admin',views.distributor_admin,name='distributor_admin'),
 
 
     

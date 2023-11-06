@@ -483,7 +483,7 @@
                             </a>
                         </li>
                         <li>
-                          <a href="{% url 'payment_terms' %}" class="has-arrow">
+                          <a href="{% url 'payment_terms' %}" >
                               <div class="parent-icon"><i class="fluent:payment-28-regular"></i>
                               </div>
                               <div class="menu-title">Payment Terms</div>
@@ -582,15 +582,15 @@
 
 
           <div class="row">
-            <div class="col-md-9">
-              <a href="">
+            <div class="col-md-9" style="height: 5rem!important;">
+              <a href="{% url 'admin_distributor_requests' %}">
               <h5 class="card-title mb-9 fw-semibold"><b>DISTRIBUTOR REQUESTS</b></h5>
             </a>
               
 
             </div>
             <div class="col">
-              <a href="">
+              <a href="{% url 'admin_distributor_requests' %}">
                 <i class="fa fa-user-plus text-white" style="font-size: 2em;"></i>
               
             </a>
@@ -605,8 +605,8 @@
       <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" >
         <div class="card-body">
           <div class="row">
-            <div class="col-md-9">
-              <a href="">
+            <div class="col-md-9 " style="height: 5rem!important;">
+              <a href="{% url 'admin_distributor_all_view' %}">
                 
                 <h5 class="card-title mb-9 fw-semibold"><b>ALL DISTRIBUTORS</b></h5>
               </a>
@@ -614,7 +614,7 @@
 
             </div>
             <div class="col">
-              <a href="">
+              <a href="{% url 'admin_distributor_all_view' %}">
               <i class="fa fa-users text-white" style="font-size: 2.3em;"></i>
             </a>
               

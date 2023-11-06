@@ -48,6 +48,14 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 from django.contrib.auth.models import User,auth
 from django.contrib.auth import authenticate, login as auth_login
+
+
+
+#gokul -----
+from django.utils.crypto import get_random_string
+
+
+
 # Create your views here.
 
 #GOKUL ---------------------------------------
@@ -60,16 +68,40 @@ def admin_distributor(request):
 def admin_clients(request):
     return render(request,'admin_clients.html')
 
+
+def admin_distributor_requests(request):
+    distributor=Distributor.objects.all()
+    return render(request,'admin_distributor_requests.html',{'distributor':distributor}) 
+
+def admin_distributor_all_view(request):
+    distributor=Distributor.objects.all()
+    company=Companies.objects.all()
+    return render(request,'admin_distributor_all_view.html',{'distributor':distributor,'company':company}) 
+
+def admin_distributor_single_view(request,did):
+    distributor=Distributor.objects.get(id=did)
+    return render(request,'admin_distributor_single_view.html',{'distributor':distributor})
+
+def distributor_admin(request):
+    return render(request,'distributor_admin.html')
+
+
 def login(request):
     if request.method == 'POST':
         email  = request.POST['email']
         password = request.POST['password']
 
         admin_user =authenticate(username=email, password=password)
+        
+
         if admin_user is not None and admin_user.is_staff:
             auth_login(request, admin_user)
             request.session['SAdm_id'] = admin_user.id
             return redirect('Admin_dashboard')
+        
+
+        if Distributor.objects.filter(email=request.POST['email'], password=request.POST['password']).exists():
+            return redirect('distributor_admin')
         
 
         if Companies.objects.filter(email=request.POST['email'], password=request.POST['password']).exists():
@@ -98,12 +130,15 @@ def login(request):
                         'tally' : tally,
                         'latestdate' : max(filtered_dates),
                 }
-
-            return render(request,'base.html',context)
     
+        elif User.objects.filter(email=request.POST['email'], password=request.POST['password']).exists():
+            return redirect('distributor_admin')
+
         else:
             context = {'msg_error': 'Invalid data'}
             return render(request, 'Login.html', context)
+        
+        
 
     return render(request, 'Login.html')
 
@@ -2533,6 +2568,7 @@ def list_of_currency(request):
     return redirect('/')
 
 def companyCreate1(request):
+    
     return render(request,'create_companys.html')
 
 def create_company(request):
@@ -2561,6 +2597,7 @@ def create_company(request):
             bc=request.POST.get('currency_symbol')
             fr=request.POST.get('formal_name')
             cmp=Companies.objects.filter(name=cn)
+
             out=datetime.strptime (fy,'%Y-%m-%d')+timedelta (days=364) 
             print(out)
             a=out.date()
@@ -3496,7 +3533,8 @@ def company(request):
 def createcompany(request):
     # st=States.objects.all()
     # country=Countries.objects.all()
-    return render(request,'createcompany.html')
+    payment_term=Payment_Terms.objects.all()
+    return render(request,'createcompany.html',{'payment_term':payment_term})
 
 # def companycreate(request):
 #     if request.method=='POST':
@@ -3544,26 +3582,72 @@ def companycreate(request):
         n=Companies()
         n.name=request.POST['companyname']
         b=Companies.objects.filter(name=n.name)
+        distributor_id=request.POST['distr_id']
         if b:
             messages.info(request,'Company name already exists!!')
             return redirect('createcompany')
-        n.mailing_name=request.POST['mailing_name']
-        n.address=request.POST['address']
-        n.state=request.POST['state']
-        n.country=request.POST['country']
-        n.pincode=request.POST['pincode']
-        n.telephone=request.POST['telephone']
-        n.mobile=request.POST['mobile']
-        n.fax=request.POST['fax']
-        n.email=request.POST['email']
+        if distributor_id !='':
+            if Distributor.objects.filter(distributor_id=distributor_id).exists():
+                distributor = Distributor.objects.get(distributor_id=distributor_id)
+            else :
+                messages.info(request, 'Sorry, distributor id does not exist !!')
+                return redirect('createcompany')
+            
+            n.mailing_name=request.POST['mailing_name']
+            n.address=request.POST['address']
+            n.state=request.POST['state']
+            n.country=request.POST['country']
+            n.pincode=request.POST['pincode']
+            n.telephone=request.POST['telephone']
+            n.mobile=request.POST['mobile']
+            n.fax=request.POST['fax']
+            n.email=request.POST['email']
         
-        n.website=request.POST['website']
-        n.fin_begin=request.POST['fyear']
-        n.books_begin=request.POST['byear']
-        n.currency_symbol=request.POST['currency']
-        n.formal_name=request.POST['formal']
-        n.password=request.POST['password']
-        cpassword=request.POST['cpassword']
+            n.website=request.POST['website']
+            n.fin_begin=request.POST['fyear']
+            n.books_begin=request.POST['byear']
+            n.currency_symbol=request.POST['currency']
+            n.formal_name=request.POST['formal']
+            n.password=request.POST['password']
+            cpassword=request.POST['cpassword']
+            payment_select=request.POST['select4']
+            terms=Payment_Terms.objects.get(id=payment_select)
+            n.payment_Terms=terms
+            n.Distributors=distributor
+        else:
+            n.mailing_name=request.POST['mailing_name']
+            n.address=request.POST['address']
+            n.state=request.POST['state']
+            n.country=request.POST['country']
+            n.pincode=request.POST['pincode']
+            n.telephone=request.POST['telephone']
+            n.mobile=request.POST['mobile']
+            n.fax=request.POST['fax']
+            n.email=request.POST['email']
+        
+            n.website=request.POST['website']
+            n.fin_begin=request.POST['fyear']
+            n.books_begin=request.POST['byear']
+            n.currency_symbol=request.POST['currency']
+            n.formal_name=request.POST['formal']
+            n.password=request.POST['password']
+            cpassword=request.POST['cpassword']
+            payment_select=request.POST['select4']
+            terms=Payment_Terms.objects.get(id=payment_select)
+            n.payment_Terms=terms
+
+
+        # -------------------------- GOKUL-----------------
+
+        
+
+
+  # -------------------------- GOKUL-----------------
+
+            
+
+
+
         
         out=datetime.strptime (n.fin_begin,'%Y-%m-%d')+timedelta (days=364) 
         n.fin_end=out.date()
@@ -18957,46 +19041,97 @@ def purchase_godown(request):
 
 
 
-# GOKUL ------------------
-def createdistributor(request):
-    return render(request,'create_distributor.html')
+# ----------------------------- GOKUL ------------------
 
-# def distributor_reg(request):
+def createdistributor(request):
+    payment_term=Payment_Terms.objects.all()
+    return render(request,'create_distributor.html',{'payment_term':payment_term})
+
+
     
 def payment_terms(request):
     return render(request,'admin_payment_terms.html')
 
-
-
-    # if 'SAdm_id' in request.session:
-    #     if request.session.has_key('SAdm_id'):
-    #         SAdm_id = request.session['SAdm_id']
-    #     else:
-    #         return redirect('/')
 def add_payment_terms(request):
-    pay_terms=Payment_Terms(request)
     if request.method == 'POST':
         pay_terms_number= request.POST['num']
         select=request.POST['select']
         if select == 'Months':
-            months = pay_terms_number * 30
-            pay_terms.payment_terms_number=pay_terms_number
-            pay_terms.payment_terms_value=select
-            pay_terms.days=months
+            months = int(pay_terms_number) * 30
+            payment_terms_number=pay_terms_number
+            payment_terms_value=select
+            days=months
             messages.info(request,'a new payment term has been added successfully')
+            pay_terms=Payment_Terms(payment_terms_number = payment_terms_number,payment_terms_value = payment_terms_value,days = days)
             pay_terms.save()
-            return redirect('add_payment_terms')
+            return redirect('payment_terms')
         else:
-            years = pay_terms_number * 365
-            pay_terms.payment_terms_number=pay_terms_number
-            pay_terms.payment_terms_value=select
-            pay_terms.days=years
+            years = int(pay_terms_number) * 365
+            payment_terms_number=pay_terms_number
+            payment_terms_value=select
+            days=years
             messages.info(request,'a new payment term has been added successfully')
+            pay_terms=Payment_Terms(payment_terms_number = payment_terms_number,payment_terms_value = payment_terms_value,days = days)
             pay_terms.save()
-            return redirect('add_payment_terms')
+            return redirect('payment_terms')
             
-    return redirect('add_payment_terms')
+    return redirect('payment_terms')
 
     
 
+
+def distributor_reg(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+        
+    if request.method=='POST':
+        fname=request.POST['dist_fname']
+        lname=request.POST['dist_lname']
+        email=request.POST['dist_email']
+        username=request.POST['dist_uname']
+        password=request.POST['dist_pass']
+        cpassword=request.POST['dist_cpass']
+        phone_number=request.POST['phone_number']
+        select=request.POST['select']
+        terms=Payment_Terms.objects.get(id=select)
+
+        start_date=date.today()
+
+        days=int(terms.days)
+        end= date.today() + timedelta(days=days)
+        end_date=end
+
+        distributor_code=get_random_string(length=6)
+        if Distributor.objects.filter(distributor_id = distributor_code).exists():
+            distributor_code=get_random_string(length=6)
+
+        if(password == cpassword):
+            if Distributor.objects.filter(username=username).exists():
+                messages.info(request,'Sorry, this username already exists!!')
+                return redirect('createdistributor')
+
+            elif not Distributor.objects.filter(email = email).exists():
+                
+                l=Logins()
+                l.email=request.POST['dist_email']
+                l.password=request.POST['dist_pass']
+                l.reg_user='distributor'
+                l.status=0
+                l.save()
+
+                logins_id=Logins.objects.get(id=l.id)
+
+                distributor_data=Distributor(first_name = fname,last_name = lname,email = email,username = username,password = password,contact_details=phone_number,distributor_id=distributor_code,start_date=start_date,end_date=end_date,payment_terms=terms,logins=logins_id)
+                distributor_data.save()
+                return redirect('login')
+            else:
+                messages.info(request,'Sorry, this Email id already exists!!')
+                return redirect('createdistributor')
+    return render(request,'login.html')
+                
+
+            
 
