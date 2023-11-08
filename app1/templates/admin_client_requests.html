@@ -38,10 +38,10 @@
     <link rel="stylesheet" href="{% static 'assets/css/app.css' %}" />
 
      <!-- Font Awesome CSS CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 
-    <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+     <!-- Font Awesome CSS -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         a {
             font-family: "Poppins", sans-serif;
@@ -59,8 +59,6 @@
             background-color:rgb(44, 158, 187);
             color: rgb(15, 14, 14);
         }
-
-        
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- <script>
@@ -362,9 +360,9 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <ul class="a" style=" list-style-type: none; margin: 0; padding: 0; width: 200px;">
-                                    <!-- <li><a href="#" style="display: block; padding: 8px 16px; text-decoration: none">Accounts and Settings</a></li>
+                                    <li><a href="#" style="display: block; padding: 8px 16px; text-decoration: none">Accounts and Settings</a></li>
                                     <li><a href="#" style="display: block; padding: 8px 16px; text-decoration: none">Customize Form Style</a></li>
-                                    <li><a href="#" style="display: block; padding: 8px 16px; text-decoration: none">Chart of Accounts</a></li> -->
+                                    <li><a href="#" style="display: block; padding: 8px 16px; text-decoration: none">Chart of Accounts</a></li>
                                 </ul>
                             </div>
                         </ul>
@@ -494,7 +492,7 @@
                             <!-- <li>
                                 <a href="createcompany"><i class="bx bx-right-arrow-alt"></i>Company</a>
                                 </li> -->
-                          
+                           
                 
                 </nav>
 
@@ -533,103 +531,51 @@
                 </script>
 
 
-<!-- start date modal  -->
-<div class="modal fade" id="dateModal" role="dialog" style="margin-top: 150px;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form action="" id="frmDate" method="POST" >
-                {% csrf_token %}
-                    <div class="form-group" align="center" id="mdlSubmit">
-                        <input type="date" name="currentdate" id="enterDate" placeholder="Date" class="form-control w-50"><br>
-                        <input type="hidden" id="hdnDate" value="0">
-                        <input type="hidden" id="hdnDateVal" value="0">
-                        <button class="btn btn-small w-25 btn btn-info" data-dismiss="modal" aria-hidden="true" onclick="setDate()">Submit</button> 
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- end of date modal -->
-
-<!--starting of period modal-->
-<div class="modal fade" id="myModal1" role="dialog" style="margin-top: 150px;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form action="" method="POST" >
-                {% csrf_token %}
-                <div class="form-group" align="center">
-                    <input type="date" name="dateperiod1"  id="enterPeriod1" class="form-control w-50"><br>
-                    <label>to</label><br>
-                    <input type="date" name="dateperiod2" id="enterPeriod2" class="form-control w-50"><br>
-                    <button class="btn btn-small w-25 btn btn-info" data-dismiss="modal" aria-hidden="true" onclick="setPeriod()">Submit</button> 
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> 
-<!--end of period modal-->
 
 {% block body %} 
 
-<div class="container" >
-<div class="row mt-5">
-    <div class="col-md-6">
-      <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" >
-        <div class="card-body"  >
-
-
-          
-
-          <div class="row"  >
-            <div class="col-md-9 " style="height: 5rem!important;">
-              <a href="{% url 'admin_distributor' %}">
-              <h5 class="card-title mb-9 fw-semibold"><b>DISTRIBUTORS</b></h5>
-            </a>
-              
-
-            </div>
-            <div class="col">
-              <a href="{% url 'admin_distributor' %}">
-                <i class="fa fa-users text-white" style="font-size: 2em;"></i>
-              
-            </a>
-              
-            </div>
+<div class="body-wrapper">
+    <div class="container-fluid">
+        <div style="overflow-x:auto;">  
+          <table class="table table-hover table-bordered mt-5 table-striped" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+              <thead class="text-center">
+                <tr class="text-center">
+                  <th scope="col" style="color: white;"><b>ID</b></th>
+                  <th scope="col" style="color: white;"><b>Name</b></th>
+                  <th scope="col" style="color: white;"><b>Email</b></th>
+                  <th scope="col" style="color: white;"><b>Telephone</b></th>
+                  <th scope="col" style="color: white;"><b>Mobile</b></th>
+                  <th scope="col" style="color: white;"><b>Payment Terms</b></th>
+                  <th scope="col" style="color: white;"><b>Start Date</b></th>
+                  <th scope="col" style="color: white;"><b>End Date</b></th>
+                  <th scope="col" style="color: white;"><b>Action</b></th>
+  
+                </tr>
+              </thead>
+              <tbody>
+                  {% for i in comp %}
+                <tr class="text-center">
+                  <td>{{ i.id }}</td>
+                  <td> <a href="" style="color: white"></a> {{ i.name }}</td>
+                  <td>{{ i.email }}</td>
+                  <td>{{ i.telephone }}</td>
+                  <td>{{ i.mobile }}</td>
+                  <td>{{ i.payment_Terms.payment_terms_number }} {{ i.payment_Terms.payment_terms_value }}</td>
+                  <td>{{ i.payTerm_startdate }}</td>
+                  <td>{{ i.payTerm_enddate }}</td>
+                  
+                  <td><a href="{% url 'client_accept' i.id%}" class="btn btn-success m-1">Accept</a>
+                  <a href="{% url 'client_reject' i.id%}" class="btn btn-danger m-1">Reject</a></td>
+                  
+                </tr>
+                  {% endfor %}
+              </tbody>
+            </table> 
           </div>
-        </div>
-      </div>
-    </div>      
-    
-    <div class="col-md-6">
-      <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" >
-        <div class="card-body "  >
-          <div class="row">
-            <div class="col-md-9" style="height: 5rem!important;">
-              <a href="{% url 'admin_clients' %}">
-                
-                <h5 class="card-title mb-9 fw-semibold "><b>CLIENTS</b></h5>
-              </a>
-              
-
-            </div>
-            <div class="col">
-              <a href="{% url 'admin_clients' %}">
-              <i class="fa fa-users text-white" style="font-size: 2.3em;"></i>
-            </a>
-              
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>   
+  
+    </div>
   </div>
-</div>
-
         </div>
         </div>
 <!-- end wrapper -->

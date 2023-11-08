@@ -14,14 +14,21 @@
     </style>
 <body style="background-color: #d6dbdf;">
     <div class="circle"></div>
-        <div class="row mt-5">
-            
-           
+        <div class="row mt-5"> 
             <div class="col-md-9 mt-5">
                 <form  action="{% url 'login' %}" method="POST">
                     {% csrf_token %}
+                   
                     <div class="row mt-5">
+                        
                             <div class="col-md-6  p-5 mt-5">
+                                <center>
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <label for="" class="text-center ml-5 mb-4" style="background-color: rgb(255, 0, 0,0.5);color:white;text-shadow: 2px 2px 4px #000000;padding: 10px; border-radius: 10px;">{{message}}</label>
+                                    {% endfor %}
+                                {% endif %}
+                                </center>
                                 <center><h4 class="text-white ml-5">Login</h4></center>
                                 <div class="row mt-5">
                                     

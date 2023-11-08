@@ -966,7 +966,7 @@ urlpatterns = [
     path('list_paymentad_voucher',views.list_paymentad_voucher,name='list_paymentad_voucher'),
 
 
-    #gokul
+    #gokul-------------------------------------
     path('createdistributor',views.createdistributor,name='createdistributor'),
     path('Admin_dashboard', views.Admin_dashboard, name='Admin_dashboard'),
     path('admin_distributor',views.admin_distributor,name='admin_distributor'),
@@ -978,6 +978,22 @@ urlpatterns = [
     path('admin_distributor_all_view',views.admin_distributor_all_view,name='admin_distributor_all_view'),
     path('admin_distributor_single_view/<int:did>',views.admin_distributor_single_view,name='admin_distributor_single_view'),
     path('distributor_admin',views.distributor_admin,name='distributor_admin'),
+    path('distributorAdmin_Client_req',views.distributorAdmin_Client_req,name='distributorAdmin_Client_req'),
+    path('distributorAdmin_Client_all',views.distributorAdmin_Client_all,name='distributorAdmin_Client_all'),
+    path('distributor_accept/<int:did>',views.distributor_accept,name='distributor_accept'),
+    path('distributor_reject/<int:did>',views.distributor_reject,name='distributor_reject'),
+    path('distributor_active/<int:did>',views.distributor_active,name='distributor_active'),
+    path('distributor_Inactive/<int:did>',views.distributor_Inactive,name='distributor_Inactive'),
+    path('accept_distriCompany/<int:dcid>',views.accept_distriCompany,name='accept_distriCompany'),
+    path('reject_distriCompany/<int:dcid>',views.reject_distriCompany,name='reject_distriCompany'),
+    path('activate_distriComp/<int:dcid>',views.activate_distriComp,name='activate_distriComp'),
+    path('deactivate_distriComp/<int:dcid>',views.deactivate_distriComp,name='deactivate_distriComp'),
+    path('admin_client_requests',views.admin_client_requests,name='admin_client_requests'),
+    path('client_accept/<int:caid>',views.client_accept,name='client_accept'),
+    path('client_reject/<int:caid>',views.client_reject,name='client_reject'),
+    path('admin_clients_all_view',views.admin_clients_all_view,name='admin_clients_all_view'),
+    path('activate_client/<int:cadid>',views.activate_client,name='activate_client'),
+    path('deactivate_client/<int:cadid>',views.deactivate_client,name='deactivate_client'),
 
 
     

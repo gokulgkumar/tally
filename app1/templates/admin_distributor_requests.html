@@ -360,9 +360,9 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <ul class="a" style=" list-style-type: none; margin: 0; padding: 0; width: 200px;">
-                                    <li><a href="#" style="display: block; padding: 8px 16px; text-decoration: none">Accounts and Settings</a></li>
+                                    <!-- <li><a href="#" style="display: block; padding: 8px 16px; text-decoration: none">Accounts and Settings</a></li>
                                     <li><a href="#" style="display: block; padding: 8px 16px; text-decoration: none">Customize Form Style</a></li>
-                                    <li><a href="#" style="display: block; padding: 8px 16px; text-decoration: none">Chart of Accounts</a></li>
+                                    <li><a href="#" style="display: block; padding: 8px 16px; text-decoration: none">Chart of Accounts</a></li> -->
                                 </ul>
                             </div>
                         </ul>
@@ -563,8 +563,10 @@
                   <td>{{ i.payment_terms.payment_terms_number }} {{ i.payment_terms.payment_terms_value }}</td>
                   <td>{{ i.start_date }}</td>
                   <td>{{ i.end_date }}</td>
-                  <td><a href="" class="btn btn-success m-1">Accept</a>
-                  <a href="" class="btn btn-danger m-1">Reject</a></td>
+                  
+                  <td><a href="{% url 'distributor_accept' i.id%}" class="btn btn-success m-1">Accept</a>
+                  <a href="{% url 'distributor_reject' i.id%}" class="btn btn-danger m-1">Reject</a></td>
+                  
                 </tr>
                   {% endfor %}
               </tbody>

@@ -32,9 +32,10 @@ class Distributor(models.Model):
     payment_terms= models.ForeignKey(Payment_Terms,on_delete=models.CASCADE,null=True,blank=True)
     distributor_id=models.CharField(max_length=100,null=True,blank=True) 
     logins=models.ForeignKey(Logins,on_delete=models.CASCADE,null=True,blank=True)
+    status=models.BooleanField(default=False)
 
 
-
+#END--------- GOKUL ---------------------
 
 
 
@@ -103,7 +104,9 @@ class Companies(models.Model):
 
     # ------------------------- GOKUL----------------------------
     payment_Terms=models.ForeignKey(Payment_Terms,on_delete=models.CASCADE, null=True)
-    # Distributors = models.ForeignKey(Distributor, on_delete=models.CASCADE,null=True,blank=True)
+    Distributors = models.ForeignKey(Distributor, on_delete=models.CASCADE,null=True,blank=True)
+    payTerm_startdate=models.DateField()
+    payTerm_enddate=models.DateField()
 
 class Features(models.Model):
     maintain_accounts = models.CharField(max_length=10)

@@ -49,9 +49,8 @@ import json
 from django.contrib.auth.models import User,auth
 from django.contrib.auth import authenticate, login as auth_login
 
-
-
 #gokul -----
+from django.db.models import Q
 from django.utils.crypto import get_random_string
 
 
@@ -70,7 +69,7 @@ def admin_clients(request):
 
 
 def admin_distributor_requests(request):
-    distributor=Distributor.objects.all()
+    distributor=Distributor.objects.filter(status=0)
     return render(request,'admin_distributor_requests.html',{'distributor':distributor}) 
 
 def admin_distributor_all_view(request):
@@ -83,8 +82,50 @@ def admin_distributor_single_view(request,did):
     return render(request,'admin_distributor_single_view.html',{'distributor':distributor})
 
 def distributor_admin(request):
+    t_id = request.session.get('t_id')
+    distributor = Distributor.objects.get(id=t_id)
     return render(request,'distributor_admin.html')
 
+def distributorAdmin_Client_req(request):
+    t_id = request.session.get('t_id')
+    distributor = Distributor.objects.get(id=t_id)
+    print('distributor',distributor.id)
+    comp=Companies.objects.filter(Distributors=distributor.id)
+    return render(request,'distributorAdmin_Client_req.html',{'comp':comp})
+
+def distributorAdmin_Client_all(request):
+    t_id = request.session.get('t_id')
+    distributor = Distributor.objects.get(id=t_id)
+    comp=Companies.objects.filter(Distributors=distributor.id)
+    return render(request,'distributorAdmin_Client_all.html',{'comp':comp})
+
+
+def admin_client_requests(request):
+    comp = Companies.objects.filter(Q(Distributors=None) & Q(status=0))
+    return render(request,'admin_client_requests.html',{'comp':comp})
+
+def client_accept(request,caid):
+    accept=Companies.objects.filter(id=caid).update(status=1)
+    return redirect('admin_client_requests')
+
+def client_reject(request,caid):
+    reject=Companies.objects.filter(id=caid)
+    reject.delete()
+    return redirect('admin_client_requests')
+
+def admin_clients_all_view(request):
+    comp=Companies.objects.filter(Distributors=None)
+    return render(request,'admin_clients_all_view.html',{'comp':comp})
+
+def activate_client(request,cadid):
+    activate=Companies.objects.filter(id=cadid).update(status=1)
+    return redirect('admin_clients_all_view')
+
+def deactivate_client(request,cadid):
+    deactivate =Companies.objects.filter(id=cadid).update(status=0)
+    return redirect('admin_clients_all_view')
+
+    
 
 def login(request):
     if request.method == 'POST':
@@ -92,53 +133,50 @@ def login(request):
         password = request.POST['password']
 
         admin_user =authenticate(username=email, password=password)
-        
-
+    
         if admin_user is not None and admin_user.is_staff:
             auth_login(request, admin_user)
             request.session['SAdm_id'] = admin_user.id
             return redirect('Admin_dashboard')
         
-
         if Distributor.objects.filter(email=request.POST['email'], password=request.POST['password']).exists():
-            return redirect('distributor_admin')
+            distrib=Distributor.objects.get(email=request.POST['email'], password=request.POST['password'])
+            request.session['t_id'] = distrib.id
+            if distrib.status == 0:
+                messages.info(request,'Approval for login required')
+                return redirect('login')
+            else:
+                return redirect('distributor_admin')
+           
         
-
-        if Companies.objects.filter(email=request.POST['email'], password=request.POST['password']).exists():
-                
+        if Companies.objects.filter(email=request.POST['email'], password=request.POST['password']).exists(): 
             member=Companies.objects.get(email=request.POST['email'], password=request.POST['password'])
-            request.session['t_id'] = member.id 
-
-            tally=Companies.objects.filter(id= member.id)
+            request.session['t_id'] = member.id
+            if member.status == 0:
+                messages.info(request,'Approval for login required')
+                return redirect('login')
+            else:
+                tally=Companies.objects.filter(id= member.id)
+                comp = Companies.objects.get(id=member.id)
+                latestdate = []
+                pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+                rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+                cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+                deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+                latestdate.extend((pay,rec,cred,deb))
+                filtered_dates = [date for date in latestdate if date is not None]
             
-            comp = Companies.objects.get(id=member.id)
-            latestdate = []
+                context = { 
+                            'company' : comp,
+                            'tally' : tally,
+                            'latestdate' : max(filtered_dates),
+                    }
 
-            pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
-
-            rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
-
-            cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
-
-            deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
-
-            latestdate.extend((pay,rec,cred,deb))
-            filtered_dates = [date for date in latestdate if date is not None]
-            
-            context = { 
-                        'company' : comp,
-                        'tally' : tally,
-                        'latestdate' : max(filtered_dates),
-                }
-    
-        elif User.objects.filter(email=request.POST['email'], password=request.POST['password']).exists():
-            return redirect('distributor_admin')
-
+                return render(request,'base.html',context)
+                
         else:
             context = {'msg_error': 'Invalid data'}
             return render(request, 'Login.html', context)
-        
-        
 
     return render(request, 'Login.html')
 
@@ -3614,6 +3652,17 @@ def companycreate(request):
             terms=Payment_Terms.objects.get(id=payment_select)
             n.payment_Terms=terms
             n.Distributors=distributor
+            start_date=date.today()
+            n.payTerm_startdate=start_date
+            days=int(terms.days)
+            end= date.today() + timedelta(days=days)
+            end_date=end
+            n.payTerm_enddate=end_date
+            n.status=0
+
+            # company_code=get_random_string(length=6)
+            # if Companies.objects.filter(distributor_id = company_code).exists():
+            #     company_code=get_random_string(length=6)
         else:
             n.mailing_name=request.POST['mailing_name']
             n.address=request.POST['address']
@@ -3635,6 +3684,17 @@ def companycreate(request):
             payment_select=request.POST['select4']
             terms=Payment_Terms.objects.get(id=payment_select)
             n.payment_Terms=terms
+            start_date=date.today()
+            n.payTerm_startdate=start_date
+            days=int(terms.days)
+            end= date.today() + timedelta(days=days)
+            end_date=end
+            n.payTerm_enddate=end_date
+            n.status=0
+            out=datetime.strptime (n.fin_begin,'%Y-%m-%d')+timedelta (days=364) 
+            n.fin_end=out.date()
+            n.save()
+            
 
 
         # -------------------------- GOKUL-----------------
@@ -3649,9 +3709,7 @@ def companycreate(request):
 
 
         
-        out=datetime.strptime (n.fin_begin,'%Y-%m-%d')+timedelta (days=364) 
-        n.fin_end=out.date()
-        n.save()
+        
 
         #---- default vouchers--
 
@@ -19041,6 +19099,9 @@ def purchase_godown(request):
 
 
 
+
+
+
 # ----------------------------- GOKUL ------------------
 
 def createdistributor(request):
@@ -19135,3 +19196,36 @@ def distributor_reg(request):
 
             
 
+def distributor_accept(request,did):
+    accept=Distributor.objects.filter(id=did).update(status=1)
+    return redirect('admin_distributor_requests')
+
+def distributor_reject(request,did):
+    reject=Distributor.objects.get(id=did)
+    reject.delete()
+    return redirect('admin_distributor_requests')
+
+def distributor_active(request,did):
+    activate=Distributor.objects.filter(id=did).update(status=1)
+    return redirect('admin_distributor_all_view')
+
+def distributor_Inactive(request,did):
+    deactivate=Distributor.objects.filter(id=did).update(status=0)
+    return redirect('admin_distributor_all_view')
+
+def accept_distriCompany(request,dcid):
+    accept=Companies.objects.filter(id=dcid).update(status=1)
+    return redirect('distributorAdmin_Client_req')
+
+def reject_distriCompany(request,dcid):
+    reject=Companies.objects.filter(id=dcid)
+    reject.delete()
+    return redirect('distributorAdmin_Client_req')
+
+def activate_distriComp(request,dcid):
+    activate=Companies.objects.filter(id=dcid).update(status=1)
+    return redirect('distributorAdmin_Client_all')
+
+def deactivate_distriComp(request,dcid):
+    deactivate=Companies.objects.filter(id=dcid).update(status=0)
+    return redirect('distributorAdmin_Client_all')
