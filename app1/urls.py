@@ -994,6 +994,7 @@ urlpatterns = [
     path('admin_clients_all_view',views.admin_clients_all_view,name='admin_clients_all_view'),
     path('activate_client/<int:cadid>',views.activate_client,name='activate_client'),
     path('deactivate_client/<int:cadid>',views.deactivate_client,name='deactivate_client'),
+    path('distributor_clients_view/<int:did>',views.distributor_clients_view,name='distributor_clients_view'),
 
 
     

@@ -19229,3 +19229,8 @@ def activate_distriComp(request,dcid):
 def deactivate_distriComp(request,dcid):
     deactivate=Companies.objects.filter(id=dcid).update(status=0)
     return redirect('distributorAdmin_Client_all')
+
+def distributor_clients_view(request,did):
+    company=Companies.objects.filter(Distributors_id=did)
+    dist=Distributor.objects.filter(id=did)
+    return render(request,'admin_distributor_clients_view.html',{'company':company,'dist':dist})

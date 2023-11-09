@@ -65,15 +65,10 @@
                         required>
                     </div>
                 </div>
-                <!-- <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">Address</label></div>
-                    <div class="col-sm-6 m-0 p-0"><textarea class="form-control" name="address" id="" cols="36"
-                            rows="4"></textarea></div>
-                </div> -->
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Email</label></div>
                     <div class="col-sm-6 m-0 p-0">
-                        <input type="text" class="form-control" id="dist_email" name="dist_email" required>
+                        <input type="text" class="form-control" id="dist_email" name="dist_email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required> 
                     </div>
                 </div>
 
@@ -87,10 +82,7 @@
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Password</label></div>
                     <div class="col-sm-6 m-0 p-0">
                         <input type="password" class="form-control" id="password" name="dist_pass" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required >
-                        
                     </div>
-                    
-
                 </div>
 
                 <div class="row container-fluid  p-2">
@@ -112,7 +104,7 @@
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Phone Number</label></div>
                     <div class="col-sm-6 m-0 p-0">
-                        <input type="password" class="form-control" id="phone_number" name="phone_number" required maxlength="10" pattern="[6-9]{1}[0-9]{9}">
+                        <input type="text" class="form-control" id="phone_number" name="phone_number" required maxlength="10" pattern="[6-9]{1}[0-9]{9}">
                         <div class="registrationFormAlert col-sm-6 m-0 p-0 pt-2"  ></div>
                         
                     </div>
@@ -137,6 +129,19 @@
             <div class="enter w-100 py-4"><button class="btn btn-info w-15" type="submit">CREATE</button></div>
     </form>
 </div>
+
+<script>
+    document.getElementById("validate").addEventListener("submit", function (event) {
+        var emailInput = document.getElementById("dist_email");
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!emailPattern.test(emailInput.value)) {
+            alert("Please enter a valid email address");
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+</script>
+
 
 <script>
 
