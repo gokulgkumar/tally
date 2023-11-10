@@ -522,7 +522,7 @@
                         </select></div>
                     </div>
 
-                    <div class="row container-fluid p-2 mt-3">
+                    <div class="row container-fluid p-2 mt-5">
                         <div class="col-sm-6 m-0 p-0">
                         </div>
                         <div class="col-sm-6 m-0 p-0">
@@ -533,15 +533,12 @@
                         </div>
                     </div>
 
-                    <div class="row container-fluid mt-2">
+                    <div class="row container-fluid p-2">
                         <div class="col-sm-6 m-0 p-0"></div>
                         <div class="col-sm-6 m-0 p-0" id="distrib_id" style="display: none;">
                             <label for="d">Distributor ID</label>
                             <input type="text" name="distr_id" class="form-control">
                         </div>
-
-                </div>
-
 
                 </div>
                 <div class="col-sm-4 m-0 p-4"></div>
@@ -552,7 +549,7 @@
 
 <script>
 
-    
+   
 function showdistid() {
     var distrIdDiv = document.getElementById("distrib_id");
     distrIdDiv.style.display = 'block';
@@ -562,15 +559,15 @@ function hidedistid() {
     var distrIdDiv = document.getElementById("distrib_id");
     distrIdDiv.style.display = 'none';
 }
-    
+        
 
     function checkPasswordMatch() {
         var password = $("#password").val();
         var confirmPassword = $("#cpassword").val();
         if (password != confirmPassword)
-            $("#CheckPasswordMatch").html("Passwords does not match!").css("color", "#d9534f");
+            $("#CheckPasswordMatch").html("Passwords does not match!");
         else
-            $("#CheckPasswordMatch").html("Passwords match.").css("color", "green");
+            $("#CheckPasswordMatch").html("Passwords match.");
     }
     $(document).ready(function () {
         $("#cpassword").keyup(checkPasswordMatch);

@@ -315,11 +315,37 @@
         
         
         <h6 class="p-2">Clients</h6>
-            {% for c in company %}
-                
+
+        {% if company %}
+        {% for c in company %}
+        <li class="list-group-item text-warning"><b>{{ c.name }}</b></li>
+        {% endfor %}
+        {% else %}
+        <li class="list-group-item text-danger"><b>No Clients, Self</b></li>
+        {% endif %}
+
+
+
+
+       
+                <!-- {% for c in company %}
+                {% if c.Distributors_id is none or c.Distributors_id == '' %}
+                {{c.Distributors_id}}
+                <li class="list-group-item  text-warning"><b>No clients </b></li>
+                    
+                {% else %}
                 <li class="list-group-item  text-warning"><b>{{ c.name }} </b></li>
-            {% endfor %}
+                {{c.Distributors_id}}
+                {% endif %}
+                {% endfor %} -->
+
+                
+           
             
+
+            <!-- {% for s in companys %}
+            <li class="list-group-item  text-warning"><b>No clients </b></li>
+            {% endfor %} -->
         
         
       

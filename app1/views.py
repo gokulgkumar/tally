@@ -50,7 +50,6 @@ from django.contrib.auth.models import User,auth
 from django.contrib.auth import authenticate, login as auth_login
 
 #gokul -----
-from django.db.models import Q
 from django.utils.crypto import get_random_string
 
 
@@ -59,7 +58,18 @@ from django.utils.crypto import get_random_string
 
 #GOKUL ---------------------------------------
 def Admin_dashboard(request):
-    return render(request,'admin.html')
+    today_date=date.today()
+    company=Companies.objects.filter(payTerm_enddate__lt=today_date)
+    distributor=Distributor.objects.filter(end_date__lt=today_date)
+    print(distributor,'dis')
+    print(today_date)
+    print(company,'comp')
+    context = {
+        'company_length': len(company),
+        'distributor_length': len(distributor),
+    }
+
+    return render(request,'adminbase.html',context)
 
 def admin_distributor(request):
     return render(request,'admin_distributor.html')
@@ -84,7 +94,13 @@ def admin_distributor_single_view(request,did):
 def distributor_admin(request):
     t_id = request.session.get('t_id')
     distributor = Distributor.objects.get(id=t_id)
-    return render(request,'distributor_admin.html')
+    today_date=date.today()
+    comp=Companies.objects.filter(Q(Distributors__isnull=False) & Q(payTerm_enddate__lt=today_date))
+    context = {
+        'comp_len' : len(comp)    
+    }
+    print(context)
+    return render(request,'distributor_admin.html',context)
 
 def distributorAdmin_Client_req(request):
     t_id = request.session.get('t_id')
@@ -126,7 +142,6 @@ def deactivate_client(request,cadid):
     return redirect('admin_clients_all_view')
 
     
-
 def login(request):
     if request.method == 'POST':
         email  = request.POST['email']
@@ -3615,6 +3630,14 @@ def createcompany(request):
     
 #     return render(request,'features.html')
 
+
+
+
+
+
+
+
+
 def companycreate(request):
     if request.method=='POST':
         n=Companies()
@@ -3659,10 +3682,10 @@ def companycreate(request):
             end_date=end
             n.payTerm_enddate=end_date
             n.status=0
+            out=datetime.strptime (n.fin_begin,'%Y-%m-%d')+timedelta (days=364)
+            n.fin_end=out.date()
+            n.save()
 
-            # company_code=get_random_string(length=6)
-            # if Companies.objects.filter(distributor_id = company_code).exists():
-            #     company_code=get_random_string(length=6)
         else:
             n.mailing_name=request.POST['mailing_name']
             n.address=request.POST['address']
@@ -3673,7 +3696,6 @@ def companycreate(request):
             n.mobile=request.POST['mobile']
             n.fax=request.POST['fax']
             n.email=request.POST['email']
-        
             n.website=request.POST['website']
             n.fin_begin=request.POST['fyear']
             n.books_begin=request.POST['byear']
@@ -3694,28 +3716,8 @@ def companycreate(request):
             out=datetime.strptime (n.fin_begin,'%Y-%m-%d')+timedelta (days=364) 
             n.fin_end=out.date()
             n.save()
-            
+         # -------------------------- GOKUL-----------------
 
-
-        # -------------------------- GOKUL-----------------
-
-        
-
-
-  # -------------------------- GOKUL-----------------
-
-            
-
-
-
-        
-        
-
-        #---- default vouchers--
-
-
-
-        #login
         l=Logins()
         l.email=request.POST['email']
         l.password=request.POST['password']
@@ -3723,6 +3725,7 @@ def companycreate(request):
         l.status=0
         l.save()
 
+        #---- default vouchers--
 
 
         # Create a default journal voucher for the company
@@ -19233,4 +19236,8 @@ def deactivate_distriComp(request,dcid):
 def distributor_clients_view(request,did):
     company=Companies.objects.filter(Distributors_id=did)
     dist=Distributor.objects.filter(id=did)
-    return render(request,'admin_distributor_clients_view.html',{'company':company,'dist':dist})
+    if company.exists():
+     return render(request, 'admin_distributor_clients_view.html', {'company': company, 'dist': dist})
+    else:
+     return render(request, 'admin_distributor_clients_view.html', {'dist': dist})
+    

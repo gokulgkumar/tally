@@ -62,6 +62,7 @@
 
         
     </style>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- <script>
         $(document).ready(function() {
@@ -76,56 +77,7 @@
             }).trigger('change');
         });
     </script> -->
-    <script>
-        
-        $(document).ready(function() {
-            var $select1 = $('#select1'),
-                $select2 = $('#select2'),
-                $select3 = $('#name'),
-                $options = $select2.find('option'),
-                $options1 = $select3.find('option');
-            $select1.on('change', function() {
-                $select2.html($options.filter('[text="' + this.value + '"]'));
-                $select3.html($options1.filter('[text="' + this.value + '"]'));
-            }).trigger('change');
-            const d1='Apr 1 2022';
-            const d2='Mar 1 2023';
-            //let text = d1.toDateString();
-            //alert(text);
-            document.getElementById("currentDate").innerHTML=new Date().toDateString();
-            document.getElementById("dateP1").innerHTML=d1;
-            document.getElementById("dateP2").innerHTML=d2;
-           
-            var table = document.getElementById("table");
-            var cells = table.getElementsByTagName("td");
-            for (var i = 0; i < cells.length; i++) {
-                if(i == 0){
-                    document.getElementById("compName").innerHTML= cells[0].innerText;
-                    //document.getElementById("compId").innerHTML= cells[1].innerText;
-                    
-                    //alert(cells[1].innerText);
-                    setName(cells[0].innerText, cells[1].innerText);
-                }
-             }
-        });
-        function getVal(route){
-           window.location.href=route+"/"+document.getElementById('cid').innerHTML;
-                   
-        }
-
-        function setDate(){
-            document.getElementById('hdnDate').value= 1;
-            
-            document.getElementById("currentDate").innerHTML= new Date(document.getElementById('enterDate').value).toDateString();
-
-        }
-        function setPeriod(){
-            document.getElementById("dateP1").innerHTML= new Date(document.getElementById('enterPeriod1').value).toDateString();
-            document.getElementById("dateP2").innerHTML= new Date(document.getElementById('enterPeriod2').value).toDateString();
-
-            
-        }
-    </script>
+    
 </head>
 
 <body style="background-color: #2f516f;">
@@ -159,198 +111,7 @@
                             <div class=" mt-5" id="myDIV" style="z-index:1;position:absolute; 
                           background-color: #213b52;width:550px;height:1px;">
                           
-                             <ul id="myList" class="one" style="background-color: #213b52;list-style: none;">
-                                
-                                         
-                                  
-                              <li>  <a href="{% url 'base' %}">
-                                <div class="menu-title">Dashboard</div>
-                            </a></li>
-                                 <li><a href="{% url 'groups' %}">Group</a></li>
-                                 <li><a href="{% url 'ledgers' %}">Ledger</a></li>
-                                 <li><a href="{% url 'gocost' %}">Cost centre</a></li>
-                                 <li><a href="{% url 'currency' %}">Currency</a></li>
-                                 <li><a href="{% url 'rates' %}">Rates of Exchange</a></li>
-                                 <li><a href="{% url 'vouchers' %}">Voucher Type</a></li>
-                                 <li><a href="load_stock_group">Stock Group</a></li>
-                              <li> <a href="load_stock_catagory">Stock Category</a></li>
-                              <li><a href="load_stock_item_creation">Stock Item</a></li>
-                              <li><a href="load_unit_creation">Unit</a></li>
-                                <li><a href="godown_creation">Godown</a></li>
-                                  <li> <a href="load_company_price">Price Levels</a></li>
-                                    <li><a>Price List(Stock Group)</a></li>
-                                      <li><a>Price List(Stock Category)</a></li>
-                                      <li><a href="employe_category">Employee Categories</a></li>
-                                      <li><a href="empgroup">Employee Groups</a></li>
-                                      <li><a href="employee">Employees</a></li>
-                                      <li><a href="stunits">Units</a></li>
-              
-                                      <li><a href="attendence">Attendance/Production Types</a></li>
-                                      <li><a href="payheads">Pay Heads</a></li>
-                                      <li><a href="payvoucher">Payroll Voucher Type</a></li>
-                                      
-                                      
-                                      
-                                               
-                                        <li><a href="load_gst_d">GST Details</a></li>
-                                        <li><a href="load_tds">TDS Details</a></li>
-                                        <li><a href="load_pan_cin">PAN/CIN Details</a></li>
-
-                                        <li><a href="list_of_groups">Group</a>
-                                        </li>
-                                        <li><a href="list_of_ledger">Ledger</a>
-                                        </li>
-                                        <li><a href="list_of_cost_centers">Cost Center</a>
-                                        </li>
-            
-                                        <li><a href="list_of_currency">Currency</a>
-                                        </li>
-                                        <li><a href="rates">Rate Of Exchange</a>
-                                        </li>
-                                        <li><a href="list_of_voucher_type">Voucher Type</a>
-                                        </li>
-                                        <li><a href="{% url 'stock_group_chart_list' %}">Stock Groups</a></li>
-                                        <li><a href="{% url 'chart_stockitem' %}">Stock Items</a></li>
-                                        <li><a href="{% url 'stock_category_chart_list' %}">Stock Categories</a></li>
-                                        <li><a href="{% url 'chart_stock_unit' %}">Units</a></li>
-                                        <li><a href="{% url 'chart_godown' %}">Godowns</a></li>
-                                        <li><a href="{% url 'chart_pricelevel' %}">Price level</a></li>
-                                        
-                                        <li><a href="alter_payrol_emp_add2">Employee Groups</a></li>
-                                        <li><a href="employee1">Employees</a></li>
-                                        <li><a href="unit2">Unit (Work)</a></li>
-                                        <li><a href="attendence1">Attendance/Production Types</a></li>
-                                        <li><a href="payheads1">Pay Heads</a></li>
-                                        <!-- <li><a href="salary2"><i class=" bx bx-caret-right"></i>Define Salary</a></li> -->
-                                        <li><a href="add_voucher2">Payroll Voucher Type </a></li>
-                                        <li><a href="list_of_companies">Change Company</a></li>
-                                        <li><a href="list_of_groups">Group</a>
-                                        </li>
-                                        <li><a href="list_of_ledger">Ledger</a>
-                                        </li>
-                                        <li><a href="list_of_cost_centers">Cost Center</a>
-                                        </li>
-            
-                                        <li><a href="list_of_currency">Currency</a>
-                                        </li>
-                                        <li><a href="rates">Rate Of Exchange</a>
-                                        </li>
-                                        <li><a href="list_of_voucher_type">Voucher Type</a>
-                                        </li>
-                                        <li><a href="{% url 'stock_group_alter_list' %}">Stock Groups</a></li>
-                                        <li><a href="{% url 'alter_stockitem' %}">Stock Items</a></li>
-                                        <li><a href="{% url 'stock_category_alter_list' %}">Stock Categories</a></li>
-                                        <li><a href="{% url 'stock_unit' %}">Units</a></li>
-                                        <li><a href="{% url 'alter_godown' %}">Godowns</a></li>
-                                        <li><a href="{% url 'alter_pricelevel' %}">Price level</a></li>
-                                        <li><a href="alter_payrol_emp_add2">Employee Groups</a></li>
-                                        <li><a href="alter_payrol_employee">Employees</a></li>
-                                        <li><a href="alter_payrol_unit2">Unit (Work)</a></li>
-                                        <li><a href="alter_payrol_attendence">Attendance/Production Types</a></li>
-                                        <li><a href="alter_payrol_payheads">Pay Heads</a></li>
-                                        <!-- <li><a href="alter_payrol_salary2"><i class=" bx bx-caret-right"></i>Define Salary</a></li> -->
-                                        <li><a href="alter_payrol_add_voucher2">Payroll Voucher Type </a></li>
-                                        <li><a href="{% url 'alter_gst_details'%}">GST Details</i></a></li>
-                                        
-                                            <li><a href="{% url 'alter_tds_details'%}">TDS Details</i></a></li>
-                                           <li><a href="{% url 'alter_pan_details'%}">PAN/CIN Details</i></a></li>
-                                           <li><a href="list_payment_voucher">Payment</a>
-                             
-                                           </li>
-                                           
-                                       
-                                           <li><a href="list_receipt_voucher">Receipt</a>
-               
-                                               
-                                           </li>
-                                           
-                                           <li><a href="{% url 'list_crd_voucher'%}">Credit Note</a>
-                                               
-                                           </li>
-                                           <li><a href="{% url 'list_deb_voucher'%}">Debit Note</a>
-                                               
-                                           </li>
-                                           <li><a href="{% url 'list_contra_voucher' %}">Contra</a>
-                                               
-                                           </li>
-                                           
-                                           <li><a href="list_journal_voucher">Journal</a>
-               
-                                           </li>
-                                           <li><a href="{% url 'salesvoucher' %}">Sales Voucher</a>
-               
-                                           </li>
-
-                                           <li><a href="{% url 'list_purchase_voucher' %}">Purchase</a>
-
-                                           </li>
-                                           <li><a href="{% url 'listbanks' %}">Cheque Printing</a></li>
-                                           <li><a href="{% url 'account_books_ledger' %}">Payment Advaice</a></li>
-                                           <li><a href="{% url 'listofbank' %}">Deposit Slip</a></li>
-                                           <li><a href="{% url 'listofbankledgers' %}">Bank Reconciliation</a></li>
-                                           <li><a href="stock_summary">Stock Summary</a>
-                             
-                                           </li>
-                                           <li><a href="{% url 'balancesheet' %}">Balance Sheet</a>
-                                            
-                                           </li>
-                                           <li>
-                           
-                                            <a  href="{% url 'featurepage' %}" >
-                                               </a></li>
-                                               
-                                                    <li><a href="{% url 'groupsummarypage' %}">Stock Group Summary</a></li>
-                                                    <li><a href="{% url 'catgroupsummary' %}">Stock Category Summary</a></li>
-                                                    <li><a href="{% url 'profit' %}">Profit & Loss</a>
                             
-                                                        <li><a href="{% url 'disp_more_reports' %}">Account Books</a>
-                                                            
-                                                        </li>
-                                                        <li><a href="{% url 'Statements_accounts' %}">Statements of Accounts</a>
-                        
-                                                        </li>
-                                                        <li>
-                                                            <a href="{% url 'liststockviews' %}">Stock Query</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="{% url 'liststockgroupviews' %}">Stock Group Analysis</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="{% url 'grouppage' %}">Group Analysis</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="{% url 'selectledgerpage' %}">Ledger Analysis</a>
-                                                        </li>
-                                                        <li>
-                                                            <a data-toggle="modal" data-target="#myModal" href="javascript:;" class="has-arrow">
-                                
-                                        
-                                                                <div class="menu-title">Date</div>
-                                                            </a>
-                                                            
-                                                            </li>
-                                                            <li>
-                                                                <a data-toggle="modal" data-target="#myModal1" href="javascript:;" class="has-arrow">
-                                    
-                                                                    <div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
-                                                                    </div>
-                                                                    <div class="menu-title">Period</div>
-                                                                </a>
-                                                                
-                                                                </li>
-                                            
-                                                
-                                                        <li>
-                                                            <a onclick="window.print()"  href="javascript:;" >
-                                
-                                                                <div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
-                                                                </div>
-                                                                <div class="menu-title">Print</div>
-                                                            </a>
-                                                            
-                                                        </li>
-                                                        
-                             </ul>
                              </div>
             
                         </div>
@@ -391,6 +152,21 @@
                                                     <h6 class="msg-name">New Customers<span class="msg-time float-right">14 Sec
                               ago</span></h6>
                                                     <p class="msg-info">5 new user registered</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a class="dropdown-item" href="javascript:;">
+                                            <div class="media align-items-center">
+                                                <div class="notify bg-light-warning text-dark"><iconify-icon icon="material-symbols:timer-outline"></iconify-icon>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h6 class="msg-name">Payment Terms<span class="msg-time float-right">2 min
+                              ago</span></h6>         {% if company_length >= 1 %}
+                                                    <p class="msg-info">{{company_length}} Companies have their payment due</p>
+                                                      {% endif %}
+                                                      {% if distributor_length >= 1 %}
+                                                    <p class="msg-info"> {{ distributor_length }} Distributors have their payment due</p>
+                                                      {% endif %}
                                                 </div>
                                             </div>
                                         </a>
