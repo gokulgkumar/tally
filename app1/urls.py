@@ -964,9 +964,7 @@ urlpatterns = [
     #------- End of Purchase Vouchers----
     
     path('list_paymentad_voucher',views.list_paymentad_voucher,name='list_paymentad_voucher'),
-
-
-    #gokul-------------------------------------
+    
     path('createdistributor',views.createdistributor,name='createdistributor'),
     path('Admin_dashboard', views.Admin_dashboard, name='Admin_dashboard'),
     path('admin_distributor',views.admin_distributor,name='admin_distributor'),
@@ -996,6 +994,17 @@ urlpatterns = [
     path('deactivate_client/<int:cadid>',views.deactivate_client,name='deactivate_client'),
     path('distributor_clients_view/<int:did>',views.distributor_clients_view,name='distributor_clients_view'),
 
+
+    # GOKUL
+
+    path('createstaff',views.createstaff,name='createstaff'),
+    path('staff_registration',views.staff_registration,name='staff_registration'),
+    path('staff_request',views.staff_request,name='staff_request'),
+    path('accept_staff/<int:sid>',views.accept_staff,name='accept_staff'),
+    path('reject_staff/<int:sid>',views.reject_staff,name='reject_staff'),
+    path('staff_all_view',views.staff_all_view,name='staff_all_view'),
+    path('edit_company',views.edit_company,name='edit_company'),
+    path('company_profile',views.company_profile,name='company_profile'),
 
     
     path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),

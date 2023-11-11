@@ -36,6 +36,9 @@
     <link rel="stylesheet" href="{% static 'assets/css/icons.css' %}" />
     <!-- App CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/app.css' %}" />
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
     <style>
         a {
             font-family: "Poppins", sans-serif;
@@ -339,6 +342,13 @@
                                                                 </div>
                                                                 <div class="menu-title">Print</div>
                                                             </a>
+
+                                                            <a  href="javascript:;" >
+                                
+                                                                <div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
+                                                                </div>
+                                                                <div class="menu-title"></div>
+                                                            </a>
                                                             
                                                         </li>
                                                         
@@ -454,7 +464,9 @@
                   </div>
                  
                 </a>
-                                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="#"><i class="bx bx-user"></i><span>Profile</span></a>
+                
+                                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="{% url 'company_profile' %}"><i class="bx bx-user"></i><span>Profile</span></a>
+                
                                     <a class="dropdown-item" href="#"><i class="bx bx-tachometer"></i><span>Dashboard</span></a>
                                     <div class="dropdown-divider mb-0"></div>
                                     <a class="dropdown-item" href="{% url 'logout' %}"><i class="bx bx-power-off"></i><span>Logout</span></a>
@@ -940,15 +952,25 @@
                                 </li>
             
                 
-                        <li>
-                            <a onclick="window.print()"  href="javascript:;" >
+                                <li>
+                                    <a href="javascript:;" class="has-arrow">
+            
+                                        <div class="parent-icon"><iconify-icon icon="fa:users"></iconify-icon>
 
-                                <div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
-                                </div>
-                                <div class="menu-title">Print</div>
-                            </a>
-                            
-                        </li>
+                                        </div>
+                                        <div class="menu-title">Employees</div>
+                                    </a>
+                                    <ul>
+                                        <li><a href="{% url 'staff_request' %}"><i class="bx bx-right-arrow-alt"></i>Employee Requests</a>
+                                        
+                                            
+                                        </li>
+                                        <li><a href="{% url 'staff_all_view' %}"><i class="bx bx-right-arrow-alt"></i>All Employees</a>
+                                           
+                                   
+                                            </ul>
+                                            
+                                        
                       
                 </nav>
 

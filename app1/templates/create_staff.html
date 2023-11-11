@@ -1,0 +1,178 @@
+{% extends 'nav.html' %}
+{% block content %}
+{% load static %}
+
+<script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
+<script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/additional-methods.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style>
+    .enter {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .content a:hover {
+        background-color: rgb(238, 167, 75);
+    }
+
+    /* Add styles to the form container */
+    .form-container {
+        max-width: 50px;
+        height: 500px;
+        padding: 10px;
+    }
+
+    .form-container1 {
+        max-width: 350px;
+        height: 500px;
+        padding: 2px;
+
+    }
+
+
+</style>
+<br>
+<div style="background-color: #213b52;color: #fff;" class="m-0">
+    
+    
+    <form class="p-3" id="validate" style="background-color:rgba(0,0,0,.4);" method="post"
+        action="{% url 'staff_registration' %}" autocomplete="off" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if messages %}
+            {% for message in messages %}
+            <center>
+                <label for="" class="text-center mt-5" style="background-color: rgb(255, 0, 0,0.5); width: 50%;color:white;text-shadow: 2px 2px 4px #000000;padding: 10px; border-radius: 10px;">{{message}}</label>
+            </center>
+            {% endfor %}
+        {% endif %}
+        
+        <h3 class=" text-light p-3  text-center mt-5" style="text-align: center;padding-top: 30px;">Staff Creation</h3>
+        <div class="row container-fluid  p-0 m-0 mt-3" style=" border: 1px solid rgba(128, 128, 128, 0.6);">
+           
+            <div class="container mt-4" style="padding-top: 3%;">
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"><label for="d">First Name</label></div>
+                    <div class="col-sm-6 m-0 p-0"><input type="text" class="form-control" id="staff_fname"
+                            name="staff_fname" required></div>
+                </div>
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Last Name</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="text" class="form-control" id="staff_lname" name="staff_lname"
+                        required>
+                    </div>
+                </div>
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Email</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="text" class="form-control" id="staff_email" name="staff_email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required> 
+                    </div>
+                </div>
+
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Username</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="text" class="form-control" id="staff_uname" name="staff_uname" required>
+                    </div>
+                </div>
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Password</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="password" class="form-control" id="password" name="staff_pass" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required >
+                    </div>
+                </div>
+
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"></div>
+                    <div class="col-sm-6 m-0 p-0 text-center">
+                        <span style="font-size: 0.8rem;" class="text-danger">*password must be atleast 8 characters long and include uppercase, lowercase, special characters and numbers.</span>
+                    </div>
+                </div>
+
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Confirm Password</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="password" class="form-control" id="cpassword" name="staff_cpass" required>
+                        <div class="registrationFormAlert col-sm-6 m-0 p-0 pt-2"  id="CheckPasswordMatch"></div>
+                        
+                    </div>
+                </div>
+
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Phone Number</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="text" class="form-control" id="phone_number" name="phone_number" required maxlength="10" pattern="[6-9]{1}[0-9]{9}">
+                        <div class="registrationFormAlert col-sm-6 m-0 p-0 pt-2"  ></div>
+                        
+                    </div>
+                </div>
+
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Company Code</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="text" class="form-control" id="company_code" name="company_code" required >
+                    </div>
+                </div>
+
+
+        
+
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0 mt-1"> <label for="d">Choose File</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="file" id="image" name="image" accept="image/*" class="form-control mt-2">
+                    </div>
+                </div>
+
+                
+               
+                <div class="col-sm-4 m-0 p-4"></div>
+            </div>
+            <div class="enter w-100 py-4"><button class="btn btn-info w-15" type="submit">CREATE</button></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById("validate").addEventListener("submit", function (event) {
+        var emailInput = document.getElementById("staff_email");
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!emailPattern.test(emailInput.value)) {
+            alert("Please enter a valid email address");
+            event.preventDefault(); 
+        }
+    });
+</script>
+
+
+<script>
+
+    function checkPasswordMatch() {
+        var password = $("#password").val();
+        var confirmPassword = $("#cpassword").val();
+        if (password != confirmPassword)
+            $("#CheckPasswordMatch").html("Passwords does not match!").css("color", "#d9534f");
+        else
+            $("#CheckPasswordMatch").html("Passwords match.").css("color", "green");
+    }
+    $(document).ready(function () {
+        $("#cpassword").keyup(checkPasswordMatch);
+    });
+
+    
+</script>
+
+
+
+
+
+
+
+
+
+{% endblock %}

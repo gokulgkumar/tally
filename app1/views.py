@@ -46,102 +46,10 @@ from django.utils import timezone
 from calendar import month_name
 from django.core.exceptions import ObjectDoesNotExist
 import json
-from django.contrib.auth.models import User,auth
-from django.contrib.auth import authenticate, login as auth_login
-
-#gokul -----
 from django.utils.crypto import get_random_string
-
-
-
+from django.contrib.auth import authenticate, login as auth_login
 # Create your views here.
 
-#GOKUL ---------------------------------------
-def Admin_dashboard(request):
-    today_date=date.today()
-    company=Companies.objects.filter(payTerm_enddate__lt=today_date)
-    distributor=Distributor.objects.filter(end_date__lt=today_date)
-    print(distributor,'dis')
-    print(today_date)
-    print(company,'comp')
-    context = {
-        'company_length': len(company),
-        'distributor_length': len(distributor),
-    }
-
-    return render(request,'adminbase.html',context)
-
-def admin_distributor(request):
-    return render(request,'admin_distributor.html')
-
-def admin_clients(request):
-    return render(request,'admin_clients.html')
-
-
-def admin_distributor_requests(request):
-    distributor=Distributor.objects.filter(status=0)
-    return render(request,'admin_distributor_requests.html',{'distributor':distributor}) 
-
-def admin_distributor_all_view(request):
-    distributor=Distributor.objects.all()
-    company=Companies.objects.all()
-    return render(request,'admin_distributor_all_view.html',{'distributor':distributor,'company':company}) 
-
-def admin_distributor_single_view(request,did):
-    distributor=Distributor.objects.get(id=did)
-    return render(request,'admin_distributor_single_view.html',{'distributor':distributor})
-
-def distributor_admin(request):
-    t_id = request.session.get('t_id')
-    distributor = Distributor.objects.get(id=t_id)
-    today_date=date.today()
-    comp=Companies.objects.filter(Q(Distributors__isnull=False) & Q(payTerm_enddate__lt=today_date))
-    context = {
-        'comp_len' : len(comp)    
-    }
-    print(context)
-    return render(request,'distributor_admin.html',context)
-
-def distributorAdmin_Client_req(request):
-    t_id = request.session.get('t_id')
-    distributor = Distributor.objects.get(id=t_id)
-    print('distributor',distributor.id)
-    comp=Companies.objects.filter(Distributors=distributor.id)
-    return render(request,'distributorAdmin_Client_req.html',{'comp':comp})
-
-def distributorAdmin_Client_all(request):
-    t_id = request.session.get('t_id')
-    distributor = Distributor.objects.get(id=t_id)
-    comp=Companies.objects.filter(Distributors=distributor.id)
-    return render(request,'distributorAdmin_Client_all.html',{'comp':comp})
-
-
-def admin_client_requests(request):
-    comp = Companies.objects.filter(Q(Distributors=None) & Q(status=0))
-    return render(request,'admin_client_requests.html',{'comp':comp})
-
-def client_accept(request,caid):
-    accept=Companies.objects.filter(id=caid).update(status=1)
-    return redirect('admin_client_requests')
-
-def client_reject(request,caid):
-    reject=Companies.objects.filter(id=caid)
-    reject.delete()
-    return redirect('admin_client_requests')
-
-def admin_clients_all_view(request):
-    comp=Companies.objects.filter(Distributors=None)
-    return render(request,'admin_clients_all_view.html',{'comp':comp})
-
-def activate_client(request,cadid):
-    activate=Companies.objects.filter(id=cadid).update(status=1)
-    return redirect('admin_clients_all_view')
-
-def deactivate_client(request,cadid):
-    deactivate =Companies.objects.filter(id=cadid).update(status=0)
-    return redirect('admin_clients_all_view')
-
-    
 def login(request):
     if request.method == 'POST':
         email  = request.POST['email']
@@ -162,6 +70,17 @@ def login(request):
                 return redirect('login')
             else:
                 return redirect('distributor_admin')
+            
+
+        if Staff.objects.filter(email=request.POST['email'], password=request.POST['password']).exists():
+            staff=Staff.objects.get(email=request.POST['email'], password=request.POST['password'])
+            request.session['t_id'] = staff.id
+            if staff.status == 0:
+                messages.info(request,'Approval for login required')
+                return redirect('login')
+            else:
+                return render(request,'base.html')
+
            
         
         if Companies.objects.filter(email=request.POST['email'], password=request.POST['password']).exists(): 
@@ -185,6 +104,7 @@ def login(request):
                             'company' : comp,
                             'tally' : tally,
                             'latestdate' : max(filtered_dates),
+                            'member': member.id,
                     }
 
                 return render(request,'base.html',context)
@@ -195,16 +115,12 @@ def login(request):
 
     return render(request, 'Login.html')
 
-#GOKUL ---------------------------------------
-
 def logout(request):
     if 't_id' in request.session:  
         request.session.flush()
         return redirect('/')
     else:
         return redirect('/')
-
-
 
 def register(request):
     return render(request, 'Register.html')
@@ -2621,7 +2537,6 @@ def list_of_currency(request):
     return redirect('/')
 
 def companyCreate1(request):
-    
     return render(request,'create_companys.html')
 
 def create_company(request):
@@ -2650,7 +2565,6 @@ def create_company(request):
             bc=request.POST.get('currency_symbol')
             fr=request.POST.get('formal_name')
             cmp=Companies.objects.filter(name=cn)
-
             out=datetime.strptime (fy,'%Y-%m-%d')+timedelta (days=364) 
             print(out)
             a=out.date()
@@ -3584,8 +3498,6 @@ def company(request):
 #     return render(request,'createcompany.html')
 
 def createcompany(request):
-    # st=States.objects.all()
-    # country=Countries.objects.all()
     payment_term=Payment_Terms.objects.all()
     return render(request,'createcompany.html',{'payment_term':payment_term})
 
@@ -3630,12 +3542,7 @@ def createcompany(request):
     
 #     return render(request,'features.html')
 
-
-
-
-
-
-
+        
 
 
 def companycreate(request):
@@ -3644,6 +3551,9 @@ def companycreate(request):
         n.name=request.POST['companyname']
         b=Companies.objects.filter(name=n.name)
         distributor_id=request.POST['distr_id']
+        company_code=get_random_string(length=7)
+        if Companies.objects.filter(company_code = company_code).exists():
+            company_code=get_random_string(length=7)
         if b:
             messages.info(request,'Company name already exists!!')
             return redirect('createcompany')
@@ -3663,7 +3573,7 @@ def companycreate(request):
             n.mobile=request.POST['mobile']
             n.fax=request.POST['fax']
             n.email=request.POST['email']
-        
+            n.company_code = company_code
             n.website=request.POST['website']
             n.fin_begin=request.POST['fyear']
             n.books_begin=request.POST['byear']
@@ -3706,6 +3616,7 @@ def companycreate(request):
             payment_select=request.POST['select4']
             terms=Payment_Terms.objects.get(id=payment_select)
             n.payment_Terms=terms
+            n.company_code = company_code
             start_date=date.today()
             n.payTerm_startdate=start_date
             days=int(terms.days)
@@ -3952,6 +3863,7 @@ def companycreate(request):
         return render(request,'features.html',{'cmp':n,'msg_success':msg_success})
     
     return render(request,'features.html')
+
     
 
 
@@ -19101,20 +19013,97 @@ def purchase_godown(request):
 #------- End of Purchase Vouchers----
 
 
+def Admin_dashboard(request):
+    today_date=date.today()
+    company=Companies.objects.filter(payTerm_enddate__lt=today_date)
+    distributor=Distributor.objects.filter(end_date__lt=today_date)
+    print(distributor,'dis')
+    print(today_date)
+    print(company,'comp')
+    context = {
+        'company_length': len(company),
+        'distributor_length': len(distributor),
+    }
+
+    return render(request,'adminbase.html',context)
+
+def admin_distributor(request):
+    return render(request,'admin_distributor.html')
+
+def admin_clients(request):
+    return render(request,'admin_clients.html')
 
 
+def admin_distributor_requests(request):
+    distributor=Distributor.objects.filter(status=0)
+    return render(request,'admin_distributor_requests.html',{'distributor':distributor}) 
+
+def admin_distributor_all_view(request):
+    distributor=Distributor.objects.all()
+    company=Companies.objects.all()
+    return render(request,'admin_distributor_all_view.html',{'distributor':distributor,'company':company}) 
+
+def admin_distributor_single_view(request,did):
+    distributor=Distributor.objects.get(id=did)
+    return render(request,'admin_distributor_single_view.html',{'distributor':distributor})
+
+def distributor_admin(request):
+    t_id = request.session.get('t_id')
+    distributor = Distributor.objects.get(id=t_id)
+    today_date=date.today()
+    comp=Companies.objects.filter(Q(Distributors__isnull=False) & Q(payTerm_enddate__lt=today_date))
+    context = {
+        'comp_len' : len(comp)    
+    }
+    print(context)
+    return render(request,'distributor_admin.html',context)
+
+def distributorAdmin_Client_req(request):
+    t_id = request.session.get('t_id')
+    distributor = Distributor.objects.get(id=t_id)
+    print('distributor',distributor.id)
+    comp=Companies.objects.filter(Distributors=distributor.id)
+    return render(request,'distributorAdmin_Client_req.html',{'comp':comp})
+
+def distributorAdmin_Client_all(request):
+    t_id = request.session.get('t_id')
+    distributor = Distributor.objects.get(id=t_id)
+    comp=Companies.objects.filter(Distributors=distributor.id)
+    return render(request,'distributorAdmin_Client_all.html',{'comp':comp})
 
 
-# ----------------------------- GOKUL ------------------
+def admin_client_requests(request):
+    comp = Companies.objects.filter(Q(Distributors=None) & Q(status=0))
+    return render(request,'admin_client_requests.html',{'comp':comp})
+
+def client_accept(request,caid):
+    accept=Companies.objects.filter(id=caid).update(status=1)
+    return redirect('admin_client_requests')
+
+def client_reject(request,caid):
+    reject=Companies.objects.filter(id=caid)
+    reject.delete()
+    return redirect('admin_client_requests')
+
+def admin_clients_all_view(request):
+    comp=Companies.objects.filter(Distributors=None)
+    return render(request,'admin_clients_all_view.html',{'comp':comp})
+
+def activate_client(request,cadid):
+    activate=Companies.objects.filter(id=cadid).update(status=1)
+    return redirect('admin_clients_all_view')
+
+def deactivate_client(request,cadid):
+    deactivate =Companies.objects.filter(id=cadid).update(status=0)
+    return redirect('admin_clients_all_view')
 
 def createdistributor(request):
     payment_term=Payment_Terms.objects.all()
     return render(request,'create_distributor.html',{'payment_term':payment_term})
-
-
     
 def payment_terms(request):
     return render(request,'admin_payment_terms.html')
+
 
 def add_payment_terms(request):
     if request.method == 'POST':
@@ -19140,8 +19129,6 @@ def add_payment_terms(request):
             return redirect('payment_terms')
             
     return redirect('payment_terms')
-
-    
 
 
 def distributor_reg(request):
@@ -19196,7 +19183,6 @@ def distributor_reg(request):
                 return redirect('createdistributor')
     return render(request,'login.html')
                 
-
             
 
 def distributor_accept(request,did):
@@ -19240,4 +19226,81 @@ def distributor_clients_view(request,did):
      return render(request, 'admin_distributor_clients_view.html', {'company': company, 'dist': dist})
     else:
      return render(request, 'admin_distributor_clients_view.html', {'dist': dist})
-    
+
+
+
+# ----------------------------GOKUL-----------------------------
+
+def createstaff(request):
+    return render(request,'create_staff.html')
+
+def staff_registration(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+        
+    if request.method=='POST':
+        company_code=request.POST['company_code']
+        if Companies.objects.filter(company_code = company_code).exists():
+            fname=request.POST['staff_fname']
+            lname=request.POST['staff_lname']
+            email=request.POST['staff_email']
+            username=request.POST['staff_uname']
+            password=request.POST['staff_pass']
+            cpassword=request.POST['staff_cpass']
+            phone_number=request.POST['phone_number']
+            company=Companies.objects.get(company_code=company_code)
+            image=request.FILES.get('image')
+
+            if Staff.objects.filter(username=username).exists():
+                messages.info(request,'Sorry this username already exists')
+                return redirect('createstaff')
+            
+            if Staff.objects.filter(email=email).exists():
+                messages.info(request,'Sorry this email already exists')
+                return redirect('createstaff')
+            
+            staff=Staff(first_name=fname,last_name = lname,email = email,username = username,password = password,contact_details=phone_number,company=company,img=image)
+            staff.save()
+            messages.info(request,'Registration success')
+            return redirect('login')
+            
+        else:
+            messages.info(request,"Sorry the company code you have entered doesn't exists")
+            return redirect('createstaff')
+
+
+def staff_request(request):
+    staff=Staff.objects.filter(status=0)
+    return render(request,'staff_request.html',{'staff':staff})
+
+
+def accept_staff(request,sid):
+    accept=Staff.objects.filter(id=sid).update(status=1)
+    return redirect('staff_request')
+
+def reject_staff(request,sid):
+    reject=Staff.objects.filter(id=sid)
+    reject.delete()
+    return redirect('staff_request')
+
+
+def staff_all_view(request):
+    staff=Staff.objects.all()
+    return render(request,'staff_all_view.html',{'staff':staff})
+
+def edit_company(request):
+    comp_id = request.session.get('t_id')
+    com=Companies.objects.get(id=comp_id)
+    print(com,'com')
+    return render(request,'edit_company.html',{'com':com})
+
+def company_profile(request):
+    comp_id = request.session.get('t_id')
+    com=Companies.objects.get(id=comp_id)
+    print(com,'com')
+    return render(request,'company_profile.html',{'com':com})           
+
+        

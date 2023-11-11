@@ -2,42 +2,12 @@ from operator import truediv
 from django.db import models
 from re import T
 from django.utils import timezone
-from django.contrib.auth.models import User
+
 import app1
 
 # Create your models here.
 
-# GOKUL ---------------------
-class Logins(models.Model):
-   username = models.CharField(max_length=70, null=False, blank=False)
-   email = models.CharField(max_length=70, null=False, blank=False)
-   password = models.CharField(max_length=70, null=False, blank=False)
-   status = models.BooleanField(default=False)
-   reg_user = models.CharField(max_length=70, null=False, blank=False)
-
-class Payment_Terms(models.Model):
-    payment_terms_number = models.IntegerField(null=True,blank=True)  
-    payment_terms_value = models.CharField(max_length=100,null=True,blank=True) 
-    days = models.CharField(max_length=100,null=True,blank=True) 
-
-class Distributor(models.Model):
-    first_name=models.CharField(max_length=100,null=True,blank=True)
-    last_name=models.CharField(max_length=100,null=True,blank=True)
-    email=models.CharField(max_length=100,null=True,blank=True)
-    username=models.CharField(max_length=100,null=True,blank=True)
-    password=models.CharField(max_length=100,null=True,blank=True)
-    contact_details=models.CharField(max_length=100,null=True,blank=True) 
-    start_date = models.DateField(max_length=255,null=True,blank=True)
-    end_date = models.DateField(max_length=255,null=True,blank=True) 
-    payment_terms= models.ForeignKey(Payment_Terms,on_delete=models.CASCADE,null=True,blank=True)
-    distributor_id=models.CharField(max_length=100,null=True,blank=True) 
-    logins=models.ForeignKey(Logins,on_delete=models.CASCADE,null=True,blank=True)
-    status=models.BooleanField(default=False)
-
-
-#END--------- GOKUL ---------------------
-
-
+# Ajmy
 
 class StockGroup(models.Model):
     grp_name = models.CharField(max_length=70, null=False, blank=False)
@@ -78,7 +48,33 @@ class company(models.Model):
     comp_name=models.CharField(max_length=100,null=True)
     start_date=models.DateField()    
 
+class Payment_Terms(models.Model):
+    payment_terms_number = models.IntegerField(null=True,blank=True)  
+    payment_terms_value = models.CharField(max_length=100,null=True,blank=True) 
+    days = models.CharField(max_length=100,null=True,blank=True) 
 
+class Logins(models.Model):
+   username = models.CharField(max_length=70, null=False, blank=False)
+   email = models.CharField(max_length=70, null=False, blank=False)
+   password = models.CharField(max_length=70, null=False, blank=False)
+   status = models.BooleanField(default=False)
+   reg_user = models.CharField(max_length=70, null=False, blank=False)
+
+
+class Distributor(models.Model):
+    first_name=models.CharField(max_length=100,null=True,blank=True)
+    last_name=models.CharField(max_length=100,null=True,blank=True)
+    email=models.CharField(max_length=100,null=True,blank=True)
+    username=models.CharField(max_length=100,null=True,blank=True)
+    password=models.CharField(max_length=100,null=True,blank=True)
+    contact_details=models.CharField(max_length=100,null=True,blank=True) 
+    start_date = models.DateField(max_length=255,null=True,blank=True)
+    end_date = models.DateField(max_length=255,null=True,blank=True) 
+    payment_terms= models.ForeignKey(Payment_Terms,on_delete=models.CASCADE,null=True,blank=True)
+    distributor_id=models.CharField(max_length=100,null=True,blank=True) 
+    logins=models.ForeignKey(Logins,on_delete=models.CASCADE,null=True,blank=True)
+    status=models.BooleanField(default=False)
+    
 # praveen , Jisha, Riya
 
 class Companies(models.Model):
@@ -101,12 +97,27 @@ class Companies(models.Model):
     books_begin = models.DateField()
     fin_end = models.DateField()
     status=models.BooleanField(default=True)
-
-    # ------------------------- GOKUL----------------------------
     payment_Terms=models.ForeignKey(Payment_Terms,on_delete=models.CASCADE, null=True)
     Distributors = models.ForeignKey(Distributor, on_delete=models.CASCADE,null=True,blank=True)
-    payTerm_startdate=models.DateField()
-    payTerm_enddate=models.DateField()
+    payTerm_startdate = models.DateField(max_length=255,null=True,blank=True)
+    payTerm_enddate = models.DateField(max_length=255,null=True,blank=True)
+
+    #------------------------GOKUL NEW-----------------
+    company_code = models.CharField(max_length=100,null=True,blank=True) 
+
+
+
+class Staff(models.Model):
+    first_name=models.CharField(max_length=100,null=True,blank=True)
+    last_name=models.CharField(max_length=100,null=True,blank=True)
+    email=models.CharField(max_length=100,null=True,blank=True)
+    username=models.CharField(max_length=100,null=True,blank=True)
+    password=models.CharField(max_length=100,null=True,blank=True)
+    contact_details=models.CharField(max_length=100,null=True,blank=True)
+    img = models.ImageField(null=True,blank = True,upload_to = 'image/staff')
+    status=models.BooleanField(default=False)
+    company=models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
+
 
 class Features(models.Model):
     maintain_accounts = models.CharField(max_length=10)
@@ -2117,6 +2128,3 @@ class receipt_note_no(models.Model):
 #---- End of Purchase Voucher---------------
 
 
-
-
-# GOKUL------------------------------------------------------
