@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'staff_base.html' %}
 
 {% block body %}
 <script type="text/javascript"
@@ -17,290 +17,71 @@
 {% endfor %}
 {% endif %}
 
-<div style="background-color: #213b52;color: #fff;" class="mt-5 " >
-   
-    <h6 class="bg-info text-light p-2 m-0 text-center">Edit Company Details</h6>
-    <form class="p-3 " id="validate" style="background-color:rgba(0,0,0,.4);" method="post"
-        action="{% url 'update_company_prof' com.id%}" autocomplete="off">
+<div style="background-color: #213b52;color: #fff;" class="m-0">
+    
+    
+    <form class="p-3" id="validate" style="background-color:rgba(0,0,0,.4);" method="post"
+        action="{% url 'update_staff_prof' staff.id%}" autocomplete="off" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="row container-fluid  p-0 m-0" style=" border: 1px solid rgba(128, 128, 128, 0.6);">
-            <div class="col-sm-6 m-0 p-4" style=" border-right: 1px solid rgba(128, 128, 128, 0.6);">
+
+        
+        <h3 class=" text-light p-3  text-center mt-5" style="text-align: center;padding-top: 30px;">Edit Staff Details</h3>
+        <div class="row container-fluid  p-0 m-0 mt-3" style=" border: 1px solid rgba(128, 128, 128, 0.6);">
+           
+            <div class="container mt-4" style="padding-top: 3%;">
                 <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"><label for="d">Company Name</label></div>
-                    <div class="col-sm-6 m-0 p-0"><input type="text" class="form-control" id="companyname"
-                            name="companyname" value="{{ com.name }}"></div>
-                </div><br>
+                    <div class="col-sm-6 m-0 p-0"><label for="d">First Name</label></div>
+                    <div class="col-sm-6 m-0 p-0"><input type="text" class="form-control" id="staff_fname"
+                            name="staff_fname" value="{{ staff.first_name }}"></div>
+                </div>
                 <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">Mailing Name</label></div>
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Last Name</label></div>
                     <div class="col-sm-6 m-0 p-0">
-                        <input type="text" class="form-control" id="mailing_name" name="mailing_name"
-                            onclick="copyName()" value="{{ com.mailing_name }}">
+                        <input type="text" class="form-control" id="staff_lname" name="staff_lname"
+                        value="{{ staff.last_name }}">
                     </div>
                 </div>
                 <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">Address</label></div>
-                    <div class="col-sm-6 m-0 p-0"><textarea class="form-control" name="address" id="" cols="36"
-                            rows="4" >{{ com.address }}</textarea></div>
-                </div>
-                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Email</label></div>
                     <div class="col-sm-6 m-0 p-0">
-                        <label id="st">State</label>
-                        <!-- <label id="reg" class="hide">Region</label>
-                        <label id="div" class="hide">Division</label>
-                        <label id="dis" class="hide">District</label> -->
-                    </div>
-                    <div class="col-sm-6 m-0 p-0"><input id="state" type="text" name="state" class="form-control"
-                            onclick="showState()" value="{{ com.state }}"></div>
-                </div>
-
-                <!-- <div class="form-popup " id="myForm" style="background-color: rgb(216, 232, 238);">
-                    <form action="" class="form-container" id="countryform">
-                        <h6 style="background-color:rgb(17, 169, 240) ;color:white">List of states</h6>
-                        <a onclick="showCountry();" style="margin-left:180px;color:black;cursor:pointer">Change
-                            Country</a>
-                        <hr>
-                        <div class="scrollbar scrollbar-primary ">
-                           
-
-                            <table id="india">
-
-                                <a class="btns_prnt" style="cursor:pointer;color: black;"
-                                    onclick="setState('Andaman and Nicobar Islands')">Andaman and Nicobar
-                                    Islands</a><br>
-                                <a class="btns_prnt" style="cursor:pointer;color: black;"
-                                    onclick="setState('Andhra Pradesh')">Andhra Pradesh</a><br>
-                                <a class="btns_prnt" style="cursor:pointer;color: black;"
-                                    onclick="setState('Arunachal Pradesh')">Arunachal Pradesh</a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Assam')">Assam </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Bihar')">Bihar </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Chandigarh')">Chandigarh
-                                </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Chhattisgarh')">Chhattisgarh
-                                </a><br>
-                                <a style="cursor:pointer;color: black;"
-                                    onclick="setState('Dadra & Nagar Haveli and Daman and Diu')">Dadra & Nagar Haveli
-                                    and Daman and Diu </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Delhi')">Delhi </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Goa')">Goa </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Gujarat')">Gujarat </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Haryana')">Haryana </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Himachal Pradesh')">Himachal
-                                    Pradesh</a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Jammu & Kashmir')">Jammu &
-                                    Kashmir </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Jharkhand')">Jharkhand
-                                </a><br>
-                                <a style="cursor:pointer;color: black;"
-                                    onclick="setState('Karnataka')">Karnataka</a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Kerala')">Kerala</a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Ladakh')">Ladakh</a><br>
-                                <a style="cursor:pointer;color: black;"
-                                    onclick="setState('Lakshadweep')">Lakshadweep</a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Madhya Pradesh')">Madhya
-                                    Pradesh </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Maharashtra')">Maharashtra
-                                </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Manipur')">Manipur </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Meghalaya')">Meghalaya
-                                </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Mizoram')">Mizoram </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Nagaland')">Nagaland </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Odisha')">Odisha </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Puduchery')">Puduchery
-                                </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Punjab')">Punjab </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Rajasthan')">Rajasthan
-                                </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Sikkim')">Sikkim </a><br>
-                                <a style="cursor:pointer;color: black;"
-                                    onclick="setState('Tamilnadu')">Tamilnadu</a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Telengana')">Telengana
-                                </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Tripura')">Tripura </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('Uttarakhand')">Uttarakhand
-                                </a><br>
-                                <a style="cursor:pointer;color: black;"
-                                    onclick="setState('TamiUttar Pradeshlnadu')">Uttar Pradesh </a><br>
-                                <a style="cursor:pointer;color: black;" onclick="setState('West Bengal')">West Bengal
-                                </a><br>
-                                <a style="cursor:pointer;color: black;" id="new"
-                                    onclick="setState('West Bengal')"></a><br>
-                                {% for i in country %}
-                                <a onclick="setCountry1('{{i.name}}','{{i.id}}')"
-                                    style="cursor:pointer;color: black;">{{i.name}}</a><br>
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </form>
-
-
-
-                </div> -->
-
-
-                <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">Country</label></div>
-                     <div class="col-sm-6 m-0 p-0"><input type="text" id="country" name="country" class="form-control"
-                            value="India" onclick="showCountry()" value="{{ com.country }}"></div>
-                </div>
-                <div class="form-popup" id="myForm1" style="background-color: rgb(216, 232, 238);">
-                    <!-- <form action="" class="form-container1">
-                        <h6 style="background-color:rgb(17, 169, 240) ;color:white">List of Countries</h6>
-                        <a onclick="document.getElementById('myForm1').style.visibility= 'hidden'"
-                            style="margin-left:250px;color:black;cursor:pointer">Back</a>
-                        <hr>
-                        <div class="scrollbar scrollbar-primary">
-                            <table>
-                                <tr>
-
-                                    <a onclick="setCountry('Bangladesh')"
-                                        style="cursor:pointer;color: black;">Bangladesh</a><br>
-                                    <a onclick="setCountry('Bhutan')"
-                                        style="cursor:pointer;color: black;">Bhutan</a><br>
-
-                                    <a onclick="setCountry('Ghana')" style="cursor:pointer;color: black;">Ghana</a><br>
-                                    <a onclick="setCountry('Hong Kong')" style="cursor:pointer;color: black;">Hong
-                                        Kong</a><br>
-                                    <a onclick="setCountry('India')" style="cursor:pointer;color: black;">India</a><br>
-                                    <a onclick="setCountry('Indonesia')"
-                                        style="cursor:pointer;color: black;">Indonesia</a><br>
-                                    <a onclick="setCountry('Kenya')" style="cursor:pointer;color: black;">Kenya</a><br>
-                                    <a onclick="setCountry('Kingdom of Bahrain')"
-                                        style="cursor:pointer;color: black;">Kingdom of Bahrain</a><br>
-                                    <a onclick="setCountry('Kuwait')"
-                                        style="cursor:pointer;color: black;">Kuwait</a><br>
-                                    <a onclick="setCountry('Liberia')"
-                                        style="cursor:pointer;color: black;">Liberia</a><br>
-                                    <a onclick="setCountry('Malawi')"
-                                        style="cursor:pointer;color: black;">Malawi</a><br>
-                                    <a onclick="setCountry('Malaysia')"
-                                        style="cursor:pointer;color: black;">Malaysia</a><br>
-                                    <a onclick="setCountry('Malaysia(Burma)')"
-                                        style="cursor:pointer;color: black;">Myanmar(Burma)</a><br>
-                                    <a onclick="setCountry('Nepal')" style="cursor:pointer;color: black;">Nepal</a><br>
-                                    <a onclick="setCountry('Nigeria')"
-                                        style="cursor:pointer;color: black;">Nigeria</a><br>
-                                    <a onclick="setCountry('Philippies')"
-                                        style="cursor:pointer;color: black;">Philippies</a><br>
-                                    <a onclick="setCountry('Qatar')" style="cursor:pointer;color: black;">Qatar</a><br>
-                                    <a onclick="setCountry('Saudi Arabia')" style="cursor:pointer;color: black;">Saudi
-                                        Arabia</a><br>
-                                    <a onclick="setCountry('Singapore')"
-                                        style="cursor:pointer;color: black;">Singapore</a><br>
-                                    <a onclick="setCountry('South Africa')" style="cursor:pointer;color: black;">South
-                                        Africa</a><br>
-                                    <a onclick="setCountry('Sri Lanka')" style="cursor:pointer;color: black;">Sri
-                                        Lanka</a><br>
-                                    <a onclick="setCountry('Sultanate of Oman')"
-                                        style="cursor:pointer;color: black;">Sultanate of Oman</a><br>
-                                    <a onclick="setCountry('Tanzania')"
-                                        style="cursor:pointer;color: black;">Tanzania</a><br>
-                                    <a onclick="setCountry('Thailand')"
-                                        style="cursor:pointer;color: black;">Thailand</a><br>
-                                    <a onclick="setCountry('UAE')" style="cursor:pointer;color: black;">UAE</a><br>
-                                    <a onclick="setCountry('Uganda')"
-                                        style="cursor:pointer;color: black;">Uganda</a><br>
-                                    <a onclick="setCountry('UK')" style="cursor:pointer;color: black;">UK</a><br>
-                                    <a onclick="setCountry('United States of America')"
-                                        style="cursor:pointer;color: black;">United States of America</a><br>
-                                    <a onclick="setCountry('Zambia')"
-                                        style="cursor:pointer;color: black;">Zambia</a><br>
-
-
-                                </tr>
-                            </table>
-                        </div>
-
-                    </form> -->
-                </div>
-
-
-                <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">Pin Code</label></div>
-                    <div class="col-sm-6 m-0 p-0"><input type="text" name="pincode" class="form-control" maxlength="6"
-                            pattern="^[1-9][0-9]{5}$" title="Please enter valid pincode" value="{{ com.pincode }}"></div>
-                </div>
-                <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">Telephone</label></div>
-                    <div class="col-sm-6 m-0 p-0"><input type="text" name="telephone" class="form-control" id="d"
-                            placeholder="" maxlength="7" pattern="[0-9]{3}[0-9]{2}[0-9]{2}" value="{{ com.telephone }}">
+                        <input type="text" class="form-control" id="staff_email" name="staff_email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" value="{{ staff.email }}"> 
                     </div>
                 </div>
-                <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">Mobile</label></div>
-                    <div class="col-sm-6 m-0 p-0"><input type="text" name="mobile" class="form-control" id="d"
-                            placeholder="" maxlength="10" pattern="[6-9]{1}[0-9]{9}"
-                            title="Please enter valid phone number" value="{{ com.mobile }}">
-                    </div>
-                </div>
-                <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">Fax</label></div>
-                    <div class="col-sm-6 m-0 p-0"><input type="text" name="fax" class="form-control"
-                            pattern="^\+?[0-9]{3,}$" value="{{ com.fax }}"></div>
-                </div>
-                <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">E-Mail</label></div>
-                    <div class="col-sm-6 m-0 p-0"><input type="email" name="email" class="form-control" id="d"
-                            placeholder="Use Email As Username" value="{{ com.email }}" ></div>
-                </div>
-                <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">Website</label></div>
-                    <div class="col-sm-6 m-0 p-0"><input type="url" name="website" class="form-control" id="d"
-                            placeholder="" value="{{ com.website }}"></div>
-                </div>
-            </div>
 
-            <div class="col-sm-6 m-0 p-4" style=" border-right: 1px solid rgba(128, 128, 128, 0.6);">
-                <div class="row container-fluid  p-0">
-                    <div class="col-sm-6 m-0 p-0"></div>
-                    <div class="col-sm-6 m-0 p-0"></div>
-                </div>
                 <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">Financial Year Beginning From</label></div>
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Username</label></div>
                     <div class="col-sm-6 m-0 p-0">
-                        <input type="date"  name="fyear"
-                            data-date-format="DD/MM/YYYY" class="form-control" value="{{ com.fin_begin|date:'Y-m-d' }}"></div>
+                        <input type="text" class="form-control" id="staff_uname" name="staff_uname" value="{{ staff.username }}">
+                    </div>
                 </div>
+               
+
+
                 <div class="row container-fluid  p-2">
-                    <div class="col-sm-6 m-0 p-0"> <label for="d">Book Beginning From</label></div>
-                    <div class="col-sm-6 m-0 p-0"><input type="date"  name="byear"
-                            data-date-format="DD/MM/YYYY" class="form-control" value="{{ com.books_begin|date:'Y-m-d'}}"></div>
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Phone Number</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ staff.contact_details }}" maxlength="10" pattern="[6-9]{1}[0-9]{9}">
+                        <div class="registrationFormAlert col-sm-6 m-0 p-0 pt-2"  ></div>
+                        
+                    </div>
                 </div>
-            </div>
 
-            <div class="row container-fluid  p-0 m-0" style=" border: 1px solid rgba(128, 128, 128, 0.6);">
-                <div class="col-sm-6 m-0 p-4">
-                    <div class="row container-fluid  p-2">
-                        <div class="col-sm-6 m-0 p-0"> <label for="d"></label>Base Currency Symbol</div>
-                        <div class="col-sm-6 m-0 p-0"><input type="text" value="{{ com.currency_symbol }}" name="currency" class="form-control"
-                                id="currency_symbol" placeholder="" value=""></div>
+                
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0 mt-1"> <label for="d">Choose File</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="file" id="image" name="image" accept="image/*" class="form-control mt-2" value="">
                     </div>
-                    <div class="row container-fluid  p-2">
-                        <div class="col-sm-6 m-0 p-0"> <label for="d"></label>Formal Name</div>
-                        <div class="col-sm-6 m-0 p-0"><input type="text" value=" {{ com.formal_name }}" name="formal" class="form-control"
-                                id="formal_name" placeholder="" ></div>
-                    </div>
-
-                    <div class="row container-fluid  p-2">
-                        <div class="col-sm-6 m-0 p-0"> <label for="d"></label>Payment Terms</div>
-                        <div class="col-sm-6 m-0 p-0"> 
-                            <select name="select" id="" class="form-control" required>
-                            <option value="{{ com.payment_Terms.id }}" selected hidden>{{ com.payment_Terms.payment_terms_number }} {{ com.payment_Terms.payment_terms_value }}</option>
-                            {% for i in payment_term %}
-                            <option value="{{ i.id }}" >{{  i.payment_terms_number }}  {{ i.payment_terms_value }}</option>
-                            {% endfor %}
-                            
-                        </select></div>
-                    </div>
+                </div>
+                <center>
+                    <div class="p-4"><button class="btn btn-info w-15" type="submit">UPDATE</button></div>
+                </center>
+                
+                
+               
                 
             </div>
-
-        </div>
-
-    </div>
-           <center>
-            <div class="enter w-100 py-4"><button class="btn btn-info w-15">UPDATE</button></div>
-        </center>
+           
     </form>
 </div>
 

@@ -79,7 +79,7 @@ def login(request):
                 messages.info(request,'Approval for login required')
                 return redirect('login')
             else:
-                return render(request,'base.html')
+                return render(request,'staff_base.html')
 
            
         
@@ -3551,6 +3551,20 @@ def companycreate(request):
         n.name=request.POST['companyname']
         b=Companies.objects.filter(name=n.name)
         distributor_id=request.POST['distr_id']
+        email=request.POST['email']
+
+        if Companies.objects.filter(email = email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('createcompany')
+        
+        if Distributor.objects.filter(email=email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('createcompany')
+        
+        if Staff.objects.filter(email=email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('createcompany')
+
         company_code=get_random_string(length=7)
         if Companies.objects.filter(company_code = company_code).exists():
             company_code=get_random_string(length=7)
@@ -3581,10 +3595,10 @@ def companycreate(request):
             n.formal_name=request.POST['formal']
             n.password=request.POST['password']
             cpassword=request.POST['cpassword']
+            n.Distributors=distributor
             payment_select=request.POST['select4']
             terms=Payment_Terms.objects.get(id=payment_select)
             n.payment_Terms=terms
-            n.Distributors=distributor
             start_date=date.today()
             n.payTerm_startdate=start_date
             days=int(terms.days)
@@ -19295,12 +19309,169 @@ def edit_company(request):
     comp_id = request.session.get('t_id')
     com=Companies.objects.get(id=comp_id)
     print(com,'com')
-    return render(request,'edit_company.html',{'com':com})
+    payment_term=Payment_Terms.objects.all()
+    return render(request,'edit_company.html',{'com':com,'payment_term':payment_term})
 
 def company_profile(request):
     comp_id = request.session.get('t_id')
     com=Companies.objects.get(id=comp_id)
+    
     print(com,'com')
-    return render(request,'company_profile.html',{'com':com})           
+    return render(request,'company_profile.html',{'com':com})   
+
+def update_company_prof(request,cid):
+    com=Companies.objects.get(id=cid)
+    if request.method=='POST':
+        email=request.POST['email']
+        if Companies.objects.filter(email = email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('edit_company')
+        
+        if Distributor.objects.filter(email=email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('edit_company')
+        
+        if Staff.objects.filter(email=email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('edit_company')
+        
+        com.name=request.POST['companyname']
+        com.mailing_name=request.POST['mailing_name']
+        com.address=request.POST['address']
+        com.state=request.POST['state']
+        com.country=request.POST['country']
+        com.pincode=request.POST['pincode']
+        com.telephone=request.POST['telephone']
+        com.mobile=request.POST['mobile']
+        com.fax=request.POST['fax']
+        com.email=request.POST['email']
+        com.website=request.POST['website']
+        com.currency_symbol=request.POST['currency']
+        com.formal_name=request.POST['formal']
+        com.fin_begin=request.POST['fyear']
+        com.books_begin=request.POST['byear']
+        out=datetime.strptime (com.fin_begin,'%Y-%m-%d')+timedelta (days=364)
+        com.fin_end=out.date()
+        payment_t=request.POST['select']
+        terms=Payment_Terms.objects.get(id=payment_t)
+        com.payment_Terms=terms
+        start_date=date.today()
+        com.payTerm_startdate=start_date
+        days=int(terms.days)
+        end= date.today() + timedelta(days=days)
+        end_date=end
+        com.payTerm_enddate=end_date
+        com.save()
+        return redirect('company_profile')
+    return redirect('company_profile')
 
         
+
+def distributor_profile(request):
+    distributor_id = request.session.get('t_id')
+    dist=Distributor.objects.get(id=distributor_id)
+    return render(request,'distributor_profile.html',{'dist':dist})
+
+
+        
+def edit_distributor(request):
+    dist_id = request.session.get('t_id')
+    dist=Distributor.objects.get(id=dist_id)
+    payment_term=Payment_Terms.objects.all()
+    return render(request,'edit_distributor.html',{'dist':dist,'payment_term':payment_term})
+
+def update_distributor_prof(request,did):
+    dis=Distributor.objects.get(id=did)
+    if request.method=='POST':
+
+        email=request.POST['dist_email']
+        if Companies.objects.filter(email = email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('edit_distributor')
+        
+        if Distributor.objects.filter(email=email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('edit_distributor')
+        
+        if Staff.objects.filter(email=email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('edit_distributor')
+        
+        username=request.POST['dist_uname']
+        if Staff.objects.filter(username = username).exists():
+            messages.info(request, 'Sorry, this username already exist !!')
+            return redirect('edit_distributor')
+        
+        if Distributor.objects.filter(username=username).exists():
+            messages.info(request, 'Sorry, this username already exist !!')
+            return redirect('edit_distributor')
+        
+        dis.first_name=request.POST['dist_fname']
+        dis.last_name=request.POST['dist_lname']
+        dis.email=request.POST['dist_email']
+        dis.username=request.POST['dist_uname']
+        dis.contact_details=request.POST['phone_number']
+        payment_t=request.POST['select']
+        terms=Payment_Terms.objects.get(id=payment_t)
+        dis.payment_terms=terms
+        start_date=date.today()
+        dis.start_date=start_date
+        days=int(terms.days)
+        end= date.today() + timedelta(days=days)
+        end_date=end
+        dis.end_date=end_date
+        dis.save()
+        return redirect('distributor_profile')
+    return redirect('distributor_profile')
+
+
+def staff_profile(request):
+    staff_id = request.session.get('t_id')
+    staff=Staff.objects.get(id=staff_id)
+    return render(request,'staff_profile.html',{'staff':staff})
+    
+        
+
+def edit_staff(request):
+    staff_id = request.session.get('t_id')
+    staff=Staff.objects.get(id=staff_id)
+    return render(request,'edit_staff.html',{'staff':staff})
+
+
+def update_staff_prof(request,sid):
+    stf=Staff.objects.get(id=sid)
+    if request.method=='POST':
+
+        email=request.POST['staff_email']
+        if Companies.objects.filter(email = email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('edit_staff')
+        
+        if Distributor.objects.filter(email=email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('edit_staff')
+        
+        if Staff.objects.filter(email=email).exists():
+            messages.info(request, 'Sorry, this email already exist !!')
+            return redirect('edit_staff')
+        
+        username=request.POST['staff_uname']
+        if Staff.objects.filter(username = username).exists():
+            messages.info(request, 'Sorry, this username already exist !!')
+            return redirect('edit_staff')
+        
+        if Distributor.objects.filter(username=username).exists():
+            messages.info(request, 'Sorry, this username already exist !!')
+            return redirect('edit_staff')
+        
+        stf.first_name=request.POST['staff_fname']
+        stf.last_name=request.POST['staff_lname']
+        stf.email=request.POST['staff_email']
+        stf.username=request.POST['staff_uname']
+        stf.contact_details=request.POST['phone_number']
+        stf.img=request.FILES.get('image')
+        stf.save()
+        return redirect('staff_profile')
+    return redirect('staff_profile')
+    
+    

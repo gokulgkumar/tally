@@ -1005,6 +1005,13 @@ urlpatterns = [
     path('staff_all_view',views.staff_all_view,name='staff_all_view'),
     path('edit_company',views.edit_company,name='edit_company'),
     path('company_profile',views.company_profile,name='company_profile'),
+    path('update_company_prof/<int:cid>',views.update_company_prof,name='update_company_prof'),
+    path('distributor_profile',views.distributor_profile,name='distributor_profile'),
+    path('edit_distributor',views.edit_distributor,name='edit_distributor'),
+    path('update_distributor_prof/<int:did>',views.update_distributor_prof,name='update_distributor_prof'),
+    path('staff_profile',views.staff_profile,name='staff_profile'),
+    path('edit_staff',views.edit_staff,name='edit_staff'),
+    path('update_staff_prof/<int:sid>',views.update_staff_prof,name='update_staff_prof'),
 
     
     path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'staff_base.html' %}
 
 {% block body %}
  <!-- Iconify -->
@@ -10,27 +10,15 @@
 <div class="card" style="width: 48rem;border-radius: 10px;">
   
 <div class="mt-4">
-    <h2 class="text-warning text-center">{{ com.name }}</h2>
+    <h2 class="text-warning text-center">{{ staff.company.name }}</h2>
   </div>
   <hr>
   <div class="row mx-3 p-2" style="font-size: 1.1rem;">
     <div class="col-5">
-      <p>Company Name</p>
-      <p>Mailing Name</p>
-      <p>Address</p>
-      <p>State</p>
-      <p>Country</p>
-      <p>Pincode</p>
-      <p>Telephone</p>
-      <p>Mobile</p>
-      <p>Fax</p>
+      <p>Staff Name</p>
       <p>E-Mail</p>
-      <p>Website</p>
-      <p>Payment Terms</p>
-      <p>Financial Year Beginning From</p>
-      <p>Book Beginning From</p>
-      <p>Base Currency Symbol</p>
-      <p>Formal Name</p>
+      <p>Username</p>
+      <p>Mobile</p>
    
 
     </div>
@@ -39,119 +27,34 @@
       <p  style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
       <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
       <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
-      <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
+      
+
     </div>
     <div class="col-5" >
 
-      {% if com.name %}
-      <p>{{ com.name }}</p>
+      {% if staff.first_name and staff.last_name %}
+      <p>{{ staff.first_name }} {{ staff.last_name }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.mailing_name %}
-      <p>{{ com.mailing_name }}</p>
+      {% if staff.email %}
+      <p>{{ staff.email }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.address %}
-      <p >{{ com.address }}</p>
+      {% if staff.username %}
+      <p >{{ staff.username }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.state %}
-      <p >{{ com.state }}</p>
+      {% if staff.contact_details %}
+      <p >{{ staff.contact_details }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
-
-      {% if com.country %}
-      <p >{{ com.country }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
-      {% if com.pincode %}
-      <p >{{ com.pincode }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
-      {% if com.telephone %}
-      <p >{{ com.telephone }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
-      {% if com.mobile %}
-      <p >{{ com.mobile }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
-      {% if com.fax %}
-      <p>{{ com.fax }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
-      {% if com.email %}
-      <p>{{ com.email }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
-      {% if com.website %}
-      <p>{{ com.website }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
-      
-      {% if com.payment_Terms %}
-      <p>{{ com.payment_Terms.payment_terms_number }} {{ com.payment_Terms.payment_terms_value }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
-
-      {% if com.fin_begin %}
-      <p>{{ com.fin_begin }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
-      {% if com.books_begin %}
-      <p>{{ com.books_begin }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
-      {% if com.currency_symbol %}
-      <p>{{ com.currency_symbol }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
-      {% if com.formal_name %}
-      <p>{{ com.formal_name }}</p>
-      {% else %}
-      <p>None</p>
-      {% endif %}
-
 
       
      
@@ -160,7 +63,7 @@
   </div>
   <hr>
   <div class="p-4">
-    <a href="{% url 'edit_company' %}" class="btn btn-danger " >Edit</a>
+    <a href="{% url 'edit_staff' %}" class="btn btn-danger " >Edit</a>
   </div>
   
 </div>

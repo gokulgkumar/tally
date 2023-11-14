@@ -350,59 +350,115 @@
 
 {% block body %} 
 
-<div class="container" >
-<div class="row mt-5">
-    <div class="col-md-6">
-      <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" >
-        <div class="card-body"  >
+
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<center>
+<div class="container mt-5">
 
 
-          
+<div class="card" style="width: 48rem;border-radius: 10px;">
+ 
+<div class="mt-4">
+   <h2 class="text-warning text-center">{{ dist.first_name }} {{ dist.last_name }}</h2>
+ </div>
+ <hr>
+ <div class="row mx-3 p-2" style="font-size: 1.1rem;">
+   <div class="col-5">
+    <p>First Name</p>
+    <p>Last Name</p>
+    <p>Code</p>
+    <p>E-Mail</p>
+     <p>Username</p>
+     <p>Phone Number</p>
+     <p>Start Date</p>
+     <p>End Date</p>
+     <p>Payment Terms</p>
+     
 
-          <div class="row"  >
-            <div class="col-md-9 " style="height: 5rem!important;">
-              <a href="{% url 'distributorAdmin_Client_req' %}">
-              <h5 class="card-title mb-9 fw-semibold"><b>CLIENT REQUEST</b></h5>
-            </a>
-              
-
-            </div>
-            <div class="col">
-              <a href="{% url 'distributorAdmin_Client_req' %}">
-                <i class="fa fa-user-plus text-white" style="font-size: 2em;"></i>
-              
-            </a>
-              
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>      
+   </div>
+   <div class="col-2">
+     <p  style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
+     <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
+     <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
+     <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
+     <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
+     <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
+     <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
+     <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
+     <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
     
-    <div class="col-md-6">
-      <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" >
-        <div class="card-body "  >
-          <div class="row">
-            <div class="col-md-9" style="height: 5rem!important;">
-              <a href="{% url 'distributorAdmin_Client_all' %}">
-                
-                <h5 class="card-title mb-9 fw-semibold "><b>ALL CLIENTS</b></h5>
-              </a>
-              
+     
+   </div>
+   <div class="col-5" >
 
-            </div>
-            <div class="col">
-              <a href="{% url 'distributorAdmin_Client_all' %}">
-              <i class="fa fa-users text-white" style="font-size: 2.3em;"></i>
-            </a>
-              
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>   
-  </div>
+     {% if dist.first_name %}
+     <p>{{ dist.first_name }}</p>
+     {% else %}
+     <p>None</p>
+     {% endif %}
+
+     {% if dist.last_name %}
+     <p >{{ dist.last_name }}</p>
+     {% else %}
+     <p>None</p>
+     {% endif %}
+
+     {% if dist.distributor_id %}
+     <p >{{ dist.distributor_id }}</p>
+     {% else %}
+     <p>None</p>
+     {% endif %}
+     
+
+     {% if dist.email %}
+     <p >{{ dist.email }}</p>
+     {% else %}
+     <p>None</p>
+     {% endif %}
+
+     {% if dist.username %}
+     <p >{{ dist.username }}</p>
+     {% else %}
+     <p>None</p>
+     {% endif %}
+
+     {% if dist.contact_details %}
+     <p >{{ dist.contact_details }}</p>
+     {% else %}
+     <p>None</p>
+     {% endif %}
+
+     {% if dist.start_date %}
+     <p >{{ dist.start_date }}</p>
+     {% else %}
+     <p>None</p>
+     {% endif %}
+
+     {% if dist.end_date %}
+     <p >{{ dist.end_date }}</p>
+     {% else %}
+     <p>None</p>
+     {% endif %}
+
+     {% if dist.payment_terms %}
+     <p>{{ dist.payment_terms.payment_terms_number }} {{ dist.payment_terms.payment_terms_value }}</p>
+     {% else %}
+     <p>None</p>
+     {% endif %}
+
+
+   </div>
+   
+ </div>
+ <hr>
+ <div class="p-4">
+   <a href="{% url 'edit_distributor' %}" class="btn btn-danger " >Edit</a>
+ </div>
+ 
 </div>
+
+</div>
+</center>
 
         </div>
         </div>

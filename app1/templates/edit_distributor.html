@@ -307,101 +307,88 @@
                 </script>
 
 
-<!-- start date modal  -->
-<div class="modal fade" id="dateModal" role="dialog" style="margin-top: 150px;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form action="" id="frmDate" method="POST" >
-                {% csrf_token %}
-                    <div class="form-group" align="center" id="mdlSubmit">
-                        <input type="date" name="currentdate" id="enterDate" placeholder="Date" class="form-control w-50"><br>
-                        <input type="hidden" id="hdnDate" value="0">
-                        <input type="hidden" id="hdnDateVal" value="0">
-                        <button class="btn btn-small w-25 btn btn-info" data-dismiss="modal" aria-hidden="true" onclick="setDate()">Submit</button> 
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- end of date modal -->
-
-<!--starting of period modal-->
-<div class="modal fade" id="myModal1" role="dialog" style="margin-top: 150px;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form action="" method="POST" >
-                {% csrf_token %}
-                <div class="form-group" align="center">
-                    <input type="date" name="dateperiod1"  id="enterPeriod1" class="form-control w-50"><br>
-                    <label>to</label><br>
-                    <input type="date" name="dateperiod2" id="enterPeriod2" class="form-control w-50"><br>
-                    <button class="btn btn-small w-25 btn btn-info" data-dismiss="modal" aria-hidden="true" onclick="setPeriod()">Submit</button> 
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> 
-<!--end of period modal-->
 
 {% block body %} 
 
-<div class="container" >
-<div class="row mt-5">
-    <div class="col-md-6">
-      <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" >
-        <div class="card-body"  >
+<div class="mt-3">
+    <span></span>
+    {% if messages %}
+            {% for message in messages %}
+                <label for="" class="text-center mt-5" style="background-color: rgb(255, 0, 0,0.5); width: 100%;color:white;text-shadow: 2px 2px 4px #000000;padding: 10px; border-radius: 10px;">{{message}}</label>
+            {% endfor %}
+        {% endif %}
+</div>
 
-
-          
-
-          <div class="row"  >
-            <div class="col-md-9 " style="height: 5rem!important;">
-              <a href="{% url 'distributorAdmin_Client_req' %}">
-              <h5 class="card-title mb-9 fw-semibold"><b>CLIENT REQUEST</b></h5>
-            </a>
-              
-
-            </div>
-            <div class="col">
-              <a href="{% url 'distributorAdmin_Client_req' %}">
-                <i class="fa fa-user-plus text-white" style="font-size: 2em;"></i>
-              
-            </a>
-              
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>      
+<div style="background-color: #213b52;color: #fff;" class="mt-5">
     
-    <div class="col-md-6">
-      <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" >
-        <div class="card-body "  >
-          <div class="row">
-            <div class="col-md-9" style="height: 5rem!important;">
-              <a href="{% url 'distributorAdmin_Client_all' %}">
-                
-                <h5 class="card-title mb-9 fw-semibold "><b>ALL CLIENTS</b></h5>
-              </a>
-              
+    
+    <form class="p-3" id="validate" style="background-color:rgba(0,0,0,.4);" method="post"
+        action="{% url 'update_distributor_prof' dist.id%}" autocomplete="off">
+        {% csrf_token %}
 
+        
+        
+        <h3 class=" text-light p-3  text-center mt-3" style="text-align: center;padding-top: 30px;">Edit Distributor Details</h3>
+        <div class="row container-fluid  p-0 m-0 mt-3" style=" border: 1px solid rgba(128, 128, 128, 0.6);">
+           
+            <div class="container mt-4" style="padding-top: 3%;">
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"><label for="d">First Name</label></div>
+                    <div class="col-sm-6 m-0 p-0"><input type="text" class="form-control" id="dist_fname"
+                            name="dist_fname" value="{{ dist.first_name }}"></div>
+                </div>
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Last Name</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="text" class="form-control" id="dist_lname" name="dist_lname"
+                        value="{{ dist.last_name }}">
+                    </div>
+                </div>
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Email</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="text" class="form-control" id="dist_email" name="dist_email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" value="{{ dist.email }}"> 
+                    </div>
+                </div>
+
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Username</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="text" class="form-control" id="dist_uname" name="dist_uname" value="{{ dist.username }}">
+                    </div>
+                </div>
+
+
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Phone Number</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <input type="text" class="form-control" id="phone_number" name="phone_number"  maxlength="10" pattern="[6-9]{1}[0-9]{9}"  value="{{ dist.contact_details }}">
+                        <div class="registrationFormAlert col-sm-6 m-0 p-0 pt-2"  ></div>
+                        
+                    </div>
+                </div>
+                <div class="row container-fluid  p-2">
+                    <div class="col-sm-6 m-0 p-0"> <label for="d">Choose Payment Terms</label></div>
+                    <div class="col-sm-6 m-0 p-0">
+                        <select name="select" id="" class="form-control" required>
+                            <option value="{{ dist.payment_terms.id }}" selected hidden>{{ dist.payment_terms.payment_terms_number }} {{ dist.payment_terms.payment_terms_value }}</option>
+                            {% for i in payment_term %}
+                            <option value="{{ i.id }}" >{{  i.payment_terms_number }}  {{ i.payment_terms_value }}</option>
+                            {% endfor %}
+                            
+                            
+                        </select>
+
+                    </div>
+                </div>
+               <center>
+                <div class="p-4">
+                    <button class="btn btn-info w-15" type="submit">UPDATE</button>
+                </div>
+            </center>
             </div>
-            <div class="col">
-              <a href="{% url 'distributorAdmin_Client_all' %}">
-              <i class="fa fa-users text-white" style="font-size: 2.3em;"></i>
-            </a>
-              
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>   
-  </div>
+            
+    </form>
 </div>
 
         </div>
