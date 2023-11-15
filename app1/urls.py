@@ -1012,6 +1012,9 @@ urlpatterns = [
     path('staff_profile',views.staff_profile,name='staff_profile'),
     path('edit_staff',views.edit_staff,name='edit_staff'),
     path('update_staff_prof/<int:sid>',views.update_staff_prof,name='update_staff_prof'),
+    path('staff_base',views.staff_base,name='staff_base'),
+    path('list_sales_voucher',views.list_sales_voucher,name='list_sales_voucher'),
+    path('sale_voucher',views.sale_voucher,name='sale_voucher'),
 
     
     path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),

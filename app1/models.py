@@ -727,7 +727,7 @@ class stock_itemcreation(models.Model):
     godown = models.ForeignKey(Godown_Items, on_delete=models.CASCADE,null=True,blank=True)
     name=models.CharField(max_length=100,null=True)
     alias=models.CharField(max_length=100,null=True)
-    units=models.IntegerField(max_length=100,null=True)
+    units=models.CharField(max_length=100,null=True)
     batches=models.CharField(max_length=10,null=True)
     trackdate=models.CharField(max_length=10,null=True)
     expirydate=models.CharField(max_length=10,null=True)
@@ -737,7 +737,7 @@ class stock_itemcreation(models.Model):
     rate_of_duty=models.IntegerField()
     quantity=models.IntegerField(max_length=100,null=True,blank=True)
     rate=models.IntegerField(max_length=100,null=True,blank=True)
-    per=models.IntegerField(max_length=100,null=True,blank=True)
+    per=models.CharField(max_length=100,null=True,blank=True)
     value=models.IntegerField(max_length=100,null=True,blank=True)
 
 class analysis_view(models.Model):

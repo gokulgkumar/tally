@@ -19475,3 +19475,139 @@ def update_staff_prof(request,sid):
     return redirect('staff_profile')
     
     
+def staff_base(request):
+    return render(request,'staff_base.html')
+
+
+
+def list_sales_voucher(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+        tally = Companies.objects.filter(id=t_id)
+        comp = Companies.objects.get(id = t_id)
+        ledger = tally_ledger.objects.filter(company_id = comp)
+
+        
+        voucher = Voucher.objects.filter(voucher_type = 'Sale',company = comp)
+        context = {
+                    'voucher': voucher,
+                    'tally':tally,
+
+                }
+        return render(request,'list_sales_voucher.html',context)
+    
+
+
+def sale_voucher(request):
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        comp = Companies.objects.get(id = t_id)
+    
+        name = request.POST.get('ptype')
+
+        vouch = Voucher.objects.filter(voucher_type = 'Sale',company = comp).get(voucher_name = name)
+        st_item = stock_itemcreation.objects.filter(company = comp)
+        ledg_grp_all = tally_ledger.objects.filter(company = comp).exclude(under__in = ['Current Assets','Deposits-Asset','Fixed Assets','Loans & Advances-Asset','Misc. Expenses-Asset'])
+        ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Sales Accounts'])
+        godown = CreateGodown.objects.filter(comp = comp)
+
+     
+        # v  = 1 if purchase_voucher.objects.filter(company = comp).values('pur_id').last() is None else purchase_voucher.objects.filter(company = comp).values('pur_id').last()['pur_id']+1
+        count_purch_voucher = purchase_voucher.objects.filter(company=comp).count()
+
+        if count_purch_voucher == 0:
+            v = 1
+        else:
+            last_purchase_voucher = purchase_voucher.objects.filter(company=comp).values('pur_id').last()
+            
+            if last_purchase_voucher is not None and last_purchase_voucher['pur_id'] is not None:
+                v = last_purchase_voucher['pur_id'] + 1
+            else:
+                records_above = purchase_voucher.objects.filter(company=comp, pur_id__isnull=False).values()
+                
+                if records_above.exists():
+                    v = records_above.earliest('pur_id')['pur_id'] + 1
+                else:
+                    v = 1
+
+        tally = Companies.objects.filter(id=t_id)
+        context = {
+                    'company' : comp ,
+                    'vouch' : vouch,
+                    'date1' : date.today(),
+                    'name':name,
+                    'ledg' : ledg_grp,
+                    'ledg_all' : ledg_grp_all,
+                    'v' : v,
+                    'tally':tally,
+                    'item': st_item,
+                    'godown' : godown,
+                }
+    return render(request,'sale_voucher.html',context)
+
+
+
+
+
+# -------------------------------------------------------------------------------------------
+
+
+
+def purchase_vouchers(request):
+
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+
+        comp = Companies.objects.get(id = t_id)
+    
+        name = request.POST.get('ptype')
+     
+        vouch = Voucher.objects.filter(voucher_type = 'Purchase',company = comp).get(voucher_name = name)
+        st_item = stock_itemcreation.objects.filter(company = comp)
+        ledg_grp_all = tally_ledger.objects.filter(company = comp).exclude(under__in = ['Current Assets','Deposits-Asset','Fixed Assets','Loans & Advances-Asset','Misc. Expenses-Asset'])
+        ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Purchase Accounts'])
+        godown = CreateGodown.objects.filter(comp = comp)
+
+     
+        # v  = 1 if purchase_voucher.objects.filter(company = comp).values('pur_id').last() is None else purchase_voucher.objects.filter(company = comp).values('pur_id').last()['pur_id']+1
+        count_purch_voucher = purchase_voucher.objects.filter(company=comp).count()
+
+        if count_purch_voucher == 0:
+            v = 1
+        else:
+            last_purchase_voucher = purchase_voucher.objects.filter(company=comp).values('pur_id').last()
+            
+            if last_purchase_voucher is not None and last_purchase_voucher['pur_id'] is not None:
+                v = last_purchase_voucher['pur_id'] + 1
+            else:
+                records_above = purchase_voucher.objects.filter(company=comp, pur_id__isnull=False).values()
+                
+                if records_above.exists():
+                    v = records_above.earliest('pur_id')['pur_id'] + 1
+                else:
+                    v = 1
+
+        tally = Companies.objects.filter(id=t_id)
+        context = {
+                    'company' : comp ,
+                    'vouch' : vouch,
+                    'date1' : date.today(),
+                    'name':name,
+                    'ledg' : ledg_grp,
+                    'ledg_all' : ledg_grp_all,
+                    'v' : v,
+                    'tally':tally,
+                    'item': st_item,
+                    'godown' : godown,
+                }
+        return render(request,'purchase_voucher.html',context)
