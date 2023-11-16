@@ -1015,6 +1015,9 @@ urlpatterns = [
     path('staff_base',views.staff_base,name='staff_base'),
     path('list_sales_voucher',views.list_sales_voucher,name='list_sales_voucher'),
     path('sale_voucher',views.sale_voucher,name='sale_voucher'),
+    path('create_sale_voucher',views.create_sale_voucher,name='create_sale_voucher'),
+    path('deactivate_staff/<int:sid>',views.deactivate_staff,name='deactivate_staff'),
+    path('activate_staff/<int:sid>',views.activate_staff,name='activate_staff'),
 
     
     path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),

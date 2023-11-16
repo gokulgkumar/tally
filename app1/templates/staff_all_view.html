@@ -27,11 +27,11 @@
                 <td>{{ i.contact_details }}</td>
 
                     {% if i.status == 0 %}
-                    <td><a href="{% url 'accept_staff' i.id %}" class="btn btn-outline-success m-1">Active</a>
-                    <a href="{% url 'reject_staff' i.id %}" class="btn btn-danger m-1">Inactive</a></td>
+                    <td><a href="{% url 'activate_staff' i.id %}" class="btn btn-outline-success m-1">Active</a>
+                    <a href="{% url 'deactivate_staff' i.id %}" class="btn btn-danger m-1">Inactive</a></td>
                     {% else %}
-                    <td><a href="{% url 'accept_staff' i.id %}" class="btn btn-success m-1">Active</a>
-                    <a href="{% url 'reject_staff' i.id %}" class="btn btn-outline-danger m-1">Inactive</a></td>
+                    <td><a href="{% url 'activate_staff' i.id %}" class="btn btn-success m-1">Active</a>
+                    <a href="{% url 'deactivate_staff' i.id %}" class="btn btn-outline-danger m-1">Inactive</a></td>
                     {% endif %}
                 
                 

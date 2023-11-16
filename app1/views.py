@@ -75,11 +75,19 @@ def login(request):
         if Staff.objects.filter(email=request.POST['email'], password=request.POST['password']).exists():
             staff=Staff.objects.get(email=request.POST['email'], password=request.POST['password'])
             request.session['t_id'] = staff.id
+           
             if staff.status == 0:
                 messages.info(request,'Approval for login required')
                 return redirect('login')
             else:
-                return render(request,'staff_base.html')
+                companyLog=0
+                staffLog=1
+                context= {
+                    'companyLog' : companyLog,
+                    'staffLog' : staffLog,
+
+                }
+                return render(request,'base.html', context)
 
            
         
@@ -99,12 +107,15 @@ def login(request):
                 deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
                 latestdate.extend((pay,rec,cred,deb))
                 filtered_dates = [date for date in latestdate if date is not None]
-            
+                companyLog=1
+                staffLog=0
                 context = { 
                             'company' : comp,
                             'tally' : tally,
                             'latestdate' : max(filtered_dates),
                             'member': member.id,
+                            'companyLog' : companyLog,
+                            'staffLog' : staffLog,
                     }
 
                 return render(request,'base.html',context)
@@ -18828,6 +18839,9 @@ def purchase_vouchers(request):
                 }
         return render(request,'purchase_voucher.html',context)
 
+
+
+
 def create_purchase_voucher(request):
     
     if 't_id' in request.session:
@@ -19243,6 +19257,9 @@ def distributor_clients_view(request,did):
 
 
 
+
+
+
 # ----------------------------GOKUL-----------------------------
 
 def createstaff(request):
@@ -19300,10 +19317,21 @@ def reject_staff(request,sid):
     reject.delete()
     return redirect('staff_request')
 
-
 def staff_all_view(request):
     staff=Staff.objects.all()
     return render(request,'staff_all_view.html',{'staff':staff})
+
+def activate_staff(request,sid):
+    activate=Staff.objects.filter(id=sid).update(status=1)
+    return redirect('staff_all_view')
+
+def deactivate_staff(request,sid):
+    deactivate=Staff.objects.filter(id=sid).update(status=0)
+    return redirect('staff_all_view')
+
+
+
+
 
 def edit_company(request):
     comp_id = request.session.get('t_id')
@@ -19315,7 +19343,6 @@ def edit_company(request):
 def company_profile(request):
     comp_id = request.session.get('t_id')
     com=Companies.objects.get(id=comp_id)
-    
     print(com,'com')
     return render(request,'company_profile.html',{'com':com})   
 
@@ -19507,33 +19534,29 @@ def sale_voucher(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
-
         comp = Companies.objects.get(id = t_id)
-    
         name = request.POST.get('ptype')
-
+        print(name,'name is')
         vouch = Voucher.objects.filter(voucher_type = 'Sale',company = comp).get(voucher_name = name)
         st_item = stock_itemcreation.objects.filter(company = comp)
         ledg_grp_all = tally_ledger.objects.filter(company = comp).exclude(under__in = ['Current Assets','Deposits-Asset','Fixed Assets','Loans & Advances-Asset','Misc. Expenses-Asset'])
-        ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Sales Accounts'])
+        ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Sales Accounts','Sales Return'])
         godown = CreateGodown.objects.filter(comp = comp)
 
-     
-        # v  = 1 if purchase_voucher.objects.filter(company = comp).values('pur_id').last() is None else purchase_voucher.objects.filter(company = comp).values('pur_id').last()['pur_id']+1
-        count_purch_voucher = purchase_voucher.objects.filter(company=comp).count()
+        count_sale_voucher = sales_vouchers.objects.filter(company=comp).count()
 
-        if count_purch_voucher == 0:
+        if count_sale_voucher == 0:
             v = 1
         else:
-            last_purchase_voucher = purchase_voucher.objects.filter(company=comp).values('pur_id').last()
-            
-            if last_purchase_voucher is not None and last_purchase_voucher['pur_id'] is not None:
-                v = last_purchase_voucher['pur_id'] + 1
+            last_sale_voucher = sales_vouchers.objects.filter(company=comp).values('sale_id').last()
+
+            if last_sale_voucher is not None and last_sale_voucher['sale_id'] is not None:
+                v = last_sale_voucher['sale_id'] + 1
             else:
-                records_above = purchase_voucher.objects.filter(company=comp, pur_id__isnull=False).values()
+                records_above = sales_vouchers.objects.filter(company=comp, sale_id__isnull=False).values()
                 
                 if records_above.exists():
-                    v = records_above.earliest('pur_id')['pur_id'] + 1
+                    v = records_above.earliest('sale_id')['sale_id'] + 1
                 else:
                     v = 1
 
@@ -19555,59 +19578,128 @@ def sale_voucher(request):
 
 
 
-
-# -------------------------------------------------------------------------------------------
-
-
-
-def purchase_vouchers(request):
-
+def create_sale_voucher(request):
+    
     if 't_id' in request.session:
         if request.session.has_key('t_id'):
             t_id = request.session['t_id']
         else:
             return redirect('/')
-
+        
         comp = Companies.objects.get(id = t_id)
-    
-        name = request.POST.get('ptype')
-     
-        vouch = Voucher.objects.filter(voucher_type = 'Purchase',company = comp).get(voucher_name = name)
-        st_item = stock_itemcreation.objects.filter(company = comp)
-        ledg_grp_all = tally_ledger.objects.filter(company = comp).exclude(under__in = ['Current Assets','Deposits-Asset','Fixed Assets','Loans & Advances-Asset','Misc. Expenses-Asset'])
-        ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Purchase Accounts'])
-        godown = CreateGodown.objects.filter(comp = comp)
+        name=request.POST['type']
+        print('name is this',name)
+        vouch = Voucher.objects.filter(abbreviation = 'Sal',company = comp).get(voucher_name = name)
 
-     
-        # v  = 1 if purchase_voucher.objects.filter(company = comp).values('pur_id').last() is None else purchase_voucher.objects.filter(company = comp).values('pur_id').last()['pur_id']+1
-        count_purch_voucher = purchase_voucher.objects.filter(company=comp).count()
+        if request.method == 'POST':
+            sale_voucher_id = request.POST.get('idlbl')
+            supplier_invoice_num = request.POST.get('sup_invno')
+            supplier_invoice_date = request.POST.get('inv_date')
+            voucher_date = request.POST.get('date1')
+            party_account = request.POST.get('partyacc')
+            party_account = tally_ledger.objects.filter(company = comp).get(id = party_account).name
+            sale_ledger = request.POST.get('saleacc')
+            sale_ledger = tally_ledger.objects.filter(company = comp).get(id = sale_ledger).name
 
-        if count_purch_voucher == 0:
-            v = 1
-        else:
-            last_purchase_voucher = purchase_voucher.objects.filter(company=comp).values('pur_id').last()
+            amount = request.POST.get('total')
+            quantity = request.POST.get('quantity')
+            narration = request.POST.get('narrate')
             
-            if last_purchase_voucher is not None and last_purchase_voucher['pur_id'] is not None:
-                v = last_purchase_voucher['pur_id'] + 1
-            else:
-                records_above = purchase_voucher.objects.filter(company=comp, pur_id__isnull=False).values()
-                
-                if records_above.exists():
-                    v = records_above.earliest('pur_id')['pur_id'] + 1
-                else:
-                    v = 1
+            item_id = request.POST.getlist("opt[]")
+            qnty = request.POST.getlist("qty[]")
+            rate = request.POST.getlist("rate[]")
+            per = request.POST.getlist("per[]")
+            amounts = request.POST.getlist("amnt[]")
 
-        tally = Companies.objects.filter(id=t_id)
-        context = {
-                    'company' : comp ,
-                    'vouch' : vouch,
-                    'date1' : date.today(),
-                    'name':name,
-                    'ledg' : ledg_grp,
-                    'ledg_all' : ledg_grp_all,
-                    'v' : v,
-                    'tally':tally,
-                    'item': st_item,
-                    'godown' : godown,
-                }
-        return render(request,'purchase_voucher.html',context)
+            
+        sales_vouchers(sale_id = sale_voucher_id,sup_inv_no = supplier_invoice_num,sup_inv_date = supplier_invoice_date,
+                         vouch_date = voucher_date,party_accname = party_account,sales_ledger = sale_ledger, 
+                         amount = amount ,quantity = quantity,narration = narration , company = comp, voucher = vouch).save()
+                         
+
+                        #  supplier = supplier, mailing_name = mailing_name, address =  address,state = state,country = country,
+                        #  gst_treatment = gst_type, gst_number = gst_num).save()
+ 
+        sale_vouch= sales_vouchers.objects.filter(company = comp).last()
+
+        # modal receipt deatils
+        receipt_no = []
+        receipt_dates = []
+
+        modal_data_receipt = request.POST.get('modal_data_receipt')
+        if modal_data_receipt:
+            modal_data = json.loads(modal_data_receipt)
+
+            sale_vouch.receipt_doc_no= modal_data.get('recdocno')
+            sale_vouch.dispatched_through= modal_data.get('dispch')
+            sale_vouch.destination = modal_data.get('destn')
+            sale_vouch.carriername_agent = modal_data.get('carrier')
+            sale_vouch.bill_of_lading = modal_data.get('bill_lading')
+            sale_vouch.receipt_date = modal_data.get('lad_date')
+            sale_vouch.motor_vehicle_no = modal_data.get('veh_num')
+
+            sale_vouch.save()
+
+
+        # part details modal data
+        modal_data_party = request.POST.get('modal_data_party')
+        if modal_data_party:
+            modal_party = json.loads(modal_data_party)
+
+            sale_vouch.supplier = modal_party.get('supplier')
+            sale_vouch.mailing_name = modal_party.get('mailing_name')
+            sale_vouch.address = modal_party.get('address')
+            sale_vouch.state = modal_party.get('state')
+            sale_vouch.country = modal_party.get('country')
+            sale_vouch.gst_treatment = modal_party.get('gst_type')
+            sale_vouch.gst_number =  modal_party.get('gst_num')
+
+            sale_vouch.save()
+
+        
+        items = []
+        for i in item_id:
+            id = stock_itemcreation.objects.get(id = i)
+            items.append(id.name)
+
+        if len(item_id)==len(qnty) == len(rate) == len(amounts) and item_id and qnty and rate and amounts:
+               
+            feilds=zip(items,item_id,qnty,rate,per,amounts)
+
+            mapped=list(feilds)
+            for m in mapped:
+                sale_particulars.objects.get_or_create( item =m[0],     
+                                                            item_id =m[1], 
+                                                            quantity =  m[2] ,
+                                                            rate = m[3], 
+                                                            per = m[4],
+                                                            amount = m[5],
+                                                            sales_voucher = sale_vouch,
+                                                            company = comp)
+
+        # modal receipt numbers deatils
+        modal_data_recnote = request.POST.get('modal_data_receiptnotes')
+
+        if modal_data_recnote:
+            modal_data_array = json.loads(modal_data_recnote)
+            for row_data in modal_data_array:
+                recno = row_data.get('recno')
+                recdate = row_data.get('recdate')
+
+                try:
+                    recdate = datetime.strptime(recdate, '%Y-%m-%d').date()
+                    receipt_no.append(recno)
+                    receipt_dates.append(recdate)
+                except ValueError:
+                    pass
+
+            if len(receipt_no)==len(receipt_dates) and  receipt_no and receipt_dates:
+
+                rec_feilds=zip(receipt_no,receipt_dates)
+                mapped=list(rec_feilds)
+                print(mapped)
+                for i in mapped:
+                    receipt_note_no.objects.get_or_create(sales = sale_vouch,note_no = i[0], date= i[1])
+            
+        
+    return redirect('list_sales_voucher')

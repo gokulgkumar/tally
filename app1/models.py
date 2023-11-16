@@ -2028,6 +2028,9 @@ class party_details(models.Model):
     gst_reg_type=models.CharField(max_length=200)
     gstn_un=models.CharField(max_length=200)
     place_of_supply=models.CharField(default="Kerala",max_length=200)
+
+
+
     
     
 class sales_invoice(models.Model):  
@@ -2068,6 +2071,12 @@ class sales_voucher_stock_item_allocation(models.Model):
     sales_voucher_stock_item_one_allocation_id=models.ForeignKey(sales_voucher_stock_item_one_allocation,on_delete=models.CASCADE,null=True)
 
 #---- Purchase voucher-- Nithya-----
+
+
+
+
+
+
 class purchase_voucher(models.Model):
     company = models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
     voucher = models.ForeignKey(Voucher,on_delete=models.CASCADE,null=True,blank=True)
@@ -2119,12 +2128,64 @@ class purchase_particulars(models.Model):
     per = models.CharField(max_length = 100,null=True,blank=True)
     amount = models.IntegerField(null= True)
     
-    
-class receipt_note_no(models.Model):
-    purchase = models.ForeignKey(purchase_voucher,on_delete=models.CASCADE,null=True,blank=True)
-    note_no = models.IntegerField(null=True,blank=True)
-    date = models.DateField(blank = True, null= True)
+
     
 #---- End of Purchase Voucher---------------
 
 
+
+
+
+
+# sale voucher
+class sales_vouchers(models.Model):
+    company = models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
+    voucher = models.ForeignKey(Voucher,on_delete=models.CASCADE,null=True,blank=True)
+
+    sale_id = models.IntegerField(null=True)
+    sup_inv_no = models.CharField(max_length= 255, null=True)
+    sup_inv_date = models.DateField(blank = True, null= True)
+    vouch_date = models.DateField(blank = True, null= True)
+    party_accname = models.CharField(max_length=255,null= True)
+    sales_ledger = models.CharField(max_length=255,null= True)
+
+    receipt_doc_no = models.CharField(max_length=255,null= True)
+    dispatched_through = models.CharField(max_length=255,null= True)
+    destination = models.CharField(max_length=255,null= True)
+    carriername_agent = models.CharField(max_length=255,null= True)
+    bill_of_lading  = models.CharField(max_length=255,null= True)
+    receipt_date = models.DateField(blank = True, null= True)
+    motor_vehicle_no = models.CharField(max_length=255,null= True)
+
+    supplier = models.CharField(max_length=255,null= True)
+    mailing_name = models.CharField(max_length=255,null= True)
+    address =  models.CharField(max_length=255,null= True)
+    state = models.CharField(max_length=255,null= True)
+    country = models.CharField(max_length=255,null= True)
+    gst_treatment = models.CharField(max_length=255,null= True)
+    gst_number = models.CharField(max_length=255,null= True)
+
+    quantity = models.IntegerField(null= True)
+    amount = models.IntegerField(null= True)
+    narration = models.CharField(max_length=255)
+
+
+
+class sale_particulars(models.Model):
+    sales_voucher = models.ForeignKey(sales_vouchers,on_delete=models.CASCADE,null=True,blank=True)
+    company = models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
+    
+    item_id = models.IntegerField(null= True)
+    item = models.CharField(max_length = 100,null=True,blank=True)
+    quantity =  models.IntegerField(null= True)
+    rate = models.IntegerField(null= True)
+    per = models.CharField(max_length = 100,null=True,blank=True)
+    amount = models.IntegerField(null= True)
+
+
+    
+class receipt_note_no(models.Model):
+    purchase = models.ForeignKey(purchase_voucher,on_delete=models.CASCADE,null=True,blank=True)
+    sales = models.ForeignKey(sales_vouchers,on_delete=models.CASCADE,null=True,blank=True)
+    note_no = models.IntegerField(null=True,blank=True)
+    date = models.DateField(blank = True, null= True)

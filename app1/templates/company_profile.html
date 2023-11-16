@@ -17,6 +17,7 @@
     <div class="col-5">
       <p>Company Name</p>
       <p>Mailing Name</p>
+      <p>Company Code</p>
       <p>Address</p>
       <p>State</p>
       <p>Country</p>
@@ -35,6 +36,7 @@
 
     </div>
     <div class="col-2">
+      <p  style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
       <p  style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
       <p  style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
       <p style="margin-top: 3px;"><iconify-icon icon="ic:twotone-double-arrow"></iconify-icon></p>
@@ -62,6 +64,12 @@
 
       {% if com.mailing_name %}
       <p>{{ com.mailing_name }}</p>
+      {% else %}
+      <p>None</p>
+      {% endif %}
+
+      {% if com.company_code %}
+      <p>{{ com.company_code }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
