@@ -465,16 +465,19 @@
                  
                 </a>            
                 <div class="dropdown-menu dropdown-menu-right">
-                    
-                    <!-- <a class="dropdown-item" href="{% url 'company_profile' %}">
+                    {% if user == 'company' %}
+                     <a class="dropdown-item" href="{% url 'company_profile' %}">
                         <i class="bx bx-user"></i><span>Profile</span>
                     </a>
+                    {% endif %}
                         
-                   
+
+                    {% if user == 'staff' %}
                     <a class="dropdown-item" href="{% url 'staff_profile' %}">
                         <i class="bx bx-user"></i><span>Profile</span>
                     </a>
-                   -->
+                    {% endif %}
+                  
                 
                     
                     <a class="dropdown-item" href="#">
@@ -968,6 +971,7 @@
             
                                
                                  <!-- ----------------------employees------------------------------------------------------------------------------------------------------------------------------------- -->
+                                 {% if user == 'company'  %}
                                  <li>
                                     <a href="javascript:;" class="has-arrow">
                                         <div class="parent-icon"><iconify-icon icon="fa:users"></iconify-icon></div>
@@ -978,6 +982,7 @@
                                         <li><a href="{% url 'staff_all_view' %}"><i class="bx bx-right-arrow-alt"></i>All Employees</a></li>
                                     </ul>
                                 </li>
+                                {% endif %}
                                 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
                                
                                

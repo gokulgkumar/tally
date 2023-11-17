@@ -80,14 +80,13 @@ def login(request):
                 messages.info(request,'Approval for login required')
                 return redirect('login')
             else:
-                companyLog=0
-                staffLog=1
-                context= {
-                    'companyLog' : companyLog,
-                    'staffLog' : staffLog,
+                user='staff'
+                context = { 
+                            'staff': staff.id,
+                            'user':user,
+                    }
 
-                }
-                return render(request,'base.html', context)
+                return render(request,'base.html',context)
 
            
         
@@ -98,6 +97,7 @@ def login(request):
                 messages.info(request,'Approval for login required')
                 return redirect('login')
             else:
+                user='company'
                 tally=Companies.objects.filter(id= member.id)
                 comp = Companies.objects.get(id=member.id)
                 latestdate = []
@@ -107,15 +107,13 @@ def login(request):
                 deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
                 latestdate.extend((pay,rec,cred,deb))
                 filtered_dates = [date for date in latestdate if date is not None]
-                companyLog=1
-                staffLog=0
+               
                 context = { 
                             'company' : comp,
                             'tally' : tally,
                             'latestdate' : max(filtered_dates),
                             'member': member.id,
-                            'companyLog' : companyLog,
-                            'staffLog' : staffLog,
+                            'user':user
                     }
 
                 return render(request,'base.html',context)
@@ -136,37 +134,53 @@ def logout(request):
 def register(request):
     return render(request, 'Register.html')
 
+
+# ------------------------------------------------------------GOKUL---------------------------------
 def base(request):
     if 't_id' in request.session:
         if request.session.has_key('t_id'):
             t_id = request.session['t_id']
+            
         else:
             return redirect('/')
-        tally = Companies.objects.filter(id = t_id)
+        
+        if Companies.objects.filter(id = t_id).exists():
+            user='company'
+            tally = Companies.objects.filter(id = t_id)
 
-        comp = Companies.objects.get(id=t_id)
-        latestdate = []
+            comp = Companies.objects.get(id=t_id)
+            latestdate = []
 
-        pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+            pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
 
-        rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+            rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
 
-        cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+            cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
 
-        deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+            deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
 
-        latestdate.extend((pay,rec,cred,deb))
-       
-        context = { 
-                    'company' : comp,
-                    'tally' : tally,
-                    'latestdate' : max(latestdate),
+            latestdate.extend((pay,rec,cred,deb))
+        
+            context = { 
+                        'company' : comp,
+                        'tally' : tally,
+                        'latestdate' : max(latestdate),
+                        'user':user
+                        }
+
+            return render(request, 'base.html',context)
+        
+        if Staff.objects.filter(id = t_id).exists():
+            user='staff'
+            context = { 
+                            'user':user,
                     }
 
-        return render(request, 'base.html',context)
+            return render(request,'base.html',context)
+
     
     return redirect("/")
-    
+# -----------------------------------------------------GOKUL----------------------------------------    
 #......................jisha........................
 
 def company_list(request):
@@ -19335,16 +19349,18 @@ def deactivate_staff(request,sid):
 
 def edit_company(request):
     comp_id = request.session.get('t_id')
+    user='company'
     com=Companies.objects.get(id=comp_id)
     print(com,'com')
     payment_term=Payment_Terms.objects.all()
-    return render(request,'edit_company.html',{'com':com,'payment_term':payment_term})
+    return render(request,'edit_company.html',{'com':com,'payment_term':payment_term,'user':user})
 
 def company_profile(request):
     comp_id = request.session.get('t_id')
     com=Companies.objects.get(id=comp_id)
+    user='company'
     print(com,'com')
-    return render(request,'company_profile.html',{'com':com})   
+    return render(request,'company_profile.html',{'com':com,'user':user})   
 
 def update_company_prof(request,cid):
     com=Companies.objects.get(id=cid)
