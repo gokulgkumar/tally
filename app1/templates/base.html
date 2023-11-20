@@ -183,10 +183,7 @@
                                       <li><a href="attendence">Attendance/Production Types</a></li>
                                       <li><a href="payheads">Pay Heads</a></li>
                                       <li><a href="payvoucher">Payroll Voucher Type</a></li>
-                                      
-                                      
-                                      
-                                               
+   
                                         <li><a href="load_gst_d">GST Details</a></li>
                                         <li><a href="load_tds">TDS Details</a></li>
                                         <li><a href="load_pan_cin">PAN/CIN Details</a></li>
@@ -971,7 +968,7 @@
             
                                
                                  <!-- ----------------------employees------------------------------------------------------------------------------------------------------------------------------------- -->
-                                 {% if user == 'company'  %}
+                                 {% if data.position == 'company'  %}
                                  <li>
                                     <a href="javascript:;" class="has-arrow">
                                         <div class="parent-icon"><iconify-icon icon="fa:users"></iconify-icon></div>

@@ -104,7 +104,7 @@ class Companies(models.Model):
 
     #------------------------GOKUL NEW-----------------
     company_code = models.CharField(max_length=100,null=True,blank=True) 
-
+     
 
 
 class Staff(models.Model):
@@ -117,6 +117,7 @@ class Staff(models.Model):
     img = models.ImageField(null=True,blank = True,upload_to = 'image/staff')
     status=models.BooleanField(default=False)
     company=models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
+    position=models.CharField(max_length=100,null=True,blank=True,default='staff')
 
 
 class Features(models.Model):
