@@ -10,7 +10,7 @@
 <div class="card" style="width: 48rem;border-radius: 10px;">
   
 <div class="mt-4">
-    <h2 class="text-warning text-center">{{ com.name }}</h2>
+    <h2 class="text-warning text-center">{{ staff.company.name }}</h2>
   </div>
   <hr>
   <div class="row mx-3 p-2" style="font-size: 1.1rem;">
@@ -56,106 +56,106 @@
     </div>
     <div class="col-5" >
 
-      {% if com.name %}
-      <p>{{ com.name }}</p>
+      {% if staff.company.name %}
+      <p>{{ staff.company.name }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.mailing_name %}
-      <p>{{ com.mailing_name }}</p>
+      {% if staff.company.mailing_name %}
+      <p>{{ staff.company.mailing_name }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.company_code %}
-      <p>{{ com.company_code }}</p>
+      {% if staff.company.company_code %}
+      <p>{{ staff.company.company_code }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.address %}
-      <p >{{ com.address }}</p>
+      {% if staff.company.address %}
+      <p >{{ staff.company.address }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.state %}
-      <p >{{ com.state }}</p>
+      {% if staff.company.state %}
+      <p >{{ staff.company.state }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.country %}
-      <p >{{ com.country }}</p>
+      {% if staff.company.country %}
+      <p >{{ staff.company.country }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.pincode %}
-      <p >{{ com.pincode }}</p>
+      {% if staff.company.pincode %}
+      <p >{{ staff.company.pincode }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.telephone %}
-      <p >{{ com.telephone }}</p>
+      {% if staff.company.telephone %}
+      <p >{{ staff.company.telephone }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.mobile %}
-      <p >{{ com.mobile }}</p>
+      {% if staff.company.mobile %}
+      <p >{{ staff.company.mobile }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.fax %}
-      <p>{{ com.fax }}</p>
+      {% if staff.company.fax %}
+      <p>{{ staff.company.fax }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.email %}
-      <p>{{ com.email }}</p>
+      {% if staff.company.email %}
+      <p>{{ staff.company.email }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.website %}
-      <p>{{ com.website }}</p>
+      {% if staff.company.website %}
+      <p>{{ staff.company.website }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
       
-      {% if com.payment_Terms %}
-      <p>{{ com.payment_Terms.payment_terms_number }} {{ com.payment_Terms.payment_terms_value }}</p>
+      {% if staff.company.payment_Terms %}
+      <p>{{ staff.company.payment_Terms.payment_terms_number }} {{ staff.company.payment_Terms.payment_terms_value }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
 
-      {% if com.fin_begin %}
-      <p>{{ com.fin_begin }}</p>
+      {% if staff.company.fin_begin %}
+      <p>{{ staff.company.fin_begin }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.books_begin %}
-      <p>{{ com.books_begin }}</p>
+      {% if staff.company.books_begin %}
+      <p>{{ staff.company.books_begin }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.currency_symbol %}
-      <p>{{ com.currency_symbol }}</p>
+      {% if staff.company.currency_symbol %}
+      <p>{{ staff.company.currency_symbol }}</p>
       {% else %}
       <p>None</p>
       {% endif %}
 
-      {% if com.formal_name %}
-      <p>{{ com.formal_name }}</p>
+      {% if staff.company.formal_name %}
+      <p>{{ staff.company.formal_name }}</p>
       {% else %}
       <p>None</p>
       {% endif %}

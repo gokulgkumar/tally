@@ -449,11 +449,20 @@
                   <div class="media user-box align-items-center">
                     <div class="media-body user-info">
                       <p class="user-name mb-0">
-                        {% for i in tally %}
+                        {% if data.position == 'company' %}
+                        {% for i in staffn %}
                         {% csrf_token %}
-                        <label style="text-align: center; font-size: 15px;">{{i.name}}</label>
+                        <label style="text-align: center; font-size: 15px;">{{i.company.name}}</label>
                         {% endfor %}
                       </p>
+                      {% endif %}
+                      {% if data.position == 'staff' %}
+                      {% for i in staffn %}
+                        {% csrf_token %}
+                        <label style="text-align: center; font-size: 15px;">{{i.first_name}}</label>
+                        {% endfor %}
+                      </p>
+                      {% endif %}
                       <p class="designattion mb-0">Online</p>
                     </div>
                     <img src="" class="user-img">
@@ -462,14 +471,14 @@
                  
                 </a>            
                 <div class="dropdown-menu dropdown-menu-right">
-                    {% if user == 'company' %}
+                    {% if data.position == 'company' %}
                      <a class="dropdown-item" href="{% url 'company_profile' %}">
                         <i class="bx bx-user"></i><span>Profile</span>
                     </a>
                     {% endif %}
                         
 
-                    {% if user == 'staff' %}
+                    {% if data.position == 'staff' %}
                     <a class="dropdown-item" href="{% url 'staff_profile' %}">
                         <i class="bx bx-user"></i><span>Profile</span>
                     </a>
@@ -1094,7 +1103,7 @@
             
             <div style="margin-bottom: 20px;">
                 <div style="margin-left:55px;font-weight: 900; font-size:15px; text-transform: capitalize;" id="compName" >
-                    {{company.name}}</div>
+                    {{data.company.name}}</div>
                 <div style="text-align:right;font-weight: 900; margin-top:-18px;font-size:12px;;margin-right:35px;" >
                     {% if latestdate == company.fin_begin %} No Vouchers Entered {% else %}{{latestdate | date:'d-M-Y' }} {% endif %}</div>
 

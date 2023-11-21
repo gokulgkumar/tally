@@ -21,26 +21,26 @@
    
     <h6 class="bg-info text-light p-2 m-0 text-center">Edit Company Details</h6>
     <form class="p-3 " id="validate" style="background-color:rgba(0,0,0,.4);" method="post"
-        action="{% url 'update_company_prof' com.id%}" autocomplete="off">
+        action="{% url 'update_company_prof' staff.id%}" autocomplete="off">
         {% csrf_token %}
         <div class="row container-fluid  p-0 m-0" style=" border: 1px solid rgba(128, 128, 128, 0.6);">
             <div class="col-sm-6 m-0 p-4" style=" border-right: 1px solid rgba(128, 128, 128, 0.6);">
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"><label for="d">Company Name</label></div>
                     <div class="col-sm-6 m-0 p-0"><input type="text" class="form-control" id="companyname"
-                            name="companyname" value="{{ com.name }}"></div>
+                            name="companyname" value="{{ staff.company.name }}"></div>
                 </div><br>
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Mailing Name</label></div>
                     <div class="col-sm-6 m-0 p-0">
                         <input type="text" class="form-control" id="mailing_name" name="mailing_name"
-                            onclick="copyName()" value="{{ com.mailing_name }}">
+                            onclick="copyName()" value="{{ staff.company.mailing_name }}">
                     </div>
                 </div>
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Address</label></div>
                     <div class="col-sm-6 m-0 p-0"><textarea class="form-control" name="address" id="" cols="36"
-                            rows="4" >{{ com.address }}</textarea></div>
+                            rows="4" >{{ staff.company.address }}</textarea></div>
                 </div>
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0">
@@ -50,7 +50,7 @@
                         <label id="dis" class="hide">District</label> -->
                     </div>
                     <div class="col-sm-6 m-0 p-0"><input id="state" type="text" name="state" class="form-control"
-                            onclick="showState()" value="{{ com.state }}"></div>
+                            onclick="showState()" value="{{ staff.company.state }}"></div>
                 </div>
 
                 <!-- <div class="form-popup " id="myForm" style="background-color: rgb(216, 232, 238);">
@@ -141,7 +141,7 @@
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Country</label></div>
                      <div class="col-sm-6 m-0 p-0"><input type="text" id="country" name="country" class="form-control"
-                            value="India" onclick="showCountry()" value="{{ com.country }}"></div>
+                            value="India" onclick="showCountry()" value="{{ staff.company.country }}"></div>
                 </div>
                 <div class="form-popup" id="myForm1" style="background-color: rgb(216, 232, 238);">
                     <!-- <form action="" class="form-container1">
@@ -218,35 +218,35 @@
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Pin Code</label></div>
                     <div class="col-sm-6 m-0 p-0"><input type="text" name="pincode" class="form-control" maxlength="6"
-                            pattern="^[1-9][0-9]{5}$" title="Please enter valid pincode" value="{{ com.pincode }}"></div>
+                            pattern="^[1-9][0-9]{5}$" title="Please enter valid pincode" value="{{ staff.company.pincode }}"></div>
                 </div>
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Telephone</label></div>
                     <div class="col-sm-6 m-0 p-0"><input type="text" name="telephone" class="form-control" id="d"
-                            placeholder="" maxlength="7" pattern="[0-9]{3}[0-9]{2}[0-9]{2}" value="{{ com.telephone }}">
+                            placeholder="" maxlength="7" pattern="[0-9]{3}[0-9]{2}[0-9]{2}" value="{{ staff.company.telephone }}">
                     </div>
                 </div>
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Mobile</label></div>
                     <div class="col-sm-6 m-0 p-0"><input type="text" name="mobile" class="form-control" id="d"
                             placeholder="" maxlength="10" pattern="[6-9]{1}[0-9]{9}"
-                            title="Please enter valid phone number" value="{{ com.mobile }}">
+                            title="Please enter valid phone number" value="{{ staff.company.mobile }}">
                     </div>
                 </div>
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Fax</label></div>
                     <div class="col-sm-6 m-0 p-0"><input type="text" name="fax" class="form-control"
-                            pattern="^\+?[0-9]{3,}$" value="{{ com.fax }}"></div>
+                            pattern="^\+?[0-9]{3,}$" value="{{ staff.company.fax }}"></div>
                 </div>
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">E-Mail</label></div>
                     <div class="col-sm-6 m-0 p-0"><input type="email" name="email" class="form-control" id="d"
-                            placeholder="Use Email As Username" value="{{ com.email }}" ></div>
+                            placeholder="Use Email As Username" value="{{ staff.company.email }}" ></div>
                 </div>
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Website</label></div>
                     <div class="col-sm-6 m-0 p-0"><input type="url" name="website" class="form-control" id="d"
-                            placeholder="" value="{{ com.website }}"></div>
+                            placeholder="" value="{{ staff.company.website }}"></div>
                 </div>
             </div>
 
@@ -259,12 +259,12 @@
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Financial Year Beginning From</label></div>
                     <div class="col-sm-6 m-0 p-0">
                         <input type="date"  name="fyear"
-                            data-date-format="DD/MM/YYYY" class="form-control" value="{{ com.fin_begin|date:'Y-m-d' }}"></div>
+                            data-date-format="DD/MM/YYYY" class="form-control" value="{{ staff.company.fin_begin|date:'Y-m-d' }}"></div>
                 </div>
                 <div class="row container-fluid  p-2">
                     <div class="col-sm-6 m-0 p-0"> <label for="d">Book Beginning From</label></div>
                     <div class="col-sm-6 m-0 p-0"><input type="date"  name="byear"
-                            data-date-format="DD/MM/YYYY" class="form-control" value="{{ com.books_begin|date:'Y-m-d'}}"></div>
+                            data-date-format="DD/MM/YYYY" class="form-control" value="{{ staff.company.books_begin|date:'Y-m-d'}}"></div>
                 </div>
             </div>
 
@@ -272,12 +272,12 @@
                 <div class="col-sm-6 m-0 p-4">
                     <div class="row container-fluid  p-2">
                         <div class="col-sm-6 m-0 p-0"> <label for="d"></label>Base Currency Symbol</div>
-                        <div class="col-sm-6 m-0 p-0"><input type="text" value="{{ com.currency_symbol }}" name="currency" class="form-control"
+                        <div class="col-sm-6 m-0 p-0"><input type="text" value="{{ staff.company.currency_symbol }}" name="currency" class="form-control"
                                 id="currency_symbol" placeholder="" value=""></div>
                     </div>
                     <div class="row container-fluid  p-2">
                         <div class="col-sm-6 m-0 p-0"> <label for="d"></label>Formal Name</div>
-                        <div class="col-sm-6 m-0 p-0"><input type="text" value=" {{ com.formal_name }}" name="formal" class="form-control"
+                        <div class="col-sm-6 m-0 p-0"><input type="text" value=" {{ staff.company.formal_name }}" name="formal" class="form-control"
                                 id="formal_name" placeholder="" ></div>
                     </div>
 
@@ -285,7 +285,7 @@
                         <div class="col-sm-6 m-0 p-0"> <label for="d"></label>Payment Terms</div>
                         <div class="col-sm-6 m-0 p-0"> 
                             <select name="select" id="" class="form-control" required>
-                            <option value="{{ com.payment_Terms.id }}" selected hidden>{{ com.payment_Terms.payment_terms_number }} {{ com.payment_Terms.payment_terms_value }}</option>
+                            <option value="{{ staff.company.payment_Terms.id }}" selected hidden>{{ staff.company.payment_Terms.payment_terms_number }} {{ staff.company.payment_Terms.payment_terms_value }}</option>
                             {% for i in payment_term %}
                             <option value="{{ i.id }}" >{{  i.payment_terms_number }}  {{ i.payment_terms_value }}</option>
                             {% endfor %}

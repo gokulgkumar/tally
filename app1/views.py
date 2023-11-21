@@ -76,52 +76,48 @@ def login(request):
 
         if Staff.objects.filter(email=request.POST['email'], password=request.POST['password'],position='staff').exists():
             staff=Staff.objects.get(email=request.POST['email'], password=request.POST['password'],position='staff')
+            print(staff,'staff login')
             request.session['t_id'] = staff.id
            
-            if staff.company.status == 0:
+            if staff.status == 0:
                 messages.info(request,'Approval for login required')
                 return redirect('login')
             else:
-                user='staff'
-                context = { 
-                            'staff': staff.id,
-                            'user':user,
-                    }
-
-                return render(request,'base.html',context)
+                
+                return redirect('base')
+                # return render(request,'base.html',context)
 
            
         #company
         if Staff.objects.filter(email=request.POST['email'], password=request.POST['password'],position='company').exists():
-            member=Staff.objects.get(email=request.POST['email'], password=request.POST['password'],position='company') 
+            data=Staff.objects.get(email=request.POST['email'], password=request.POST['password'],position='company') 
         # if Companies.objects.filter(email=request.POST['email'], password=request.POST['password']).exists(): 
         #     member=Companies.objects.get(email=request.POST['email'], password=request.POST['password'])
-            request.session['t_id'] = member.id
-            if member.company.status == 0:
+           
+            request.session['t_id'] = data.id
+            if data.company.status == 0:
                 messages.info(request,'Approval for login required')
                 return redirect('login')
             else:
-                # user='company'
-                # tally=Companies.objects.filter(id= member.id)
-                # comp = Companies.objects.get(id=member.id)
-                # latestdate = []
-                # pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
-                # rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
-                # cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
-                # deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
-                # latestdate.extend((pay,rec,cred,deb))
-                # filtered_dates = [date for date in latestdate if date is not None]
+                tally=Companies.objects.filter(id= data.company.id)
+                comp = Companies.objects.get(id=data.company.id)
+                latestdate = []
+                pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+                rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+                cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+                deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+                latestdate.extend((pay,rec,cred,deb))
+                filtered_dates = [date for date in latestdate if date is not None]
                
-                # context = { 
-                #             'company' : comp,
-                #             'tally' : tally,
-                #             'latestdate' : max(filtered_dates),
-                #             'member': member.id,
-                #             'user':user
-                #     }
+                context = { 
+                            'company' : comp,
+                            'tally' : tally,
+                            'latestdate' : max(filtered_dates),
+                            'data': data,
+                    }
                 
-                return redirect('base')
-                # return render(request,'base.html',context)
+
+                return render(request,'base.html',context)
                 
         else:
             context = {'msg_error': 'Invalid data'}
@@ -146,56 +142,38 @@ def base(request):
     t_id = request.session['t_id']
     data=Staff.objects.get(id=t_id)
 
-    print(data)
+    print(data,'data')
     print(t_id)
-    approve=Staff.objects.filter(company=data.company.id,status=0,position='staff')
-    print(approve)
+    
+    # ----------------------
+    tally = Companies.objects.filter(id = data.company.id)
 
+    staffn = Staff.objects.filter(id = data.id)
+    print(staffn,'staff is')
 
+    comp = Companies.objects.get(id=data.company.id)
+    latestdate = []
 
+    pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
 
-    # if 't_id' in request.session:
+    rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
 
-        # if request.session.has_key('t_id'):
-        #     t_id = request.session['t_id']
-            
-        # else:
-        #     return redirect('/')
+    cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+
+    deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+
+    latestdate.extend((pay,rec,cred,deb))
         
-        # if Companies.objects.filter(id = t_id).exists():
-        #     user='company'
-        #     tally = Companies.objects.filter(id = t_id)
+    context = { 
+                         'company' : comp,
+                         'tally' : tally,
+                         'latestdate' : max(latestdate),
+                        'data':data,
+                        'staffn':staffn
+                       
+                        }
 
-        #     comp = Companies.objects.get(id=t_id)
-        #     latestdate = []
-
-        #     pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
-
-        #     rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
-
-        #     cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
-
-        #     deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
-
-        #     latestdate.extend((pay,rec,cred,deb))
-        
-        #     context = { 
-        #                 'company' : comp,
-        #                 'tally' : tally,
-        #                 'latestdate' : max(latestdate),
-        #                 'user':user
-        #                 }
-
-        #     return render(request, 'base.html',context)
-        
-        # if Staff.objects.filter(id = t_id).exists():
-        #     user='staff'
-        #     context = { 
-        #                     'user':user,
-        #             }
-
-        #     return render(request,'base.html',context)
-    return render(request,'base.html',{'data':data,'approve':approve})
+    return render(request,'base.html',context)
     
     # return redirect("/")
 # -----------------------------------------------------GOKUL----------------------------------------  
@@ -268,8 +246,8 @@ def features(request):
         
         tally = Staff.objects.get(id=t_id)
         # tally = Companies.objects.filter(id=t_id)
-        return redirect('login')
-        # return render(request, 'features.html',{'tally':tally})
+        # return redirect('login')
+        return render(request, 'features.html',{'tally':tally})
     return redirect('/')
 
 def tds(request):
@@ -19377,8 +19355,10 @@ def reject_staff(request,sid):
     return redirect('staff_request')
 
 def staff_all_view(request):
-    staff=Staff.objects.all()
-    return render(request,'staff_all_view.html',{'staff':staff})
+    t_id = request.session['t_id']
+    data=Staff.objects.get(id=t_id)
+    staff=Staff.objects.filter(company=data.company.id,position='staff')
+    return render(request,'staff_all_view.html',{'staff':staff,'data':data})
 
 def activate_staff(request,sid):
     activate=Staff.objects.filter(id=sid).update(status=1)
@@ -19393,27 +19373,25 @@ def deactivate_staff(request,sid):
 
 
 def edit_company(request):
-    comp_id = request.session.get('t_id')
-    user='company'
-    com=Companies.objects.get(id=comp_id)
-    print(com,'com')
+    t_id = request.session['t_id']
+    data=Staff.objects.get(id=t_id)
+    staff=Staff.objects.get(company=data.company.id,position='company')
+    print(staff,'staff is that')
     payment_term=Payment_Terms.objects.all()
-    return render(request,'edit_company.html',{'com':com,'payment_term':payment_term,'user':user})
+    return render(request,'edit_company.html',{'staff':staff,'payment_term':payment_term,'data':data})
 
 def company_profile(request):
-    comp_id = request.session.get('t_id')
-    com=Companies.objects.get(id=comp_id)
-    user='company'
-    print(com,'com')
-    return render(request,'company_profile.html',{'com':com,'user':user})   
+    t_id = request.session['t_id']
+    data=Staff.objects.get(id=t_id)
+    staff=Staff.objects.get(company=data.company.id,position='company')
+    print('staff is this',staff)
+    return render(request,'company_profile.html',{'staff':staff,'data':data})   
 
 def update_company_prof(request,cid):
-    com=Companies.objects.get(id=cid)
+    staff=Staff.objects.get(id=cid,position='company')
+    print('staff id is',staff)
     if request.method=='POST':
         email=request.POST['email']
-        if Companies.objects.filter(email = email).exists():
-            messages.info(request, 'Sorry, this email already exist !!')
-            return redirect('edit_company')
         
         if Distributor.objects.filter(email=email).exists():
             messages.info(request, 'Sorry, this email already exist !!')
@@ -19423,33 +19401,33 @@ def update_company_prof(request,cid):
             messages.info(request, 'Sorry, this email already exist !!')
             return redirect('edit_company')
         
-        com.name=request.POST['companyname']
-        com.mailing_name=request.POST['mailing_name']
-        com.address=request.POST['address']
-        com.state=request.POST['state']
-        com.country=request.POST['country']
-        com.pincode=request.POST['pincode']
-        com.telephone=request.POST['telephone']
-        com.mobile=request.POST['mobile']
-        com.fax=request.POST['fax']
-        com.email=request.POST['email']
-        com.website=request.POST['website']
-        com.currency_symbol=request.POST['currency']
-        com.formal_name=request.POST['formal']
-        com.fin_begin=request.POST['fyear']
-        com.books_begin=request.POST['byear']
-        out=datetime.strptime (com.fin_begin,'%Y-%m-%d')+timedelta (days=364)
-        com.fin_end=out.date()
+        staff.company.name=request.POST['companyname']
+        staff.company.mailing_name=request.POST['mailing_name']
+        staff.company.address=request.POST['address']
+        staff.company.state=request.POST['state']
+        staff.company.country=request.POST['country']
+        staff.company.pincode=request.POST['pincode']
+        staff.company.telephone=request.POST['telephone']
+        staff.company.mobile=request.POST['mobile']
+        staff.company.fax=request.POST['fax']
+        staff.company.email=request.POST['email']
+        staff.company.website=request.POST['website']
+        staff.company.currency_symbol=request.POST['currency']
+        staff.company.formal_name=request.POST['formal']
+        staff.company.fin_begin=request.POST['fyear']
+        staff.company.books_begin=request.POST['byear']
+        out=datetime.strptime (staff.company.fin_begin,'%Y-%m-%d')+timedelta (days=364)
+        staff.company.fin_end=out.date()
         payment_t=request.POST['select']
         terms=Payment_Terms.objects.get(id=payment_t)
-        com.payment_Terms=terms
+        staff.company.payment_Terms=terms
         start_date=date.today()
-        com.payTerm_startdate=start_date
+        staff.company.payTerm_startdate=start_date
         days=int(terms.days)
         end= date.today() + timedelta(days=days)
         end_date=end
-        com.payTerm_enddate=end_date
-        com.save()
+        staff.company.payTerm_enddate=end_date
+        staff.company.save()
         return redirect('company_profile')
     return redirect('company_profile')
 
@@ -19514,16 +19492,18 @@ def update_distributor_prof(request,did):
 
 
 def staff_profile(request):
-    staff_id = request.session.get('t_id')
-    staff=Staff.objects.get(id=staff_id)
-    return render(request,'staff_profile.html',{'staff':staff})
+    t_id = request.session['t_id']
+    data=Staff.objects.get(id=t_id)
+    staff=Staff.objects.get(id=t_id,position='staff')
+    return render(request,'staff_profile.html',{'staff':staff,'data':data})
     
         
 
 def edit_staff(request):
-    staff_id = request.session.get('t_id')
-    staff=Staff.objects.get(id=staff_id)
-    return render(request,'edit_staff.html',{'staff':staff})
+    t_id = request.session['t_id']
+    data=Staff.objects.get(id=t_id)
+    staff=Staff.objects.get(id=t_id,position='staff')
+    return render(request,'edit_staff.html',{'staff':staff,'data':data})
 
 
 def update_staff_prof(request,sid):
@@ -19563,9 +19543,6 @@ def update_staff_prof(request,sid):
     return redirect('staff_profile')
     
     
-def staff_base(request):
-    return render(request,'staff_base.html')
-
 
 
 def list_sales_voucher(request):
@@ -19597,7 +19574,7 @@ def sale_voucher(request):
             return redirect('/')
         comp = Companies.objects.get(id = t_id)
         name = request.POST.get('ptype')
-        print(name,'name is')
+        print(comp,'comp is')
         vouch = Voucher.objects.filter(voucher_type = 'Sale',company = comp).get(voucher_name = name)
         st_item = stock_itemcreation.objects.filter(company = comp)
         ledg_grp_all = tally_ledger.objects.filter(company = comp).exclude(under__in = ['Current Assets','Deposits-Asset','Fixed Assets','Loans & Advances-Asset','Misc. Expenses-Asset'])
