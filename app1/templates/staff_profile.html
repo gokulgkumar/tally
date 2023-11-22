@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block body %}
+{% load static %}
  <!-- Iconify -->
  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
  <center>
@@ -13,6 +14,18 @@
     <h2 class="text-warning text-center">{{ staff.company.name }}</h2>
   </div>
   <hr>
+  <div class="mb-3 container p-3 border border-warning" style="width: 20%;">
+    
+    {% if staff.img %}
+
+    
+
+    
+    <img src="{{ staff.img.url }}" alt="" height="100px" width="80px" class="" >
+  
+    {% endif %}
+  
+  </div>
   <div class="row mx-3 p-2" style="font-size: 1.1rem;">
     <div class="col-5">
       <p>Staff Name</p>

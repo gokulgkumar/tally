@@ -72,8 +72,7 @@ def login(request):
                 return redirect('distributor_admin')
             
 
-            #staff
-
+        #staff
         if Staff.objects.filter(email=request.POST['email'], password=request.POST['password'],position='staff').exists():
             staff=Staff.objects.get(email=request.POST['email'], password=request.POST['password'],position='staff')
             print(staff,'staff login')
@@ -83,17 +82,12 @@ def login(request):
                 messages.info(request,'Approval for login required')
                 return redirect('login')
             else:
-                
                 return redirect('base')
-                # return render(request,'base.html',context)
 
            
         #company
         if Staff.objects.filter(email=request.POST['email'], password=request.POST['password'],position='company').exists():
             data=Staff.objects.get(email=request.POST['email'], password=request.POST['password'],position='company') 
-        # if Companies.objects.filter(email=request.POST['email'], password=request.POST['password']).exists(): 
-        #     member=Companies.objects.get(email=request.POST['email'], password=request.POST['password'])
-           
             request.session['t_id'] = data.id
             if data.company.status == 0:
                 messages.info(request,'Approval for login required')
@@ -145,7 +139,6 @@ def base(request):
     print(data,'data')
     print(t_id)
     
-    # ----------------------
     tally = Companies.objects.filter(id = data.company.id)
 
     staffn = Staff.objects.filter(id = data.id)
@@ -245,6 +238,7 @@ def features(request):
             return redirect('/')
         
         tally = Staff.objects.get(id=t_id)
+        print(features,'features')
         # tally = Companies.objects.filter(id=t_id)
         # return redirect('login')
         return render(request, 'features.html',{'tally':tally})
@@ -1246,8 +1240,10 @@ def company_feature(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
-        tally = Staff.objects.get(id=t_id)
-        # tally = Companies.objects.filter(id=t_id)
+        tally = Staff.objects.get(id=t_id,position='company')
+        tally2 = Companies.objects.filter(id=t_id)
+        print(tally,'tally')
+        print(tally2,'tally 2')
         if request.method=="POST":
             ma=request.POST['maintain_account']
             be=request.POST['billwise_entry']
@@ -19370,8 +19366,6 @@ def deactivate_staff(request,sid):
 
 
 
-
-
 def edit_company(request):
     t_id = request.session['t_id']
     data=Staff.objects.get(id=t_id)
@@ -19392,14 +19386,24 @@ def update_company_prof(request,cid):
     print('staff id is',staff)
     if request.method=='POST':
         email=request.POST['email']
+
         
         if Distributor.objects.filter(email=email).exists():
             messages.info(request, 'Sorry, this email already exist !!')
             return redirect('edit_company')
         
-        if Staff.objects.filter(email=email).exists():
-            messages.info(request, 'Sorry, this email already exist !!')
-            return redirect('edit_company')
+
+        if email != staff.email:
+            if Staff.objects.filter(email__iexact=email,position='company').exists():
+                messages.info(request, 'Sorry, this email already exists!')
+                return redirect('edit_company')
+            
+        if email != staff.email:
+            if Staff.objects.filter(email__iexact=email,position='staff').exists():
+                messages.info(request, 'Sorry, this email already exists!')
+                return redirect('edit_company')
+
+
         
         staff.company.name=request.POST['companyname']
         staff.company.mailing_name=request.POST['mailing_name']
@@ -19411,6 +19415,7 @@ def update_company_prof(request,cid):
         staff.company.mobile=request.POST['mobile']
         staff.company.fax=request.POST['fax']
         staff.company.email=request.POST['email']
+        staff.email=request.POST['email']
         staff.company.website=request.POST['website']
         staff.company.currency_symbol=request.POST['currency']
         staff.company.formal_name=request.POST['formal']
@@ -19427,6 +19432,7 @@ def update_company_prof(request,cid):
         end= date.today() + timedelta(days=days)
         end_date=end
         staff.company.payTerm_enddate=end_date
+        staff.save()
         staff.company.save()
         return redirect('company_profile')
     return redirect('company_profile')
@@ -19451,26 +19457,30 @@ def update_distributor_prof(request,did):
     if request.method=='POST':
 
         email=request.POST['dist_email']
+
         if Companies.objects.filter(email = email).exists():
             messages.info(request, 'Sorry, this email already exist !!')
             return redirect('edit_distributor')
         
-        if Distributor.objects.filter(email=email).exists():
-            messages.info(request, 'Sorry, this email already exist !!')
-            return redirect('edit_distributor')
+        if email != dis.email:
+            if Distributor.objects.filter(email__iexact=email).exists():
+                messages.info(request, 'Sorry, this email already exists!')
+                return redirect('edit_staff')
         
         if Staff.objects.filter(email=email).exists():
             messages.info(request, 'Sorry, this email already exist !!')
             return redirect('edit_distributor')
         
         username=request.POST['dist_uname']
+
         if Staff.objects.filter(username = username).exists():
             messages.info(request, 'Sorry, this username already exist !!')
             return redirect('edit_distributor')
         
-        if Distributor.objects.filter(username=username).exists():
-            messages.info(request, 'Sorry, this username already exist !!')
-            return redirect('edit_distributor')
+        if username != dis.username:
+            if Distributor.objects.filter(username__iexact=username).exists():
+                messages.info(request, 'Sorry, this username already exists!')
+                return redirect('edit_staff')
         
         dis.first_name=request.POST['dist_fname']
         dis.last_name=request.POST['dist_lname']
@@ -19519,14 +19529,22 @@ def update_staff_prof(request,sid):
             messages.info(request, 'Sorry, this email already exist !!')
             return redirect('edit_staff')
         
-        if Staff.objects.filter(email=email).exists():
-            messages.info(request, 'Sorry, this email already exist !!')
-            return redirect('edit_staff')
+        
+        emails = request.POST['staff_email'].strip()
+        usernames = request.POST['staff_uname'].strip()
+
+        if emails != stf.email:
+            if Staff.objects.filter(email__iexact=emails).exists():
+                messages.info(request, 'Sorry, this email already exists!')
+                return redirect('edit_staff')
+
+        
+        if usernames != stf.username:
+            if Staff.objects.filter(username__iexact=usernames).exists():
+                messages.info(request, 'Sorry, this username already exists!')
+                return redirect('edit_staff')
         
         username=request.POST['staff_uname']
-        if Staff.objects.filter(username = username).exists():
-            messages.info(request, 'Sorry, this username already exist !!')
-            return redirect('edit_staff')
         
         if Distributor.objects.filter(username=username).exists():
             messages.info(request, 'Sorry, this username already exist !!')
