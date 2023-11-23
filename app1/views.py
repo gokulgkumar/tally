@@ -129,8 +129,6 @@ def logout(request):
 def register(request):
     return render(request, 'Register.html')
 
-
-# ------------------------------------------------------------GOKUL---------------------------------
 def base(request):
 
     t_id = request.session['t_id']
@@ -168,9 +166,6 @@ def base(request):
 
     return render(request,'base.html',context)
     
-    # return redirect("/")
-# -----------------------------------------------------GOKUL----------------------------------------  
-#   
 #......................jisha........................
 
 def company_list(request):
@@ -1240,10 +1235,8 @@ def company_feature(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
-        tally = Staff.objects.get(id=t_id,position='company')
-        tally2 = Companies.objects.filter(id=t_id)
-        print(tally,'tally')
-        print(tally2,'tally 2')
+        tally = Staff.objects.get(id=t_id)
+        # tally = Companies.objects.filter(id=t_id)
         if request.method=="POST":
             ma=request.POST['maintain_account']
             be=request.POST['billwise_entry']
@@ -3563,9 +3556,6 @@ def createcompany(request):
 #         return render(request,'features.html',{'cmp':n,'msg_success':msg_success})
     
 #     return render(request,'features.html')
-
-        
-
 
 def companycreate(request):
     if request.method=='POST':
@@ -18870,9 +18860,6 @@ def purchase_vouchers(request):
                 }
         return render(request,'purchase_voucher.html',context)
 
-
-
-
 def create_purchase_voucher(request):
     
     if 't_id' in request.session:
@@ -19285,14 +19272,8 @@ def distributor_clients_view(request,did):
      return render(request, 'admin_distributor_clients_view.html', {'company': company, 'dist': dist})
     else:
      return render(request, 'admin_distributor_clients_view.html', {'dist': dist})
-
-
-
-
-
-
-# ----------------------------GOKUL-----------------------------
-
+     
+     
 def createstaff(request):
     return render(request,'create_staff.html')
 
@@ -19381,6 +19362,7 @@ def company_profile(request):
     print('staff is this',staff)
     return render(request,'company_profile.html',{'staff':staff,'data':data})   
 
+
 def update_company_prof(request,cid):
     staff=Staff.objects.get(id=cid,position='company')
     print('staff id is',staff)
@@ -19452,12 +19434,13 @@ def edit_distributor(request):
     payment_term=Payment_Terms.objects.all()
     return render(request,'edit_distributor.html',{'dist':dist,'payment_term':payment_term})
 
+
 def update_distributor_prof(request,did):
     dis=Distributor.objects.get(id=did)
     if request.method=='POST':
 
         email=request.POST['dist_email']
-
+        
         if Companies.objects.filter(email = email).exists():
             messages.info(request, 'Sorry, this email already exist !!')
             return redirect('edit_distributor')
@@ -19590,7 +19573,13 @@ def sale_voucher(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
+        
+
         comp = Companies.objects.get(id = t_id)
+
+        print(comp,'company is')
+
+        
         name = request.POST.get('ptype')
         print(comp,'comp is')
         vouch = Voucher.objects.filter(voucher_type = 'Sale',company = comp).get(voucher_name = name)
@@ -19759,6 +19748,3 @@ def create_sale_voucher(request):
             
         
     return redirect('list_sales_voucher')
-
-
-

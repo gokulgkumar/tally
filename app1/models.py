@@ -97,28 +97,13 @@ class Companies(models.Model):
     books_begin = models.DateField()
     fin_end = models.DateField()
     status=models.BooleanField(default=True)
+    # ------------------------- GOKUL----------------------------
     payment_Terms=models.ForeignKey(Payment_Terms,on_delete=models.CASCADE, null=True)
     Distributors = models.ForeignKey(Distributor, on_delete=models.CASCADE,null=True,blank=True)
     payTerm_startdate = models.DateField(max_length=255,null=True,blank=True)
     payTerm_enddate = models.DateField(max_length=255,null=True,blank=True)
-
-    #------------------------GOKUL NEW-----------------
     company_code = models.CharField(max_length=100,null=True,blank=True) 
-     
-
-
-class Staff(models.Model):
-    first_name=models.CharField(max_length=100,null=True,blank=True)
-    last_name=models.CharField(max_length=100,null=True,blank=True)
-    email=models.CharField(max_length=100,null=True,blank=True)
-    username=models.CharField(max_length=100,null=True,blank=True)
-    password=models.CharField(max_length=100,null=True,blank=True)
-    contact_details=models.CharField(max_length=100,null=True,blank=True)
-    img = models.ImageField(null=True,blank = True,upload_to = 'image/staff')
-    status=models.BooleanField(default=False)
-    company=models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
-    position=models.CharField(max_length=100,null=True,blank=True,default='staff')
-
+    
 
 class Features(models.Model):
     maintain_accounts = models.CharField(max_length=10)
@@ -728,7 +713,7 @@ class stock_itemcreation(models.Model):
     godown = models.ForeignKey(Godown_Items, on_delete=models.CASCADE,null=True,blank=True)
     name=models.CharField(max_length=100,null=True)
     alias=models.CharField(max_length=100,null=True)
-    units=models.CharField(max_length=100,null=True)
+    units=models.IntegerField(max_length=100,null=True)
     batches=models.CharField(max_length=10,null=True)
     trackdate=models.CharField(max_length=10,null=True)
     expirydate=models.CharField(max_length=10,null=True)
@@ -738,7 +723,7 @@ class stock_itemcreation(models.Model):
     rate_of_duty=models.IntegerField()
     quantity=models.IntegerField(max_length=100,null=True,blank=True)
     rate=models.IntegerField(max_length=100,null=True,blank=True)
-    per=models.CharField(max_length=100,null=True,blank=True)
+    per=models.IntegerField(max_length=100,null=True,blank=True)
     value=models.IntegerField(max_length=100,null=True,blank=True)
 
 class analysis_view(models.Model):
@@ -2029,9 +2014,6 @@ class party_details(models.Model):
     gst_reg_type=models.CharField(max_length=200)
     gstn_un=models.CharField(max_length=200)
     place_of_supply=models.CharField(default="Kerala",max_length=200)
-
-
-
     
     
 class sales_invoice(models.Model):  
@@ -2072,12 +2054,6 @@ class sales_voucher_stock_item_allocation(models.Model):
     sales_voucher_stock_item_one_allocation_id=models.ForeignKey(sales_voucher_stock_item_one_allocation,on_delete=models.CASCADE,null=True)
 
 #---- Purchase voucher-- Nithya-----
-
-
-
-
-
-
 class purchase_voucher(models.Model):
     company = models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
     voucher = models.ForeignKey(Voucher,on_delete=models.CASCADE,null=True,blank=True)
@@ -2128,17 +2104,8 @@ class purchase_particulars(models.Model):
     rate = models.IntegerField(null= True)
     per = models.CharField(max_length = 100,null=True,blank=True)
     amount = models.IntegerField(null= True)
-    
-
-    
-#---- End of Purchase Voucher---------------
 
 
-
-
-
-
-# sale voucher
 class sales_vouchers(models.Model):
     company = models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
     voucher = models.ForeignKey(Voucher,on_delete=models.CASCADE,null=True,blank=True)
@@ -2168,10 +2135,31 @@ class sales_vouchers(models.Model):
 
     quantity = models.IntegerField(null= True)
     amount = models.IntegerField(null= True)
-    narration = models.CharField(max_length=255)
+    narration = models.CharField(max_length=255)    
+    
+class receipt_note_no(models.Model):
+    purchase = models.ForeignKey(purchase_voucher,on_delete=models.CASCADE,null=True,blank=True)
+    sales = models.ForeignKey(sales_vouchers,on_delete=models.CASCADE,null=True,blank=True)
+    note_no = models.IntegerField(null=True,blank=True)
+    date = models.DateField(blank = True, null= True)
+    
+#---- End of Purchase Voucher---------------
+
+class Staff(models.Model):
+    first_name=models.CharField(max_length=100,null=True,blank=True)
+    last_name=models.CharField(max_length=100,null=True,blank=True)
+    email=models.CharField(max_length=100,null=True,blank=True)
+    username=models.CharField(max_length=100,null=True,blank=True)
+    password=models.CharField(max_length=100,null=True,blank=True)
+    contact_details=models.CharField(max_length=100,null=True,blank=True)
+    img = models.ImageField(null=True,blank = True,upload_to = 'image/staff')
+    status=models.BooleanField(default=False)
+    company=models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
+    position=models.CharField(max_length=100,null=True,blank=True,default='staff')
 
 
-
+    
+    
 class sale_particulars(models.Model):
     sales_voucher = models.ForeignKey(sales_vouchers,on_delete=models.CASCADE,null=True,blank=True)
     company = models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
@@ -2182,11 +2170,3 @@ class sale_particulars(models.Model):
     rate = models.IntegerField(null= True)
     per = models.CharField(max_length = 100,null=True,blank=True)
     amount = models.IntegerField(null= True)
-
-
-    
-class receipt_note_no(models.Model):
-    purchase = models.ForeignKey(purchase_voucher,on_delete=models.CASCADE,null=True,blank=True)
-    sales = models.ForeignKey(sales_vouchers,on_delete=models.CASCADE,null=True,blank=True)
-    note_no = models.IntegerField(null=True,blank=True)
-    date = models.DateField(blank = True, null= True)

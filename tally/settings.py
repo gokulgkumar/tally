@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'tally.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'tally',
+        'NAME': 'tallynew',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
@@ -123,6 +123,7 @@ USE_TZ = True
 
 # STATIC_URL = 'static/'
 # STATICFILES_DIRS = [os.path.join(BASE_DIR,"static")]
+
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')

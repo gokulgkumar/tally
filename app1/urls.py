@@ -993,10 +993,7 @@ urlpatterns = [
     path('activate_client/<int:cadid>',views.activate_client,name='activate_client'),
     path('deactivate_client/<int:cadid>',views.deactivate_client,name='deactivate_client'),
     path('distributor_clients_view/<int:did>',views.distributor_clients_view,name='distributor_clients_view'),
-
-
-    # GOKUL
-
+    
     path('createstaff',views.createstaff,name='createstaff'),
     path('staff_registration',views.staff_registration,name='staff_registration'),
     path('staff_request',views.staff_request,name='staff_request'),
