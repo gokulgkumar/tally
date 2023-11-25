@@ -90,8 +90,8 @@ urlpatterns = [
     path('ledger_taxgst',views.ledger_taxgst,name='ledger_taxgst'),
     path('create_ledger_taxgst',views.create_ledger_taxgst,name='create_ledger_taxgst'),
 
-    path('create_cmpny',views.create_cmpny,name='create_cmpny'),
-    path('company_create',views.company_create,name='company_create'),
+    # path('create_cmpny',views.create_cmpny,name='create_cmpny'),
+    # path('company_create',views.company_create,name='company_create'),
 
     path('features',views.features,name='features'),
     path('company_feature',views.company_feature,name='company_feature'),

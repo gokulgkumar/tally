@@ -72,46 +72,73 @@ def login(request):
                 return redirect('distributor_admin')
             
 
-        #staff
+        #staff 
         if Staff.objects.filter(email=request.POST['email'], password=request.POST['password'],position='staff').exists():
-            staff=Staff.objects.get(email=request.POST['email'], password=request.POST['password'],position='staff')
-            print(staff,'staff login')
-            request.session['t_id'] = staff.id
-           
-            if staff.status == 0:
-                messages.info(request,'Approval for login required')
-                return redirect('login')
-            else:
-                return redirect('base')
+            data=Staff.objects.get(email=request.POST['email'], password=request.POST['password'],position='staff')
 
+            request.session["t_id"]=data.id
+            if 't_id' in request.session:
+                if request.session.has_key('t_id'):
+                    t_id = request.session['t_id']
+                    print(t_id,'staff login')
+                    if data.status == 0:
+                        messages.info(request,'Approval for login required')
+                        return redirect('login')
+                    else:
+                        tally=Companies.objects.filter(id= data.company.id)
+                        comp = Companies.objects.get(id=data.company.id)
+                        latestdate = []
+                        pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+                        rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+                        cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+                        deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+                        latestdate.extend((pay,rec,cred,deb))
+                        filtered_dates = [date for date in latestdate if date is not None]
+                    
+                        context = { 
+                                    'company' : comp,
+                                    'tally' : tally,
+                                    'latestdate' : max(filtered_dates),
+                                    'data': data,
+                            }
+                        return render(request,'base.html',context)
+
+                    
+            
            
         #company
         if Staff.objects.filter(email=request.POST['email'], password=request.POST['password'],position='company').exists():
             data=Staff.objects.get(email=request.POST['email'], password=request.POST['password'],position='company') 
             request.session['t_id'] = data.id
-            if data.company.status == 0:
-                messages.info(request,'Approval for login required')
-                return redirect('login')
-            else:
-                tally=Companies.objects.filter(id= data.company.id)
-                comp = Companies.objects.get(id=data.company.id)
-                latestdate = []
-                pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
-                rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
-                cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
-                deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
-                latestdate.extend((pay,rec,cred,deb))
-                filtered_dates = [date for date in latestdate if date is not None]
-               
-                context = { 
-                            'company' : comp,
-                            'tally' : tally,
-                            'latestdate' : max(filtered_dates),
-                            'data': data,
-                    }
-                
 
-                return render(request,'base.html',context)
+            if 't_id' in request.session:
+                if request.session.has_key('t_id'):
+                    t_id = request.session['t_id']
+                    print(t_id,'company login')
+                    if data.company.status == 0:
+                        messages.info(request,'Approval for login required')
+                        return redirect('login')
+                    else:
+                        tally=Companies.objects.filter(id= data.company.id)
+                        comp = Companies.objects.get(id=data.company.id)
+                        latestdate = []
+                        pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+                        rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+                        cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+                        deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+                        latestdate.extend((pay,rec,cred,deb))
+                        filtered_dates = [date for date in latestdate if date is not None]
+                    
+                        context = { 
+                                    'company' : comp,
+                                    'tally' : tally,
+                                    'latestdate' : max(filtered_dates),
+                                    'data': data,
+                            }
+                    
+
+                        return render(request,'base.html',context)
+            
                 
         else:
             context = {'msg_error': 'Invalid data'}
@@ -130,41 +157,43 @@ def register(request):
     return render(request, 'Register.html')
 
 def base(request):
-
-    t_id = request.session['t_id']
-    data=Staff.objects.get(id=t_id)
-
-    print(data,'data')
-    print(t_id)
-    
-    tally = Companies.objects.filter(id = data.company.id)
-
-    staffn = Staff.objects.filter(id = data.id)
-    print(staffn,'staff is')
-
-    comp = Companies.objects.get(id=data.company.id)
-    latestdate = []
-
-    pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
-
-    rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
-
-    cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
-
-    deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
-
-    latestdate.extend((pay,rec,cred,deb))
+    if 't_id' in request.session:
+        if request.session.has_key('t_id'):
+            t_id = request.session['t_id']
+        else:
+            return redirect('/')
+        print(t_id,'t_id is')
         
-    context = { 
-                         'company' : comp,
-                         'tally' : tally,
-                         'latestdate' : max(latestdate),
-                        'data':data,
-                        'staffn':staffn
-                       
-                        }
+        data=Staff.objects.get(id=t_id)
+        print(data,'data is')
+        
+        tally=Companies.objects.filter(id= data.company.id)
+        comp = Companies.objects.get(id=data.company.id)
 
-    return render(request,'base.html',context)
+        # comp = Companies.objects.get(id=t_id)
+
+        latestdate = []
+
+        pay = payment_voucher.objects.filter(company = comp).last().date if payment_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+
+        rec = receipt_voucher.objects.filter(company = comp).last().date if receipt_voucher.objects.filter(company = comp).exists() else comp.fin_begin
+
+        cred = credit_note.objects.filter(comp = comp).last().creditdate if credit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+
+        deb = debit_note.objects.filter(comp = comp).last().debitdate if debit_note.objects.filter(comp = comp).exists() else comp.fin_begin
+
+        latestdate.extend((pay,rec,cred,deb))
+       
+        context = { 
+                    'company' : comp,
+                    'tally' : tally,
+                    'latestdate' : max(latestdate),
+                    'data':data,
+                    }
+
+        return render(request, 'base.html',context)
+    
+    return redirect("/")
     
 #......................jisha........................
 
@@ -202,8 +231,8 @@ def enable(request,pk):
     c.save()
     return redirect('/')
 
-def create_cmpny(request):
-    return render(request, 'create_cmpny.html')
+# def create_cmpny(request):
+#     return render(request, 'create_cmpny.html')
 
 def tally_gst(request):
     if 't_id' in request.session:
@@ -232,11 +261,12 @@ def features(request):
         else:
             return redirect('/')
         
-        tally = Staff.objects.get(id=t_id)
-        print(features,'features')
-        # tally = Companies.objects.filter(id=t_id)
+        data=Staff.objects.get(id=t_id)
+        
+        
+        tally = Companies.objects.filter(id=data.company.id)
         # return redirect('login')
-        return render(request, 'features.html',{'tally':tally})
+        return render(request, 'features.html',{'tally':tally,'data':data})
     return redirect('/')
 
 def tds(request):
@@ -577,8 +607,11 @@ def vouchers(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
-        tally = Companies.objects.filter(id=t_id)
-        return render(request, 'vouchers.html',{'tally':tally})
+        data=Staff.objects.get(id=t_id)
+        print(data)
+        tally = Companies.objects.filter(id=data.company.id)
+        print(tally)
+        return render(request, 'vouchers.html',{'tally':tally,'data':data})
     return redirect('/')
 
 def create_voucher(request):
@@ -587,7 +620,11 @@ def create_voucher(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
-        tally = Companies.objects.filter(id=t_id)
+        data=Staff.objects.get(id=t_id)
+        print(data)
+        tally = Companies.objects.filter(id=data.company.id)
+        print(tally)
+        # tally = Companies.objects.filter(id=t_id)
         if request.method=='POST':
             # cmp=Companies.objects.get(id=pk)
         
@@ -644,11 +681,11 @@ def create_voucher(request):
                         msg_2 = msg2,
                         default_bank = dbank,
                         name_class = nc,
-                        company_id=t_id)          
+                        company_id=data.company.id)          
             vhr.save()
             print("Added")
             return redirect('base')
-        return render(request,'vouchers.html',{'tally':tally})
+        return render(request,'vouchers.html',{'tally':tally,'data':data})
     return redirect('/')
 
 def vouch_advance(request):
@@ -702,9 +739,19 @@ def ledgers(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
-        tally = Companies.objects.filter(id=t_id)
+        print(t_id,'t_id is')
+
+        # tally = Companies.objects.filter(id=t_id)
+
+        tally=Staff.objects.filter(id=t_id)
+        company=Staff.objects.get(id=t_id)
+        print(company,'company is')
+        print(tally,'tally is')
         # grp=tally_group.objects.all()
-        grp=tally_group.objects.filter(company=t_id)
+        # grp=tally_group.objects.filter(company=t_id)
+        grp=tally_group.objects.filter(company=company.company)
+        print(grp,'grp is')
+
         return render(request,'ledgers.html',{'grp' : grp,'tally':tally})
     return redirect('ledgers')
 
@@ -714,7 +761,11 @@ def create_ledger(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
-        tally = Companies.objects.filter(id=t_id)
+        print(t_id,'t_id')
+        # tally = Companies.objects.filter(id=t_id)
+        tally=Staff.objects.filter(id=t_id)
+        company=Staff.objects.get(id=t_id)
+        print(tally,'tally for save ledger')
         if request.method=='POST':
             nm=request.POST.get('name')
             als=request.POST.get('alias')
@@ -772,7 +823,7 @@ def create_ledger(request):
                             valuation_type=valtype,rate_per_unit=rateperu,percentage_of_calcution=percalc,rond_method=rondmethod,rond_limit=roimlit,
                             gst_applicable=gstapplicbl,setalter_gstdetails=sagatdet,type_of_supply=typsupply,assessable_value=asseval,
                             appropriate_to=appropto,method_of_calculation=methcalcu,balance_billbybill=balbillbybill,credit_period=credperiod,
-                            creditdays_voucher=creditdaysvouch,opening_blnc_type=cd,company_id=t_id,current_blnc = opnbn, current_blnc_type = cd)
+                            creditdays_voucher=creditdaysvouch,opening_blnc_type=cd,company_id=company.company.id,current_blnc = opnbn, current_blnc_type = cd)
             
             ldr.save()
             if under =="Bank Accounts":
@@ -1195,39 +1246,39 @@ def create_lutbond(request,pk):
 		return redirect('lut_bond')
 	return render(request,'lut_bond')
 
-def company_create(request):
-	if request.method=="POST":
-		name=request.POST['companyname']
-		mname=request.POST['mailing_name']
-		addr=request.POST['address']
-		st=request.POST['state']
-		cntry=request.POST['country']
-		pncd=request.POST['pincode']
-		tlphn=request.POST['telephone']
-		mbl=request.POST['mobile']
-		fax=request.POST['fax']
-		email=request.POST['email']
-		wbsit=request.POST['website']
-		fin_begin=request.POST['fyear']
-		bk_begin=request.POST['byear']
-		crny_symbol=request.POST['currency']
-		frml_name=request.POST['formal']
+# def company_create(request):
+# 	if request.method=="POST":
+# 		name=request.POST['companyname']
+# 		mname=request.POST['mailing_name']
+# 		addr=request.POST['address']
+# 		st=request.POST['state']
+# 		cntry=request.POST['country']
+# 		pncd=request.POST['pincode']
+# 		tlphn=request.POST['telephone']
+# 		mbl=request.POST['mobile']
+# 		fax=request.POST['fax']
+# 		email=request.POST['email']
+# 		wbsit=request.POST['website']
+# 		fin_begin=request.POST['fyear']
+# 		bk_begin=request.POST['byear']
+# 		crny_symbol=request.POST['currency']
+# 		frml_name=request.POST['formal']
 
-		ccmp=Companies.objects.filter(name=name)
-		out=datetime.strptime (fin_begin,'%Y-%m-%d')+timedelta (days=364) 
-		a=out.date()
+# 		ccmp=Companies.objects.filter(name=name)
+# 		out=datetime.strptime (fin_begin,'%Y-%m-%d')+timedelta (days=364) 
+# 		a=out.date()
 		
 
-		if ccmp:
-			messages.info(request,'Company name already exists!!')
-			return redirect('create_cmpny')
-		else:
-			cmp=Companies(name=name,mailing_name=mname,address=addr,state=st,country=cntry,
-                pincode=pncd,telephone=tlphn,mobile=mbl,fax=fax,email=email,website=wbsit,fin_begin=fin_begin,
-                books_begin=bk_begin,currency_symbol=crny_symbol,formal_name=frml_name,fin_end=a)
-			cmp.save()
-			messages.info(request,'Company created successfully(Enable the features as per your business needs)')
-			return render(request,'features.html',{'cmp':cmp})
+# 		if ccmp:
+# 			messages.info(request,'Company name already exists!!')
+# 			return redirect('create_cmpny')
+# 		else:
+# 			cmp=Companies(name=name,mailing_name=mname,address=addr,state=st,country=cntry,
+#                 pincode=pncd,telephone=tlphn,mobile=mbl,fax=fax,email=email,website=wbsit,fin_begin=fin_begin,
+#                 books_begin=bk_begin,currency_symbol=crny_symbol,formal_name=frml_name,fin_end=a)
+# 			cmp.save()
+# 			messages.info(request,'Company created successfully(Enable the features as per your business needs)')
+# 			return render(request,'features.html',{'cmp':cmp})
 
 def company_feature(request):
     if 't_id' in request.session:
@@ -1235,8 +1286,12 @@ def company_feature(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
-        tally = Staff.objects.get(id=t_id)
-        # tally = Companies.objects.filter(id=t_id)
+        data=Staff.objects.get(id=t_id)
+        print(data,'feature data')
+
+        tally = Companies.objects.filter(id=data.company.id)
+        print(tally,'feature tally')
+
         if request.method=="POST":
             ma=request.POST['maintain_account']
             be=request.POST['billwise_entry']
@@ -1265,11 +1320,11 @@ def company_feature(request):
             cmp_fet=Features(maintain_accounts=ma,bill_wise_entry=be,cost_centres=cc,interest_calc=ic,maintain_inventory=mi,
             integrate_accounts=ai,multiple_price_level=mpl,batches=eb,expirydate_batches=edt,joborder_processing=jop,cost_tracking=ct,job_costing=jc,discount_invoices=dc,
             Billed_Quantity=sa,gst=gst,tds=tds,tcs=tcs,vat=vat,excise=excise,servicetax=st,payroll=prl,multiple_addrss=maddr,
-            vouchers=mark_mod,company=tally.company)
+            vouchers=mark_mod,company=tally)
 
             cmp_fet.save()
             return redirect('features')
-        return render(request,'features.html',{'tally':tally})
+        return render(request,'features.html',{'tally':tally,'data':data})
     return redirect('/')
 
 #......................Ajmy........................
@@ -3580,9 +3635,11 @@ def companycreate(request):
         company_code=get_random_string(length=7)
         if Companies.objects.filter(company_code = company_code).exists():
             company_code=get_random_string(length=7)
+
         if b:
             messages.info(request,'Company name already exists!!')
             return redirect('createcompany')
+        
         if distributor_id !='':
             if Distributor.objects.filter(distributor_id=distributor_id).exists():
                 distributor = Distributor.objects.get(distributor_id=distributor_id)
@@ -3628,7 +3685,9 @@ def companycreate(request):
             demo_staff=Staff(company=n,
                                    email=n.email,
                                    position='company',
-                                   password=n.password)
+                                   password=n.password,
+                                   company_code=company_code
+                                   )
             demo_staff.save()
 
 
@@ -3671,7 +3730,8 @@ def companycreate(request):
             demo_staff=Staff(company=n,
                                    email=n.email,
                                    position='company',
-                                   password=n.password)
+                                   password=n.password,
+                                   company_code=company_code)
             demo_staff.save()
          # -------------------------- GOKUL-----------------
 
@@ -19286,7 +19346,7 @@ def staff_registration(request):
         
     if request.method=='POST':
         company_code=request.POST['company_code']
-        if Companies.objects.filter(company_code = company_code).exists():
+        if Staff.objects.filter(company_code = company_code).exists():
             fname=request.POST['staff_fname']
             lname=request.POST['staff_lname']
             email=request.POST['staff_email']
@@ -19552,12 +19612,17 @@ def list_sales_voucher(request):
             t_id = request.session['t_id']
         else:
             return redirect('/')
+        print(t_id,'id is')
         tally = Companies.objects.filter(id=t_id)
-        comp = Companies.objects.get(id = t_id)
-        ledger = tally_ledger.objects.filter(company_id = comp)
+        # comp = Companies.objects.get(id = t_id)
+       
+        comp = Staff.objects.get(id = t_id)
+        print('comp',comp)
+
+        ledger = tally_ledger.objects.filter(company_id = comp.company.id)
 
         
-        voucher = Voucher.objects.filter(voucher_type = 'Sale',company = comp)
+        voucher = Voucher.objects.filter(voucher_type = 'Sale',company = comp.company.id)
         context = {
                     'voucher': voucher,
                     'tally':tally,
@@ -19575,37 +19640,51 @@ def sale_voucher(request):
             return redirect('/')
         
 
-        comp = Companies.objects.get(id = t_id)
+        # comp = Companies.objects.get(id = t_id)
 
-        print(comp,'company is')
+        comp = Staff.objects.get(id = t_id)
+        print(comp,'comp is -sales')
 
-        
         name = request.POST.get('ptype')
-        print(comp,'comp is')
-        vouch = Voucher.objects.filter(voucher_type = 'Sale',company = comp).get(voucher_name = name)
-        st_item = stock_itemcreation.objects.filter(company = comp)
-        ledg_grp_all = tally_ledger.objects.filter(company = comp).exclude(under__in = ['Current Assets','Deposits-Asset','Fixed Assets','Loans & Advances-Asset','Misc. Expenses-Asset'])
-        ledg_grp = tally_ledger.objects.filter(company = comp,under__in = ['Sales Accounts','Sales Return'])
-        godown = CreateGodown.objects.filter(comp = comp)
+        
+        
+        vouch = Voucher.objects.filter(voucher_type = 'Sale',company = comp.company.id).get(voucher_name = name)
+        print(vouch,'sales vouch -sales')
 
-        count_sale_voucher = sales_vouchers.objects.filter(company=comp).count()
+        st_item = stock_itemcreation.objects.filter(company = comp.company.id)
+        print(st_item,'stk itm -sales')
+
+        ledg_grp_all = tally_ledger.objects.filter(company = comp.company.id).exclude(under__in = ['Current Assets','Deposits-Asset','Fixed Assets','Loans & Advances-Asset','Misc. Expenses-Asset'])
+        print(ledg_grp_all,'ledgr grp all -sales')
+
+        ledg_grp = tally_ledger.objects.filter(company = comp.company.id,under__in = ['Sales Accounts','Sales Return'])
+        print(ledg_grp,'ledgr grp -sales')
+
+        godown = CreateGodown.objects.filter(comp = comp.company.id)
+        print(godown,'godown -sales')
+
+        count_sale_voucher = sales_vouchers.objects.filter(company=comp.company.id).count()
 
         if count_sale_voucher == 0:
             v = 1
         else:
-            last_sale_voucher = sales_vouchers.objects.filter(company=comp).values('sale_id').last()
+            last_sale_voucher = sales_vouchers.objects.filter(company=comp.company.id).values('sale_id').last()
+            print(last_sale_voucher,'last sale voucher -sales')
 
             if last_sale_voucher is not None and last_sale_voucher['sale_id'] is not None:
                 v = last_sale_voucher['sale_id'] + 1
             else:
-                records_above = sales_vouchers.objects.filter(company=comp, sale_id__isnull=False).values()
-                
+                records_above = sales_vouchers.objects.filter(company=comp.company.id, sale_id__isnull=False).values()
+                print(records_above,'records_above -sales')
+
                 if records_above.exists():
                     v = records_above.earliest('sale_id')['sale_id'] + 1
                 else:
                     v = 1
 
         tally = Companies.objects.filter(id=t_id)
+        print(tally,'tally - sales')
+
         context = {
                     'company' : comp ,
                     'vouch' : vouch,

@@ -2156,6 +2156,7 @@ class Staff(models.Model):
     status=models.BooleanField(default=False)
     company=models.ForeignKey(Companies,on_delete=models.CASCADE,null=True,blank=True)
     position=models.CharField(max_length=100,null=True,blank=True,default='staff')
+    company_code=models.CharField(max_length=100,null=True,blank=True,default=None)
 
 
     
